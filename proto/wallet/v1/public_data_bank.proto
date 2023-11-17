@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "google/protobuf/empty.proto";
+import "wallet/v1/public_data_common.proto";
+import "wallet/v1/bank_common.proto";
+
+// This is a fiat money account.
+// There's a bunch of different types of accounts in a traditional bank: current accounts, savings accounts, etc.
+// For the time being we only have current accounts.
+message BankAccount {
+  string id = 10;
+
+  // The name of the account. 
+  // Allows to distinguish multiple accounts of the same currency. 
+  // A customer's main account is always called "default".
+  string name = 11;
+
+  Balance balance = 20;
+
+  // Three letter ISO-4217 currency code, see https://en.wikipedia.org/wiki/ISO_4217
+  // The client is responsible for picking a library that exposes decimal precision for the given currency.
+  string currency = 30;
+
+  // Example: $ or € or £
+  string currency_symbol = 31;
+
+  // Identifier for domestic UK payments in GBP, always present on all GBP accounts
+  UkAccountIdentifier uk_local_id = 40;
+
+  // Identifier for international SWIFT payments, present on all accounts.
+  IBANAccountIdentifier international_id = 50;
+
+  // Identifier for euro-zone SEPA payments, only present in EUR accounts,
+  // likely, but not necessarily, the same as international_id.
+  IBANAccountIdentifier sepa_id = 60;
+}
+
+message BankTransaction {
+  string id = 10;
+
+  // Client needs to know which account this transaction belongs to, as our endpoints support
+  // returning transactions for all accounts.
+  // Specifying the currency won't be necessary, as the client can infer from the account.
+  // It's best to always synchronize transactions right after having synchronized accounts,
+  // to avoid ending up with a tx referencing an unknown account_id.
+  string account_id = 11;
+
+  string event_id = 12;
+
+  // eg: 500 net amount, 1 fee amount = 501 total
+  string total_amount = 20;
+  string net_amount = 21;
+  string fee_amount = 22;
+  
+  // if this is an exchange transaction, the following fields will contain the exchanged amount and asset
+  string exchange_amount = 24;
+  string exchange_asset = 25;
+
+  BankTransactionState state = 30;
+  BankTransactionFailReason fail_reason = 31; // check this enum if state = REJECTED or FAILED
+
+  BankTransactionType type = 40;
+
+  // This will contain the merchant name for card spends, the beneficiary name for outgoing payments and direct debits,
+  // the payer name for incoming payments, the counterparty account name for transfers/FX, or some description
+  // about the ATM or cash operation.
+  // At the moment there are no guarantees in length, make sure to truncate on clients when displaying.
+  string description = 60;
+
+  TransactionTime time = 70;
+
+  oneof details {
+    google.protobuf.Empty empty_details = 99; // in case it's none of the below
+    BankPaymentDetails bank_payment_details = 100; // only present if type=BANK_TRANSACTION_TYPE_PAYMENT or =BANK_TRANSACTION_TYPE_TRANSFER
+    CardTransactionDetails card_tx_details = 110; // only present if it's a card transaction
+    DirectDebitDetails direct_debit_details = 120; // only present if it's a direct debit
+  }
+}
+
+message BankTransactions { // not much use for backend, mainly used to facilitate client code
+  repeated BankTransaction transactions = 1;
+}
+
+message DirectDebitDetails {
+  DirectDebitRoute route = 10;
+  // not sure if there's any additional info we can show, probably not
+}
+
+enum DirectDebitRoute {
+  DIRECT_DEBIT_ROUTE_UNSPECIFIED = 0;
+  DIRECT_DEBIT_ROUTE_UK_DD = 1; // uk direct debits
+  DIRECT_DEBIT_ROUTE_SEPA_DD = 2; // sepa direct debit
+}

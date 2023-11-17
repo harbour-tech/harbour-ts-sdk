@@ -1,0 +1,20 @@
+syntax = "proto3";
+package auth.v1;
+
+message PhoneNumber {
+  // Phone prefix, both formats are supported (either +44 or 0044), mandatory.
+  // Submitting an invalid prefix will produce an invalid_argument error response.
+  string prefix = 10;
+
+  // Mandatory phone number, will be validated on the server side.
+  // Only digits allowed, please strip away any spaces or parentheses before submitting. Max length: 30.
+  // Send a number starting with 111 or 222 in non-prod environments to send an OTP via Slack instead of SMS.
+  // Use 111 or 777 in scenarios where the OTP needs to be known beforehand, such as acceptance tests.
+  // Note that valid UK mobile numbers need to start with +447 and be 10 digits long excluding the country prefix.
+  // The OTP will not be generated randomly, but instead will consist of the last 6 digits of the phone number.
+  // Use 222 to generate a random OTP.
+  // Eg: +44 7908 538983 -> an SMS is sent to this real UK phone number
+  //     +44 111 123456 -> an OTP 123456 is sent to Slack
+  //     +44 222 123456 -> a random OTP is sent to Slack
+  string number = 20;
+}

@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Balance {
+  string cleared = 10;
+
+  // The available balance equals the cleared balance minus any pending debits
+  // (eg: a withdrawal waiting to be signed, or an authorised card transactions that's pending clearance)
+  string available = 20;
+
+  int64 incremental_id = 30;
+}
+
+message TransactionTime {
+  // Date/Time at which the transaction was submitted
+  // (eg: time of card authorisation at POS, time of submitting a bank payment or requesting a crypto tx)
+  google.protobuf.Timestamp posted_time = 10;
+
+  // Date/Time at which the transaction was last updated (typically state changes).
+  // Use this to avoid overriding transactions in rare cases where events might be received out of order.
+  google.protobuf.Timestamp updated_time = 20;
+
+  // Date/Time at which the transaction reached its final state (cleared, rejected, failed).
+  google.protobuf.Timestamp finalised_time = 30;
+}
+
+message Amount {
+  string amount = 1;
+  string currency = 2; // either ISO currency code or cryptocyrrency Ticker (eg: EUR or BTC)
+}
+
+// Most of the time, you'll see something like LocalAmount: 20 EUR, CardAmount: 20 EUR, SpendAmountTotal: 20 EUR, SpendAmountNet: 20 EUR, SpendAmountFee: 0 EUR
+// However, amounts might differ when spending abroad, and even when converting other balances as source of funds.
+// As an example, let's assume we pay at a New York restaurant with a EUR card, using our USDC balance.
+// Let's say the restaurante bills 12 USD, Visa bills the card 11.05 EUR, and we take 12.10 USDC from the customer's USDC 
+// account, as it's set as a funding source for the card.
+message CardTransactionDetails {
+  // This is always the amount that was paid locally at the POS or ATM.
+  // So it might be any currency in the world that VISA (or MasterCard) supports.
+  // In our example it's 12 USD.
+  Amount local_amount = 10;
+
+  // fx rate between the local and the card amount. It's effectively the rate given to us by the payments processor.
+  // Note: the fx rate will be 1 when the local currency == card currency.
+  // Eg: if the card is GBP, and the local currency is EUR, the fx rate will represent the EUR/GBP rate.
+  string local_fx_rate = 11;
+
+  // This is the amount that was charged on the card.
+  // In our example 11.05 EUR because it's a EUR card. 
+  Amount card_amount = 20;
+
+  // This is what is billed to the account from which funds are taken to fund the card transaction.
+  // In our example it's 12.10 USDC.
+  // Other example: if we are using a GBP account to fund a EUR card, this would be GBP.
+  // In any case, this is the amount that affects the balance of the account to which it belongs.
+  Amount spend_amount_total = 30;
+
+  // At the moment we do not charge fees on top of the exchange rate, so the net is always the same as the total,
+  // and the fee is always zero. However, in the future, this might change.
+  // In our example, the net is 12 and the fee 0.10 USDC.
+  // The spend amount total, net and fee are always the same currency as the account this transaction belongs to.
+  Amount spend_amount_net = 31;
+  Amount spend_amount_fee = 32;
+
+  // fx rate between the card and the spend amount. This is Harbour's fx rate, offered to the customer, 
+  // in order to fund their card transaction with an account of a different currency.
+  // Note: the fx rate will be 1 when the account currency is same with card currency.
+  // Eg: if the card is GBP, and a USDC account was used to fund it, the fx rate will represent the GBP/USDC rate.
+  string spend_fx_rate = 33;
+
+  Merchant merchant = 40;
+
+  message Merchant {
+    string id = 10;
+    string mcc = 20;
+    string name = 30;
+  }
+
+  // The internal card id of the card that was used to make the transaction.
+  string card_id = 60;
+}  

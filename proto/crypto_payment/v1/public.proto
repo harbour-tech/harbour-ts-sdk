@@ -1,0 +1,189 @@
+syntax = "proto3";
+package crypto_payment.v1;
+
+import "google/protobuf/timestamp.proto";
+
+service PingService {
+  rpc Ping (PingRequest) returns (PingResponse) {}
+}
+
+message PingRequest {
+}
+
+message PingResponse {
+  string message = 10;
+}
+
+service WhitelistService {
+  // GetWhitelist - returns the whitelist for the asset identification specified in the request.
+  // This endpoint requires the user ID in the auth principal propagated in the context.
+  rpc GetWhitelist (GetWhitelistRequest) returns (GetWhitelistResponse) {}
+
+  // adding to whitelist consist of the two steps - first we request "add to whitelist" endpoint,
+  // which returns the token and initiate the OTP sending to the user.
+  // Next step - we call the confirmation endpoint (AddToWhitelistConfirm) and send the otp value
+  // along with the token to confirm adding to whitelist
+  rpc AddToWhitelist (AddToWhitelistRequest) returns (AddToWhitelistResponse) {}
+
+  // call this endpoint after AddToWhitelist and send the otp along with the token returned from previous call
+  rpc AddToWhitelistConfirm (AddToWhitelistConfirmRequest) returns (AddToWhitelistConfirmResponse) {}
+}
+
+service PaymentService {
+  // To be able to withdraw asset we need to have the address added to the whitelist. So before withdrawing -
+  // the client needs to go through the process of adding the address to the whitelist.
+  // Then we need to provide the whitelist id, asset, source wallet, destination address.
+  //
+  rpc WithdrawAsset (WithdrawAssetRequest) returns (WithdrawAssetResponse) {}
+
+  rpc EstimateWithdrawalFee (EstimateWithdrawalFeeRequest) returns (EstimateWithdrawalFeeResponse) {}
+}
+
+message GetWhitelistRequest {
+  string user_id = 10;
+  // network - optional parameter, if specified, the endpoint returns only the whitelist entries from the specified network
+  optional string network = 20;
+}
+
+message GetWhitelistResponse {
+  repeated WhitelistEntry entries = 10;
+}
+
+message WhitelistEntry {
+  string id = 10;
+  string network_id = 20;
+  // a mandatory nickname/alias to allow users to easily identify this address, with a minimum of 2 and up to 100 chars
+  string name = 30;
+  // mandatory on-chain address which can be used to transfer funds to, with a minimum of 3 and up to 256 chars
+  string address = 40;
+}
+
+message AddToWhitelistRequest {
+  string user_id = 10;
+  // the name of this entry which can be displayed to the user (the maximum length of the name is 100 symbols)
+  string name = 20;
+  // on-chain address
+  string address = 30;
+  // network - the identification of the network, to which belongs the on-chain address
+  // possible values: bitcoin-mainnet, bitcoin-testnet, ethereum-mainnet, ethereum-goerli...
+  string network = 40;
+  // this option can be set to true to validate all the parameters without actually creating any
+  // entries. Response to the dry run can contain either error or an empty token in the result - it means
+  // the dry run was successfully executed without errors
+  bool dry_run = 50;
+}
+
+message AddToWhitelistResponse {
+  oneof result {
+    Error error = 1;
+    string token = 2;
+  }
+  enum Error {
+    // is not used right now - linter requires this to be here
+    ERROR_UNSPECIFIED = 0;
+    // returned when there is already such a combination {user_id, address, asset} in the database
+    ERROR_ALREADY_EXIST = 1;
+    // returned if the specified address is not valid for the specified asset in the request
+    ERROR_ADDRESS_INVALID = 2;
+  }
+}
+
+message AddToWhitelistConfirmRequest {
+  string otp = 10;
+  string token = 20;
+}
+
+message AddToWhitelistConfirmResponse {
+  oneof result {
+    Error error = 10;
+    // the id of the created entry in the whitelist - can be used later on in the withdraw process -
+    // which actually requires this id
+    string whitelist_id = 20;
+  }
+
+  enum Error {
+    // when we get unspecified error from the auth service (shouldn't be the case in normal situations)
+    ERROR_UNSPECIFIED = 0;
+    //
+    ERROR_OTP_INVALID = 1;
+    // when the OTP code is already expired
+    ERROR_OTP_EXPIRED = 2;
+    // OTP code is marked as used in the database
+    ERROR_OTP_ALREADY_USED = 3;
+    // malformed token or wrong signature
+    ERROR_TOKEN_INVALID = 4;
+    // this whitelist entry already exists in the database (same combination of {user_id,address,asset})
+    ERROR_ALREADY_EXIST = 5;
+  }
+}
+
+message WithdrawAssetRequest {
+  // mandatory id of the user requesting the withdrawal
+  string user_id = 10;
+  // mandatory id of the crypto account - the id of the crypto account entity returned by the wallet API
+  // an invalid account will result in a code invalid argument
+  string crypto_account_id = 30;
+  // mandatory whitelist id
+  // an invalid whitelist id has its own custom error type, as another device could remove a whitelist
+  // without the user's current device knowing
+  string whitelist_id = 40;
+  // mandatory amount to be received by counterparty, on top of which fees will be added
+  // must be positive, else a code invalid argument is returned
+  // there's also a minimum and a maximum amount that can be sent, which the client needs to fetch via a dedicated RPC
+  string net_amount = 50;
+  // network fee which should be paid by user in order to withdraw funds to external address.
+  // it should be request with EstimateWithdrawalFeeRequest and re-requested before "valid_until" of
+  // EstimateWithdrawalFeeResponse
+  string fee = 55;
+  // this flag can be used to validate all the parameters without actually making any withdrawals
+  bool dry_run = 60;
+  // idempotency key to avoid double spend
+  string idempotency_key = 70;
+  // standard jwt with vendor_device_id claim and strict expiry, same as when authenticating
+  // note: if this is built incorrectly you'll get a grpc code invalid argument
+  string signature = 80;
+}
+
+message WithdrawAssetResponse {
+  oneof result {
+    Error error = 10;
+  }
+  enum Error {
+    ERROR_UNSPECIFIED = 0;
+    // whitelist entry with the ID provided in the request was not found in the DB
+    // can only happen if another device deletes the entry at around the same time, which is highly unlikely
+    ERROR_INVALID_WHITELIST_ID = 1;
+    // insufficient funds on the account to withdraw
+    ERROR_INSUFFICIENT_BALANCE = 2;
+    // there's single tx / daily / monthly spending limits associated with each user
+    ERROR_LIMITS_EXCEED = 3;
+    // account is blocked (possibly temporarily) from sending assets out of Harbor
+    ERROR_BLOCKED = 4;
+    // Client submitted an amount < than the minimum withdrawable for this asset.
+    // The client should always retrieve the min amount from our API before submitting a request.
+    // If this happens, either the client has a bug in interpreting our API, or it was unlucky enough that the
+    // backend-configured min amount changed in between the two requests.
+    // Handle this error gracefully and just tell the user the amount is below minimum.
+    ERROR_MIN_AMOUNT = 5;
+    // Withdrawal fee is to low, this might happen because of spike in network fees or client didn't
+    // poll new fee after "valid_until" of EstimateWithdrawalFeeResponse. Fee need to be re-requested and withdraw
+    // request retried
+    ERROR_MIN_FEE = 6;
+    // Client submitted an amount with decimal digits more than allowed for this asset.
+    // i.e. 1.00001 USDC while the max allowed precision for USDC is 2 decimal digist,
+    // so it's only allowed to withdraw 1.01
+    // same goes for other assets but with other allowed precision.
+    ERROR_PRECISION_EXCEEDED = 7;
+  }
+}
+
+message EstimateWithdrawalFeeRequest {
+  string asset_id = 10;
+}
+
+message EstimateWithdrawalFeeResponse {
+  // estimates fee denominated in currency of request
+  string fee = 10;
+  // until when fee is valid, after that new fee estimation should be polled again
+  google.protobuf.Timestamp valid_until = 20;
+}

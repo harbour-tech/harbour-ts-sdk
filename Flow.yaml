@@ -1,0 +1,20 @@
+appId: fi.harbour.app.dev
+---
+- launchApp
+- tapOn:
+    text: "RESET PIN"
+    optional: true
+- tapOn:
+    text: "Unlink"
+    optional: true
+- tapOn: "LOG IN"
+- tapOn: "---- ------"
+- inputText: "7777000000"
+- tapOn: "SEND CODE"
+- inputText: "000000"
+- tapOn:
+    text: "0"
+    repeat: 4
+- tapOn:
+    text: "0"
+    repeat: 4

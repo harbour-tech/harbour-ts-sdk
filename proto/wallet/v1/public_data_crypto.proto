@@ -1,0 +1,205 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "google/protobuf/empty.proto";
+import "wallet/v1/public_data_common.proto";
+
+// We've decided to not give users actual crypto wallets.
+// We will take their assets in our custody and might move them on-chain for internal purposes.
+// So we can call this entity account rather than wallet.
+// Especially to simplify scenarios where there's multiple cryptocurrencies potentially sitting on the same wallet,
+// such as Ethereum ERC-20 tokens.
+message CryptoAccount {
+  string id = 10;
+  Balance balance = 20;
+  string currency = 30;
+  DepositIdentifier deposit_identifier = 40;
+}
+
+message DepositIdentifier {
+  // on-chain address on which funds can be deposited
+  string address = 10;
+  // at a later stage we can add things such as memos
+}
+
+message CryptoTransactions { // not much use for backend, mainly used to facilitate client code
+  repeated CryptoTransaction transactions = 1;
+}
+
+message CryptoTransaction {
+  string id = 10;
+
+  // Client needs to know which account this transaction belongs to, as our endpoints support
+  // returning transactions for all accounts.
+  // Specifying the currency won't be necessary, as the client can infer from the account.
+  // It's best to always synchronize transactions right after having synchronized accounts,
+  // to avoid ending up with a tx referencing an unknown account_id.
+  string account_id = 11;
+
+  string event_id = 12;
+
+  // eg: 1.01 SOL total amount = 1 SOL net amount + 0.005 fee + 0.005 service fee
+  // also keep in mind that crypto transactions might be pretty long strings, eg: 1200.0012345342341
+  // truncate decimal digits in the UI when displaying in narrow spaces
+  string total_amount = 20;
+  string net_amount = 21;
+  string fee_amount = 22;
+  string service_fee_amount = 23;
+
+  // if this is an exchange transaction, the following fields will contain the exchanged amount and asset
+  string exchange_amount = 24;
+  string exchange_asset = 25;
+
+  CryptoTransactionState state = 30;
+  CryptoTransactionFailReason fail_reason = 31; // check this enum if state is REJECTED or FAILED
+  CryptoTransactionType type = 40;
+
+  // Harbour-generated transaction description
+  // At the moment there are no guarantees in length, make sure to truncate on clients when displaying.
+  string description = 50;
+
+  // Only populated for withdrawals, in which case it's the destination blockchain address,
+  // and deposits, in which case it's the origin blockchain address
+  string counterparty = 60;
+
+  // If this is an on-chain transaction, the following info can be used to redirect users to block explorers
+  // and give them some basic information about the transaction on the network
+  BlockchainTxInfo blockchain_tx_info = 70;
+
+  TransactionTime time = 80;
+
+  oneof details {
+    google.protobuf.Empty empty_details = 99; // in case it's none of the below
+    CardTransactionDetails card_tx_details = 110; // only present if it's a card transaction
+  }
+}
+
+message BlockchainTxInfo {
+  string tx_hash = 10;
+  string block_height = 20;
+  string block_hash = 30;
+}
+
+enum CryptoTransactionState {
+  CRYPTO_TRANSACTION_STATE_UNSPECIFIED = 0;
+
+  // Only happens for payments initiated by the client.
+  // State is initialised as soon as it is submitted, but might be later rejected for many reasons
+  // (insufficient funds, compliance, fraud, velocity limits).
+  // Probably best not to show on customer UI until it transitions to PENDING
+  CRYPTO_TRANSACTION_STATE_INITIALISED = 10;
+
+  // This is a transaction that passed initial validation and is now pending to be processed.
+  // It is important to note that these transactions are an abstraction layer built for the end-user and
+  // do not map 1:1 with on-chain or ledger transactions.
+  // For instance, satisfying a withdrawal request might require an internal ledger transfer plus an on-chain transaction.
+  // So this PENDING state is a generic intermediate state which can run from a few instants to several hours
+  // depending on the underlying operations and speed of broadcasting on the blockchain.
+  CRYPTO_TRANSACTION_STATE_PENDING = 20;
+
+  // All actions required for clearing this transaction have been performed and, if on-chain transactions were involved,
+  // the counterparty should have confirmed funds.
+  CRYPTO_TRANSACTION_STATE_CLEARED = 30;
+
+  // Transaction was rejected, typically insufficient balance, fraud or velocity limits. Also a final state.
+  // Again, should never be altered once rejected, but do allow overwrites just in case.
+  CRYPTO_TRANSACTION_STATE_REJECTED = 40;
+
+  // A transaction failed for technical reasons rather than being rejected. Also a final state.
+  // Again, should never be altered once rejected, but do allow overwrites just in case.
+  CRYPTO_TRANSACTION_STATE_FAILED = 50;
+
+  // A card authorisation was cancelled. This is a final state.
+  // This happens when a card authorisation is fully reversed.
+  CRYPTO_TRANSACTION_STATE_CANCELLED = 60;
+
+  // A card transaction was declined by the merchant. This is a final state.
+  CRYPTO_TRANSACTION_STATE_DECLINED = 70;
+}
+
+enum CryptoTransactionType {
+  CRYPTO_TRANSACTION_TYPE_UNSPECIFIED = 0;
+
+  // Someone transferred funds on-chain to the user's deposit address
+  CRYPTO_TRANSACTION_TYPE_DEPOSIT = 10;
+
+  // User transferred money out of their account to a blockchain address
+  CRYPTO_TRANSACTION_TYPE_WITHDRAWAL = 20;
+
+  // An amount was debited or credited to this account as part of a currency conversion
+  // Either crypto/crypt or fiat/crypto
+  CRYPTO_TRANSACTION_TYPE_EXCHANGE = 30;
+
+  // Funds have been transferred between Harbour accounts rather than going on-chain.
+  // Could be a transfer between user's own wallets or between different users
+  CRYPTO_TRANSACTION_TYPE_TRANSFER = 40;
+
+  // Normally any fees are included in a transaction's gross amount.
+  // However, it is still good to have a fee type, who knows, maybe in the future there will be subscription
+  // plans that can be paid in crypto.
+  CRYPTO_TRANSACTION_TYPE_FEE = 50;
+
+  // Any kind of card transaction
+  CRYPTO_TRANSACTION_TYPE_CARD = 60;
+
+  // Any ATM transaction
+  CRYPTO_TRANSACTION_TYPE_ATM = 70;
+
+  // Other kind of transaction. Two examples of when this could happen:
+  // Our staff amends a ledger manually because of an error or any other internal operation.
+  // A new type has being added and older RPC versions are adapted to convert to this type,
+  // whereas new RPC versions will expose the correct type.
+  // This helps avoid breaking outdated client apps.
+  CRYPTO_TRANSACTION_TYPE_OTHER = 1000;
+}
+
+enum CryptoTransactionFailReason {
+  CRYPTO_TRANSACTION_FAIL_REASON_UNSPECIFIED = 0;
+
+  CRYPTO_TRANSACTION_FAIL_REASON_INSUFFICIENT_BALANCE = 10;
+
+  // Failed due to limits on account. Example: max balance, max daily or monthly withdrawals.
+  CRYPTO_TRANSACTION_FAIL_REASON_LIMITS = 20;
+
+  // Failed because of screening. Example: destination address is detected as involved in fraud.
+  CRYPTO_TRANSACTION_FAIL_REASON_SCREENING = 30;
+
+  // Failed because the amount is smaller than the minimum allowed
+  CRYPTO_TRANSACTION_FAIL_REASON_MIN_AMOUNT = 40;
+
+  // Insufficient amount to pay for fees on the account
+  CRYPTO_TRANSACTION_FAIL_REASON_FEES = 50;
+  
+  // Network error
+  CRYPTO_TRANSACTION_FAIL_REASON_NETWORK = 60;
+
+  // Eg: wrong PIN at POS, or wrong CVV at online merchant.
+  // Hopefully we are able to get a more detailed error (see following), but not all card processors support it,
+  // so we might fall back to this one.
+  CRYPTO_TRANSACTION_FAIL_REASON_INVALID_CARD_DETAILS = 80;
+  
+  // Wrong PIN at POS/ATM
+  CRYPTO_TRANSACTION_FAIL_REASON_WRONG_CARD_PIN = 90;
+
+  // Wrong CVV when paying online
+  CRYPTO_TRANSACTION_FAIL_REASON_WRONG_CARD_CVV = 100;
+
+  // Wrong expiry date paying online
+  CRYPTO_TRANSACTION_FAIL_REASON_WRONG_CARD_EXPIRY_DATE = 110;
+
+  // Failed 3D-secure challenge while paying online
+  CRYPTO_TRANSACTION_FAIL_REASON_FAILED_3DS = 120;
+
+  // Card expired
+  CRYPTO_TRANSACTION_FAIL_REASON_FAILED_CARD_EXPIRED = 130;
+
+  // Card got deactivated by user
+  CRYPTO_TRANSACTION_FAIL_REASON_FAILED_CARD_INACTIVE = 140;
+
+  // An unexpected error happened and our backend wasn't able to process this tx
+  CRYPTO_TRANSACTION_FAIL_REASON_SERVER_ERROR = 500;
+
+  // If we add new elements to this enum, handlers should convert them to this type to avoid breaking clients
+  CRYPTO_TRANSACTION_FAIL_REASON_UNKNOWN = 1000;
+}
