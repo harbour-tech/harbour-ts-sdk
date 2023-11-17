@@ -1,0 +1,13 @@
+### IDEs ###
+.idea
+*.iws
+*.iml
+*.ipr
+.vscode
+node_modules
+
+### Mac OS ###
+.DS_Store
+
+### Other ###
+_tmp

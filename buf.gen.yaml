@@ -1,0 +1,14 @@
+version: v1
+managed:
+  enabled: true
+#  go_package_prefix:
+#    default: github.com/harbour-tech/be-auth-service/gen/proto/go
+#    except:
+#      - buf.build/googleapis/googleapis
+plugins:
+  - name: es
+    out: src/gen
+    opt: target=ts
+  - name: connect-es
+    out: src/gen
+    opt: target=ts

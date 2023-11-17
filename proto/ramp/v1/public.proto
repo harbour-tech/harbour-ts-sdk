@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package ramp.v1;
+
+// signature_type is supplied with every request in the header
+// public_key is supplied with every request in the header
+// timestamp is supplied with every request in the header and timestamp is validated as (+-1 minute from now) and used as a salt
+// signature is supplied with every request in the header as sing(request body + salt, private_key) and validated as verify(request body + salt, public_key)
+service RampService {
+  rpc GetAccountInfo (GetAccountInfoRequest) returns (GetAccountInfoResponse) {}
+
+  rpc WhitelistAddress (WhitelistAddressRequest) returns (WhitelistAddressResponse) {}
+  rpc RemoveAddress (RemoveAddressRequest) returns (RemoveAddressResponse) {}
+
+  rpc SetBankAccount (SetBankAccountRequest) returns (SetBankAccountResponse) {}
+  rpc GetBankAccount (GetBankAccountRequest) returns (GetBankAccountResponse) {}
+}
+
+message GetAccountInfoRequest {}
+
+message GetAccountInfoResponse {
+  oneof result {
+    Authentication authentication = 20;
+    Account account = 30;
+  }
+
+  message Authentication {
+    string authentication_url = 10;
+  }
+
+  message Account {
+    repeated Wallet wallets = 40;
+    oneof bank_account { // this might become just "bank_account", as we haven't decide yet if we require on ramp with whitelisted bank account only
+      ScanCoordinates scan = 10; // only for scheme SCAN
+      IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
+      string recipient = 30; // account holder name
+    }
+  }
+
+  message Wallet {
+    Network network = 10;
+    string address = 20;
+    repeated Asset assets = 30;
+
+    message Asset {
+      string asset = 10; // BTC, USDC etc. // should be more details like address of the smart contract of an asset?
+      OnRamp on_ramp = 20;
+      OffRamp off_ramp = 30;
+    }
+
+    message OnRamp {
+      string payment_reference = 20; // e.g. "ETH USDC 1" or ETU1
+    }
+
+    message OffRamp {
+      string address = 10;
+    }
+  }
+}
+
+message WhitelistAddressRequest {
+  string name = 10;
+  Network network = 20;
+  string address = 30;
+  // for the Ethereum: the address filed should be signed with https://docs.metamask.io/wallet/reference/personal_sign/ using
+  // private key of this address
+  string address_signature = 40;
+}
+
+message WhitelistAddressResponse {}
+
+message RemoveAddressRequest {
+  Network network = 20;
+  string address = 30;
+}
+
+message RemoveAddressResponse {}
+
+message SetBankAccountRequest {
+  // First and beneficiary name is not required. KYC info will be used as beneficiary name
+  oneof bank_account {
+    ScanCoordinates scan = 10; // only for scheme SCAN
+    IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
+  }
+}
+
+message SetBankAccountResponse {
+
+}
+
+message GetBankAccountRequest {
+  // First and beneficiary name is not required. KYC info will be used as beneficiary name
+  oneof bank_account {
+    ScanCoordinates scan = 10; // only for scheme SCAN
+    IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
+  }
+}
+
+message GetBankAccountResponse {
+  oneof bank_account {
+    google.protobuf.Empty empty = 10;
+    ScanCoordinates scan = 20;
+    IbanCoordinates iban = 30;
+  }
+}
+
+message ScanCoordinates {
+  string account_number = 10; // always 8 digits
+  string sort_code = 20; // always 6 digits (if using an input mask such as ##-##-##, remove the dashes before submitting)
+}
+
+message IbanCoordinates {
+  string iban = 10; // up to 34 characters (please submit them all uppercase) and numbers
+}
+
+enum Network {
+  NETWORK_UNSPECIFIED = 0;
+  NETWORK_ETHEREUM_MAINNET = 10;
+  NETWORK_ETHEREUM_SEPOLIA = 11;
+  NETWORK_AVALANCHE_MAINNET = 21;
+  NETWORK_AVALANCHE_FUJI = 22;
+}
+
+enum SignatureType {
+  SIGNATURE_TYPE_UNSPECIFIED = 0;
+  SIGNATURE_TYPE_RSA = 1;
+  SIGNATURE_TYPE_SECP256K1 = 2;
+  SIGNATURE_TYPE_SECP256R1 = 3;
+}

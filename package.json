@@ -1,0 +1,26 @@
+{
+  "name": "harbour-ts-sdk",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "repository": "git@github.com:harbour-tech/harbour-ts-sdk.git",
+  "author": "Harbour",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@bufbuild/protobuf": "^1.6.0",
+    "@connectrpc/connect": "^1.2.0",
+    "@connectrpc/connect-web": "^1.2.0"
+  },
+  "devDependencies": {
+    "@connectrpc/protoc-gen-connect-es": "^1.2.0",
+    "@mysten/sui.js": "^0.48.1",
+    "eslint-plugin-prettier": "^5.1.0",
+    "ethers": "^6.9.1",
+    "prettier": "^3.1.1"
+  },
+  "scripts": {
+    "buf:generate": "buf generate && sed -i '' s/_pb.js/_pb/ src/gen/*/v1/public_*.ts",
+    "buf:sync": "rm -rf proto && rm -rf _tmp && git clone --depth 1 git@github.com:harbour-tech/harbour-api.git _tmp && mv _tmp/proto proto/ && rm -rf _tmp",
+    "buf": "yarn buf:sync && yarn buf:generate && yarn prettier --write ./src/gen/"
+  }
+}

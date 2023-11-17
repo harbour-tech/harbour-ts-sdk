@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor Wallet
+
+== Ready ==
+autonumber
+Wallet -> HarborApi: Get Account Info Request
+Wallet <-- HarborApi: Get Account Info Response
+
+== Authentication ==
+autonumber
+Wallet -> HarborAuthentication: Open Authentication Url (popup/iframe)
+Wallet <-- HarborAuthentication: AuthenticationCompleteEvent
+
+Wallet -> HarborApi: Get Account Info Request
+Wallet <-- HarborApi: Get Account Info Response
+
+
+== Account ==
+autonumber
+Wallet -> HarborApi: Whitelist Addresses Request
+Wallet <-- HarborApi: Whitelist Addresses Response
+
+Wallet -> HarborApi: Remove Addresses Request
+Wallet <-- HarborApi: Remove Addresses Response
+
+Wallet -> HarborApi: Set Bank Account Request
+Wallet <-- HarborApi: Set Bank Account Response
+
+
+@enduml
