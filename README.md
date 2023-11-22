@@ -6,6 +6,7 @@ Requirements:
 
 - Have [brew](https://brew.sh/) installed
 - Have [yarn](https://yarnpkg.com/) installed (or use `brew install yarn`)
+- Have [npm](https://www.npmjs.com/) installed (or use `brew install npm`)
 
 Then install the following dependencies for code generation:
 ```shell
@@ -13,6 +14,7 @@ brew install bufbuild/buf/buf
 brew install protobuf
 ```
 
+TODO: do we need these instructions? Isn't it enough to install buf and then run yarn buf?
 Follow the instructions here to install the code generator for javascript:
 https://github.com/protocolbuffers/protobuf-javascript
 https://connect.build/docs/web/generating-code
