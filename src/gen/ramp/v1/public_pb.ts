@@ -3,14 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import type {
-  BinaryReadOptions,
-  FieldList,
-  JsonReadOptions,
-  JsonValue,
-  PartialMessage,
-  PlainMessage,
-} from "@bufbuild/protobuf";
+import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
 import { Message, proto3, protoInt64 } from "@bufbuild/protobuf";
 
 /**
@@ -172,33 +165,22 @@ export class PingRequest extends Message<PingRequest> {
 
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.PingRequest";
-  static readonly fields: FieldList = proto3.util.newFieldList(() => []);
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): PingRequest {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): PingRequest {
     return new PingRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): PingRequest {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): PingRequest {
     return new PingRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): PingRequest {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): PingRequest {
     return new PingRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a: PingRequest | PlainMessage<PingRequest> | undefined,
-    b: PingRequest | PlainMessage<PingRequest> | undefined,
-  ): boolean {
+  static equals(a: PingRequest | PlainMessage<PingRequest> | undefined, b: PingRequest | PlainMessage<PingRequest> | undefined): boolean {
     return proto3.util.equals(PingRequest, a, b);
   }
 }
@@ -223,31 +205,19 @@ export class PingResponse extends Message<PingResponse> {
     { no: 10, name: "message", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): PingResponse {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): PingResponse {
     return new PingResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): PingResponse {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): PingResponse {
     return new PingResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): PingResponse {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): PingResponse {
     return new PingResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a: PingResponse | PlainMessage<PingResponse> | undefined,
-    b: PingResponse | PlainMessage<PingResponse> | undefined,
-  ): boolean {
+  static equals(a: PingResponse | PlainMessage<PingResponse> | undefined, b: PingResponse | PlainMessage<PingResponse> | undefined): boolean {
     return proto3.util.equals(PingResponse, a, b);
   }
 }
@@ -263,33 +233,22 @@ export class GetAccountInfoRequest extends Message<GetAccountInfoRequest> {
 
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoRequest";
-  static readonly fields: FieldList = proto3.util.newFieldList(() => []);
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoRequest {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoRequest {
     return new GetAccountInfoRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoRequest {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoRequest {
     return new GetAccountInfoRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoRequest {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoRequest {
     return new GetAccountInfoRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a: GetAccountInfoRequest | PlainMessage<GetAccountInfoRequest> | undefined,
-    b: GetAccountInfoRequest | PlainMessage<GetAccountInfoRequest> | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoRequest | PlainMessage<GetAccountInfoRequest> | undefined, b: GetAccountInfoRequest | PlainMessage<GetAccountInfoRequest> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoRequest, a, b);
   }
 }
@@ -301,26 +260,23 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
   /**
    * @generated from oneof ramp.v1.GetAccountInfoResponse.result
    */
-  result:
-    | {
-        /**
-         * when result is authentication user needs to be onboarded or logged in
-         *
-         * @generated from field: ramp.v1.GetAccountInfoResponse.Authentication authentication = 20;
-         */
-        value: GetAccountInfoResponse_Authentication;
-        case: "authentication";
-      }
-    | {
-        /**
-         * when result is account user is logged
-         *
-         * @generated from field: ramp.v1.GetAccountInfoResponse.Account account = 30;
-         */
-        value: GetAccountInfoResponse_Account;
-        case: "account";
-      }
-    | { case: undefined; value?: undefined } = { case: undefined };
+  result: {
+    /**
+     * when result is authentication user needs to be onboarded or logged in
+     *
+     * @generated from field: ramp.v1.GetAccountInfoResponse.Authentication authentication = 20;
+     */
+    value: GetAccountInfoResponse_Authentication;
+    case: "authentication";
+  } | {
+    /**
+     * when result is account user is logged
+     *
+     * @generated from field: ramp.v1.GetAccountInfoResponse.Account account = 30;
+     */
+    value: GetAccountInfoResponse_Account;
+    case: "account";
+  } | { case: undefined; value?: undefined } = { case: undefined };
 
   constructor(data?: PartialMessage<GetAccountInfoResponse>) {
     super();
@@ -330,53 +286,23 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 20,
-      name: "authentication",
-      kind: "message",
-      T: GetAccountInfoResponse_Authentication,
-      oneof: "result",
-    },
-    {
-      no: 30,
-      name: "account",
-      kind: "message",
-      T: GetAccountInfoResponse_Account,
-      oneof: "result",
-    },
+    { no: 20, name: "authentication", kind: "message", T: GetAccountInfoResponse_Authentication, oneof: "result" },
+    { no: 30, name: "account", kind: "message", T: GetAccountInfoResponse_Account, oneof: "result" },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse {
     return new GetAccountInfoResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse {
     return new GetAccountInfoResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse {
     return new GetAccountInfoResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse
-      | PlainMessage<GetAccountInfoResponse>
-      | undefined,
-    b:
-      | GetAccountInfoResponse
-      | PlainMessage<GetAccountInfoResponse>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse | PlainMessage<GetAccountInfoResponse> | undefined, b: GetAccountInfoResponse | PlainMessage<GetAccountInfoResponse> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse, a, b);
   }
 }
@@ -408,60 +334,23 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.Authentication";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "authentication_url",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 20,
-      name: "expires_in_sec",
-      kind: "scalar",
-      T: 3 /* ScalarType.INT64 */,
-    },
+    { no: 10, name: "authentication_url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "expires_in_sec", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_Authentication {
-    return new GetAccountInfoResponse_Authentication().fromBinary(
-      bytes,
-      options,
-    );
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Authentication {
+    return new GetAccountInfoResponse_Authentication().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Authentication {
-    return new GetAccountInfoResponse_Authentication().fromJson(
-      jsonValue,
-      options,
-    );
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Authentication {
+    return new GetAccountInfoResponse_Authentication().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Authentication {
-    return new GetAccountInfoResponse_Authentication().fromJsonString(
-      jsonString,
-      options,
-    );
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Authentication {
+    return new GetAccountInfoResponse_Authentication().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse_Authentication
-      | PlainMessage<GetAccountInfoResponse_Authentication>
-      | undefined,
-    b:
-      | GetAccountInfoResponse_Authentication
-      | PlainMessage<GetAccountInfoResponse_Authentication>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse_Authentication | PlainMessage<GetAccountInfoResponse_Authentication> | undefined, b: GetAccountInfoResponse_Authentication | PlainMessage<GetAccountInfoResponse_Authentication> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_Authentication, a, b);
   }
 }
@@ -482,52 +371,46 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
    *
    * @generated from oneof ramp.v1.GetAccountInfoResponse.Account.onramp_bank_account
    */
-  onrampBankAccount:
-    | {
-        /**
-         * only for scheme SCAN (UK payments)
-         *
-         * @generated from field: ramp.v1.ScanCoordinates onramp_scan = 100;
-         */
-        value: ScanCoordinates;
-        case: "onrampScan";
-      }
-    | {
-        /**
-         * for both SEPA and SWIFT schemes
-         *
-         * @generated from field: ramp.v1.IbanCoordinates onramp_iban = 110;
-         */
-        value: IbanCoordinates;
-        case: "onrampIban";
-      }
-    | { case: undefined; value?: undefined } = { case: undefined };
+  onrampBankAccount: {
+    /**
+     * only for scheme SCAN (UK payments)
+     *
+     * @generated from field: ramp.v1.ScanCoordinates onramp_scan = 100;
+     */
+    value: ScanCoordinates;
+    case: "onrampScan";
+  } | {
+    /**
+     * for both SEPA and SWIFT schemes
+     *
+     * @generated from field: ramp.v1.IbanCoordinates onramp_iban = 110;
+     */
+    value: IbanCoordinates;
+    case: "onrampIban";
+  } | { case: undefined; value?: undefined } = { case: undefined };
 
   /**
    * A bank account set by the user for off-ramping, see rpc SetBankAccount
    *
    * @generated from oneof ramp.v1.GetAccountInfoResponse.Account.offramp_bank_account
    */
-  offrampBankAccount:
-    | {
-        /**
-         * only for scheme SCAN (UK payments)
-         *
-         * @generated from field: ramp.v1.ScanCoordinates offramp_scan = 200;
-         */
-        value: ScanCoordinates;
-        case: "offrampScan";
-      }
-    | {
-        /**
-         * for both SEPA and SWIFT schemes
-         *
-         * @generated from field: ramp.v1.IbanCoordinates offramp_iban = 210;
-         */
-        value: IbanCoordinates;
-        case: "offrampIban";
-      }
-    | { case: undefined; value?: undefined } = { case: undefined };
+  offrampBankAccount: {
+    /**
+     * only for scheme SCAN (UK payments)
+     *
+     * @generated from field: ramp.v1.ScanCoordinates offramp_scan = 200;
+     */
+    value: ScanCoordinates;
+    case: "offrampScan";
+  } | {
+    /**
+     * for both SEPA and SWIFT schemes
+     *
+     * @generated from field: ramp.v1.IbanCoordinates offramp_iban = 210;
+     */
+    value: IbanCoordinates;
+    case: "offrampIban";
+  } | { case: undefined; value?: undefined } = { case: undefined };
 
   /**
    * account holder name for on and off-ramping
@@ -551,90 +434,28 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.Account";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "wallets",
-      kind: "message",
-      T: GetAccountInfoResponse_Wallet,
-      repeated: true,
-    },
-    {
-      no: 100,
-      name: "onramp_scan",
-      kind: "message",
-      T: ScanCoordinates,
-      oneof: "onramp_bank_account",
-    },
-    {
-      no: 110,
-      name: "onramp_iban",
-      kind: "message",
-      T: IbanCoordinates,
-      oneof: "onramp_bank_account",
-    },
-    {
-      no: 200,
-      name: "offramp_scan",
-      kind: "message",
-      T: ScanCoordinates,
-      oneof: "offramp_bank_account",
-    },
-    {
-      no: 210,
-      name: "offramp_iban",
-      kind: "message",
-      T: IbanCoordinates,
-      oneof: "offramp_bank_account",
-    },
-    {
-      no: 20,
-      name: "account_holder",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 30,
-      name: "crypto_assets",
-      kind: "message",
-      T: GetAccountInfoResponse_CryptoAsset,
-      repeated: true,
-    },
+    { no: 10, name: "wallets", kind: "message", T: GetAccountInfoResponse_Wallet, repeated: true },
+    { no: 100, name: "onramp_scan", kind: "message", T: ScanCoordinates, oneof: "onramp_bank_account" },
+    { no: 110, name: "onramp_iban", kind: "message", T: IbanCoordinates, oneof: "onramp_bank_account" },
+    { no: 200, name: "offramp_scan", kind: "message", T: ScanCoordinates, oneof: "offramp_bank_account" },
+    { no: 210, name: "offramp_iban", kind: "message", T: IbanCoordinates, oneof: "offramp_bank_account" },
+    { no: 20, name: "account_holder", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "crypto_assets", kind: "message", T: GetAccountInfoResponse_CryptoAsset, repeated: true },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_Account {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Account {
     return new GetAccountInfoResponse_Account().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Account {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Account {
     return new GetAccountInfoResponse_Account().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Account {
-    return new GetAccountInfoResponse_Account().fromJsonString(
-      jsonString,
-      options,
-    );
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Account {
+    return new GetAccountInfoResponse_Account().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse_Account
-      | PlainMessage<GetAccountInfoResponse_Account>
-      | undefined,
-    b:
-      | GetAccountInfoResponse_Account
-      | PlainMessage<GetAccountInfoResponse_Account>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse_Account | PlainMessage<GetAccountInfoResponse_Account> | undefined, b: GetAccountInfoResponse_Account | PlainMessage<GetAccountInfoResponse_Account> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_Account, a, b);
   }
 }
@@ -678,51 +499,22 @@ export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoRe
     { no: 5, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 10, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
     { no: 20, name: "asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
-    {
-      no: 30,
-      name: "short_name",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
+    { no: 30, name: "short_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_CryptoAsset {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_CryptoAsset {
     return new GetAccountInfoResponse_CryptoAsset().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_CryptoAsset {
-    return new GetAccountInfoResponse_CryptoAsset().fromJson(
-      jsonValue,
-      options,
-    );
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_CryptoAsset {
+    return new GetAccountInfoResponse_CryptoAsset().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_CryptoAsset {
-    return new GetAccountInfoResponse_CryptoAsset().fromJsonString(
-      jsonString,
-      options,
-    );
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_CryptoAsset {
+    return new GetAccountInfoResponse_CryptoAsset().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse_CryptoAsset
-      | PlainMessage<GetAccountInfoResponse_CryptoAsset>
-      | undefined,
-    b:
-      | GetAccountInfoResponse_CryptoAsset
-      | PlainMessage<GetAccountInfoResponse_CryptoAsset>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse_CryptoAsset | PlainMessage<GetAccountInfoResponse_CryptoAsset> | undefined, b: GetAccountInfoResponse_CryptoAsset | PlainMessage<GetAccountInfoResponse_CryptoAsset> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_CryptoAsset, a, b);
   }
 }
@@ -768,49 +560,22 @@ export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoRespons
     { no: 5, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 10, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 20, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    {
-      no: 30,
-      name: "assets",
-      kind: "message",
-      T: GetAccountInfoResponse_Wallet_RampAsset,
-      repeated: true,
-    },
+    { no: 30, name: "assets", kind: "message", T: GetAccountInfoResponse_Wallet_RampAsset, repeated: true },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_Wallet {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Wallet {
     return new GetAccountInfoResponse_Wallet().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet {
     return new GetAccountInfoResponse_Wallet().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet {
-    return new GetAccountInfoResponse_Wallet().fromJsonString(
-      jsonString,
-      options,
-    );
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet {
+    return new GetAccountInfoResponse_Wallet().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse_Wallet
-      | PlainMessage<GetAccountInfoResponse_Wallet>
-      | undefined,
-    b:
-      | GetAccountInfoResponse_Wallet
-      | PlainMessage<GetAccountInfoResponse_Wallet>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse_Wallet | PlainMessage<GetAccountInfoResponse_Wallet> | undefined, b: GetAccountInfoResponse_Wallet | PlainMessage<GetAccountInfoResponse_Wallet> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_Wallet, a, b);
   }
 }
@@ -842,66 +607,24 @@ export class GetAccountInfoResponse_Wallet_RampAsset extends Message<GetAccountI
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet.RampAsset";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "asset",
-      kind: "message",
-      T: GetAccountInfoResponse_CryptoAsset,
-    },
-    {
-      no: 20,
-      name: "on_ramp",
-      kind: "message",
-      T: GetAccountInfoResponse_Wallet_OnRamp,
-    },
-    {
-      no: 30,
-      name: "off_ramp",
-      kind: "message",
-      T: GetAccountInfoResponse_Wallet_OffRamp,
-    },
+    { no: 10, name: "asset", kind: "message", T: GetAccountInfoResponse_CryptoAsset },
+    { no: 20, name: "on_ramp", kind: "message", T: GetAccountInfoResponse_Wallet_OnRamp },
+    { no: 30, name: "off_ramp", kind: "message", T: GetAccountInfoResponse_Wallet_OffRamp },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_Wallet_RampAsset {
-    return new GetAccountInfoResponse_Wallet_RampAsset().fromBinary(
-      bytes,
-      options,
-    );
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Wallet_RampAsset {
+    return new GetAccountInfoResponse_Wallet_RampAsset().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet_RampAsset {
-    return new GetAccountInfoResponse_Wallet_RampAsset().fromJson(
-      jsonValue,
-      options,
-    );
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet_RampAsset {
+    return new GetAccountInfoResponse_Wallet_RampAsset().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet_RampAsset {
-    return new GetAccountInfoResponse_Wallet_RampAsset().fromJsonString(
-      jsonString,
-      options,
-    );
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet_RampAsset {
+    return new GetAccountInfoResponse_Wallet_RampAsset().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse_Wallet_RampAsset
-      | PlainMessage<GetAccountInfoResponse_Wallet_RampAsset>
-      | undefined,
-    b:
-      | GetAccountInfoResponse_Wallet_RampAsset
-      | PlainMessage<GetAccountInfoResponse_Wallet_RampAsset>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse_Wallet_RampAsset | PlainMessage<GetAccountInfoResponse_Wallet_RampAsset> | undefined, b: GetAccountInfoResponse_Wallet_RampAsset | PlainMessage<GetAccountInfoResponse_Wallet_RampAsset> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_Wallet_RampAsset, a, b);
   }
 }
@@ -947,72 +670,25 @@ export class GetAccountInfoResponse_Wallet_OnRamp extends Message<GetAccountInfo
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet.OnRamp";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "payment_reference",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 30,
-      name: "estimated_rate",
-      kind: "scalar",
-      T: 2 /* ScalarType.FLOAT */,
-    },
-    {
-      no: 40,
-      name: "estimated_network_fee",
-      kind: "message",
-      T: GetAccountInfoResponse_Wallet_Fee,
-    },
-    {
-      no: 50,
-      name: "processing_fee",
-      kind: "message",
-      T: GetAccountInfoResponse_Wallet_Fee,
-    },
+    { no: 10, name: "payment_reference", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "estimated_rate", kind: "scalar", T: 2 /* ScalarType.FLOAT */ },
+    { no: 40, name: "estimated_network_fee", kind: "message", T: GetAccountInfoResponse_Wallet_Fee },
+    { no: 50, name: "processing_fee", kind: "message", T: GetAccountInfoResponse_Wallet_Fee },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_Wallet_OnRamp {
-    return new GetAccountInfoResponse_Wallet_OnRamp().fromBinary(
-      bytes,
-      options,
-    );
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Wallet_OnRamp {
+    return new GetAccountInfoResponse_Wallet_OnRamp().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet_OnRamp {
-    return new GetAccountInfoResponse_Wallet_OnRamp().fromJson(
-      jsonValue,
-      options,
-    );
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet_OnRamp {
+    return new GetAccountInfoResponse_Wallet_OnRamp().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet_OnRamp {
-    return new GetAccountInfoResponse_Wallet_OnRamp().fromJsonString(
-      jsonString,
-      options,
-    );
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet_OnRamp {
+    return new GetAccountInfoResponse_Wallet_OnRamp().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse_Wallet_OnRamp
-      | PlainMessage<GetAccountInfoResponse_Wallet_OnRamp>
-      | undefined,
-    b:
-      | GetAccountInfoResponse_Wallet_OnRamp
-      | PlainMessage<GetAccountInfoResponse_Wallet_OnRamp>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse_Wallet_OnRamp | PlainMessage<GetAccountInfoResponse_Wallet_OnRamp> | undefined, b: GetAccountInfoResponse_Wallet_OnRamp | PlainMessage<GetAccountInfoResponse_Wallet_OnRamp> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_Wallet_OnRamp, a, b);
   }
 }
@@ -1051,60 +727,23 @@ export class GetAccountInfoResponse_Wallet_OffRamp extends Message<GetAccountInf
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet.OffRamp";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 10, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    {
-      no: 30,
-      name: "estimated_rate",
-      kind: "scalar",
-      T: 2 /* ScalarType.FLOAT */,
-    },
-    {
-      no: 50,
-      name: "processing_fee",
-      kind: "message",
-      T: GetAccountInfoResponse_Wallet_Fee,
-    },
+    { no: 30, name: "estimated_rate", kind: "scalar", T: 2 /* ScalarType.FLOAT */ },
+    { no: 50, name: "processing_fee", kind: "message", T: GetAccountInfoResponse_Wallet_Fee },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_Wallet_OffRamp {
-    return new GetAccountInfoResponse_Wallet_OffRamp().fromBinary(
-      bytes,
-      options,
-    );
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Wallet_OffRamp {
+    return new GetAccountInfoResponse_Wallet_OffRamp().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet_OffRamp {
-    return new GetAccountInfoResponse_Wallet_OffRamp().fromJson(
-      jsonValue,
-      options,
-    );
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet_OffRamp {
+    return new GetAccountInfoResponse_Wallet_OffRamp().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet_OffRamp {
-    return new GetAccountInfoResponse_Wallet_OffRamp().fromJsonString(
-      jsonString,
-      options,
-    );
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet_OffRamp {
+    return new GetAccountInfoResponse_Wallet_OffRamp().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse_Wallet_OffRamp
-      | PlainMessage<GetAccountInfoResponse_Wallet_OffRamp>
-      | undefined,
-    b:
-      | GetAccountInfoResponse_Wallet_OffRamp
-      | PlainMessage<GetAccountInfoResponse_Wallet_OffRamp>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse_Wallet_OffRamp | PlainMessage<GetAccountInfoResponse_Wallet_OffRamp> | undefined, b: GetAccountInfoResponse_Wallet_OffRamp | PlainMessage<GetAccountInfoResponse_Wallet_OffRamp> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_Wallet_OffRamp, a, b);
   }
 }
@@ -1139,40 +778,19 @@ export class GetAccountInfoResponse_Wallet_Fee extends Message<GetAccountInfoRes
     { no: 20, name: "percent", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_Wallet_Fee {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Wallet_Fee {
     return new GetAccountInfoResponse_Wallet_Fee().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet_Fee {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet_Fee {
     return new GetAccountInfoResponse_Wallet_Fee().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Wallet_Fee {
-    return new GetAccountInfoResponse_Wallet_Fee().fromJsonString(
-      jsonString,
-      options,
-    );
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Wallet_Fee {
+    return new GetAccountInfoResponse_Wallet_Fee().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | GetAccountInfoResponse_Wallet_Fee
-      | PlainMessage<GetAccountInfoResponse_Wallet_Fee>
-      | undefined,
-    b:
-      | GetAccountInfoResponse_Wallet_Fee
-      | PlainMessage<GetAccountInfoResponse_Wallet_Fee>
-      | undefined,
-  ): boolean {
+  static equals(a: GetAccountInfoResponse_Wallet_Fee | PlainMessage<GetAccountInfoResponse_Wallet_Fee> | undefined, b: GetAccountInfoResponse_Wallet_Fee | PlainMessage<GetAccountInfoResponse_Wallet_Fee> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_Wallet_Fee, a, b);
   }
 }
@@ -1234,51 +852,23 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
     { no: 10, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 20, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 30, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    {
-      no: 35,
-      name: "public_key",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 40,
-      name: "address_signature",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
+    { no: 35, name: "public_key", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 40, name: "address_signature", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): WhitelistAddressRequest {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): WhitelistAddressRequest {
     return new WhitelistAddressRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): WhitelistAddressRequest {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): WhitelistAddressRequest {
     return new WhitelistAddressRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): WhitelistAddressRequest {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): WhitelistAddressRequest {
     return new WhitelistAddressRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | WhitelistAddressRequest
-      | PlainMessage<WhitelistAddressRequest>
-      | undefined,
-    b:
-      | WhitelistAddressRequest
-      | PlainMessage<WhitelistAddressRequest>
-      | undefined,
-  ): boolean {
+  static equals(a: WhitelistAddressRequest | PlainMessage<WhitelistAddressRequest> | undefined, b: WhitelistAddressRequest | PlainMessage<WhitelistAddressRequest> | undefined): boolean {
     return proto3.util.equals(WhitelistAddressRequest, a, b);
   }
 }
@@ -1294,39 +884,22 @@ export class WhitelistAddressResponse extends Message<WhitelistAddressResponse> 
 
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.WhitelistAddressResponse";
-  static readonly fields: FieldList = proto3.util.newFieldList(() => []);
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): WhitelistAddressResponse {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): WhitelistAddressResponse {
     return new WhitelistAddressResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): WhitelistAddressResponse {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): WhitelistAddressResponse {
     return new WhitelistAddressResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): WhitelistAddressResponse {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): WhitelistAddressResponse {
     return new WhitelistAddressResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | WhitelistAddressResponse
-      | PlainMessage<WhitelistAddressResponse>
-      | undefined,
-    b:
-      | WhitelistAddressResponse
-      | PlainMessage<WhitelistAddressResponse>
-      | undefined,
-  ): boolean {
+  static equals(a: WhitelistAddressResponse | PlainMessage<WhitelistAddressResponse> | undefined, b: WhitelistAddressResponse | PlainMessage<WhitelistAddressResponse> | undefined): boolean {
     return proto3.util.equals(WhitelistAddressResponse, a, b);
   }
 }
@@ -1355,40 +928,23 @@ export class RemoveAddressRequest extends Message<RemoveAddressRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.RemoveAddressRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 20,
-      name: "ecosystem",
-      kind: "enum",
-      T: proto3.getEnumType(Ecosystem),
-    },
+    { no: 20, name: "ecosystem", kind: "enum", T: proto3.getEnumType(Ecosystem) },
     { no: 30, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): RemoveAddressRequest {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RemoveAddressRequest {
     return new RemoveAddressRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): RemoveAddressRequest {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RemoveAddressRequest {
     return new RemoveAddressRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): RemoveAddressRequest {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RemoveAddressRequest {
     return new RemoveAddressRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a: RemoveAddressRequest | PlainMessage<RemoveAddressRequest> | undefined,
-    b: RemoveAddressRequest | PlainMessage<RemoveAddressRequest> | undefined,
-  ): boolean {
+  static equals(a: RemoveAddressRequest | PlainMessage<RemoveAddressRequest> | undefined, b: RemoveAddressRequest | PlainMessage<RemoveAddressRequest> | undefined): boolean {
     return proto3.util.equals(RemoveAddressRequest, a, b);
   }
 }
@@ -1404,33 +960,22 @@ export class RemoveAddressResponse extends Message<RemoveAddressResponse> {
 
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.RemoveAddressResponse";
-  static readonly fields: FieldList = proto3.util.newFieldList(() => []);
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): RemoveAddressResponse {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RemoveAddressResponse {
     return new RemoveAddressResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): RemoveAddressResponse {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RemoveAddressResponse {
     return new RemoveAddressResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): RemoveAddressResponse {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RemoveAddressResponse {
     return new RemoveAddressResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a: RemoveAddressResponse | PlainMessage<RemoveAddressResponse> | undefined,
-    b: RemoveAddressResponse | PlainMessage<RemoveAddressResponse> | undefined,
-  ): boolean {
+  static equals(a: RemoveAddressResponse | PlainMessage<RemoveAddressResponse> | undefined, b: RemoveAddressResponse | PlainMessage<RemoveAddressResponse> | undefined): boolean {
     return proto3.util.equals(RemoveAddressResponse, a, b);
   }
 }
@@ -1444,26 +989,23 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
    *
    * @generated from oneof ramp.v1.SetBankAccountRequest.bank_account
    */
-  bankAccount:
-    | {
-        /**
-         * only for scheme SCAN
-         *
-         * @generated from field: ramp.v1.ScanCoordinates scan = 10;
-         */
-        value: ScanCoordinates;
-        case: "scan";
-      }
-    | {
-        /**
-         * for both SEPA and SWIFT schemes
-         *
-         * @generated from field: ramp.v1.IbanCoordinates iban = 20;
-         */
-        value: IbanCoordinates;
-        case: "iban";
-      }
-    | { case: undefined; value?: undefined } = { case: undefined };
+  bankAccount: {
+    /**
+     * only for scheme SCAN
+     *
+     * @generated from field: ramp.v1.ScanCoordinates scan = 10;
+     */
+    value: ScanCoordinates;
+    case: "scan";
+  } | {
+    /**
+     * for both SEPA and SWIFT schemes
+     *
+     * @generated from field: ramp.v1.IbanCoordinates iban = 20;
+     */
+    value: IbanCoordinates;
+    case: "iban";
+  } | { case: undefined; value?: undefined } = { case: undefined };
 
   constructor(data?: PartialMessage<SetBankAccountRequest>) {
     super();
@@ -1473,47 +1015,23 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.SetBankAccountRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "scan",
-      kind: "message",
-      T: ScanCoordinates,
-      oneof: "bank_account",
-    },
-    {
-      no: 20,
-      name: "iban",
-      kind: "message",
-      T: IbanCoordinates,
-      oneof: "bank_account",
-    },
+    { no: 10, name: "scan", kind: "message", T: ScanCoordinates, oneof: "bank_account" },
+    { no: 20, name: "iban", kind: "message", T: IbanCoordinates, oneof: "bank_account" },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): SetBankAccountRequest {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SetBankAccountRequest {
     return new SetBankAccountRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): SetBankAccountRequest {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SetBankAccountRequest {
     return new SetBankAccountRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): SetBankAccountRequest {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SetBankAccountRequest {
     return new SetBankAccountRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a: SetBankAccountRequest | PlainMessage<SetBankAccountRequest> | undefined,
-    b: SetBankAccountRequest | PlainMessage<SetBankAccountRequest> | undefined,
-  ): boolean {
+  static equals(a: SetBankAccountRequest | PlainMessage<SetBankAccountRequest> | undefined, b: SetBankAccountRequest | PlainMessage<SetBankAccountRequest> | undefined): boolean {
     return proto3.util.equals(SetBankAccountRequest, a, b);
   }
 }
@@ -1538,46 +1056,22 @@ export class SetBankAccountResponse extends Message<SetBankAccountResponse> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.SetBankAccountResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "errors",
-      kind: "enum",
-      T: proto3.getEnumType(SetBankAccountResponse_Error),
-      repeated: true,
-    },
+    { no: 10, name: "errors", kind: "enum", T: proto3.getEnumType(SetBankAccountResponse_Error), repeated: true },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): SetBankAccountResponse {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SetBankAccountResponse {
     return new SetBankAccountResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): SetBankAccountResponse {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SetBankAccountResponse {
     return new SetBankAccountResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): SetBankAccountResponse {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SetBankAccountResponse {
     return new SetBankAccountResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | SetBankAccountResponse
-      | PlainMessage<SetBankAccountResponse>
-      | undefined,
-    b:
-      | SetBankAccountResponse
-      | PlainMessage<SetBankAccountResponse>
-      | undefined,
-  ): boolean {
+  static equals(a: SetBankAccountResponse | PlainMessage<SetBankAccountResponse> | undefined, b: SetBankAccountResponse | PlainMessage<SetBankAccountResponse> | undefined): boolean {
     return proto3.util.equals(SetBankAccountResponse, a, b);
   }
 }
@@ -1613,15 +1107,11 @@ export enum SetBankAccountResponse_Error {
   BANK_NUMBER_INVALID = 2,
 }
 // Retrieve enum metadata with: proto3.getEnumType(SetBankAccountResponse_Error)
-proto3.util.setEnumType(
-  SetBankAccountResponse_Error,
-  "ramp.v1.SetBankAccountResponse.Error",
-  [
-    { no: 0, name: "ERROR_UNSPECIFIED" },
-    { no: 1, name: "ERROR_BANK_CODE_INVALID" },
-    { no: 2, name: "ERROR_BANK_NUMBER_INVALID" },
-  ],
-);
+proto3.util.setEnumType(SetBankAccountResponse_Error, "ramp.v1.SetBankAccountResponse.Error", [
+  { no: 0, name: "ERROR_UNSPECIFIED" },
+  { no: 1, name: "ERROR_BANK_CODE_INVALID" },
+  { no: 2, name: "ERROR_BANK_NUMBER_INVALID" },
+]);
 
 /**
  * @generated from message ramp.v1.EstimateOnRampFeeRequest
@@ -1640,17 +1130,15 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
   /**
    * @generated from oneof ramp.v1.EstimateOnRampFeeRequest.amount
    */
-  amount:
-    | {
-        /**
-         * string crypto_asset_amount = 30; // TODO:
-         *
-         * @generated from field: string fiat_asset_amount = 20;
-         */
-        value: string;
-        case: "fiatAssetAmount";
-      }
-    | { case: undefined; value?: undefined } = { case: undefined };
+  amount: {
+    /**
+     * string crypto_asset_amount = 30; // TODO:
+     *
+     * @generated from field: string fiat_asset_amount = 20;
+     */
+    value: string;
+    case: "fiatAssetAmount";
+  } | { case: undefined; value?: undefined } = { case: undefined };
 
   constructor(data?: PartialMessage<EstimateOnRampFeeRequest>) {
     super();
@@ -1660,53 +1148,24 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.EstimateOnRampFeeRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "crypto_asset_id",
-      kind: "enum",
-      T: proto3.getEnumType(AssetId),
-    },
+    { no: 10, name: "crypto_asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
     { no: 15, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
-    {
-      no: 20,
-      name: "fiat_asset_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-      oneof: "amount",
-    },
+    { no: 20, name: "fiat_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "amount" },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): EstimateOnRampFeeRequest {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): EstimateOnRampFeeRequest {
     return new EstimateOnRampFeeRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): EstimateOnRampFeeRequest {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): EstimateOnRampFeeRequest {
     return new EstimateOnRampFeeRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): EstimateOnRampFeeRequest {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): EstimateOnRampFeeRequest {
     return new EstimateOnRampFeeRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | EstimateOnRampFeeRequest
-      | PlainMessage<EstimateOnRampFeeRequest>
-      | undefined,
-    b:
-      | EstimateOnRampFeeRequest
-      | PlainMessage<EstimateOnRampFeeRequest>
-      | undefined,
-  ): boolean {
+  static equals(a: EstimateOnRampFeeRequest | PlainMessage<EstimateOnRampFeeRequest> | undefined, b: EstimateOnRampFeeRequest | PlainMessage<EstimateOnRampFeeRequest> | undefined): boolean {
     return proto3.util.equals(EstimateOnRampFeeRequest, a, b);
   }
 }
@@ -1756,69 +1215,26 @@ export class EstimateOnRampFeeResponse extends Message<EstimateOnRampFeeResponse
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.EstimateOnRampFeeResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 20,
-      name: "fiat_asset_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 30,
-      name: "crypto_asset_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 40,
-      name: "exchange_rate",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 50,
-      name: "network_fee_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 60,
-      name: "processing_fee_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
+    { no: 20, name: "fiat_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "crypto_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 40, name: "exchange_rate", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 50, name: "network_fee_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 60, name: "processing_fee_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): EstimateOnRampFeeResponse {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): EstimateOnRampFeeResponse {
     return new EstimateOnRampFeeResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): EstimateOnRampFeeResponse {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): EstimateOnRampFeeResponse {
     return new EstimateOnRampFeeResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): EstimateOnRampFeeResponse {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): EstimateOnRampFeeResponse {
     return new EstimateOnRampFeeResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | EstimateOnRampFeeResponse
-      | PlainMessage<EstimateOnRampFeeResponse>
-      | undefined,
-    b:
-      | EstimateOnRampFeeResponse
-      | PlainMessage<EstimateOnRampFeeResponse>
-      | undefined,
-  ): boolean {
+  static equals(a: EstimateOnRampFeeResponse | PlainMessage<EstimateOnRampFeeResponse> | undefined, b: EstimateOnRampFeeResponse | PlainMessage<EstimateOnRampFeeResponse> | undefined): boolean {
     return proto3.util.equals(EstimateOnRampFeeResponse, a, b);
   }
 }
@@ -1840,17 +1256,15 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
   /**
    * @generated from oneof ramp.v1.EstimateOffRampFeeRequest.amount
    */
-  amount:
-    | {
-        /**
-         * string fiat_asset_amount = 30; // TODO:
-         *
-         * @generated from field: string crypto_asset_amount = 20;
-         */
-        value: string;
-        case: "cryptoAssetAmount";
-      }
-    | { case: undefined; value?: undefined } = { case: undefined };
+  amount: {
+    /**
+     * string fiat_asset_amount = 30; // TODO:
+     *
+     * @generated from field: string crypto_asset_amount = 20;
+     */
+    value: string;
+    case: "cryptoAssetAmount";
+  } | { case: undefined; value?: undefined } = { case: undefined };
 
   constructor(data?: PartialMessage<EstimateOffRampFeeRequest>) {
     super();
@@ -1860,53 +1274,24 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.EstimateOffRampFeeRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "crypto_asset_id",
-      kind: "enum",
-      T: proto3.getEnumType(AssetId),
-    },
+    { no: 10, name: "crypto_asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
     { no: 15, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
-    {
-      no: 20,
-      name: "crypto_asset_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-      oneof: "amount",
-    },
+    { no: 20, name: "crypto_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "amount" },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): EstimateOffRampFeeRequest {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): EstimateOffRampFeeRequest {
     return new EstimateOffRampFeeRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): EstimateOffRampFeeRequest {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): EstimateOffRampFeeRequest {
     return new EstimateOffRampFeeRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): EstimateOffRampFeeRequest {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): EstimateOffRampFeeRequest {
     return new EstimateOffRampFeeRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | EstimateOffRampFeeRequest
-      | PlainMessage<EstimateOffRampFeeRequest>
-      | undefined,
-    b:
-      | EstimateOffRampFeeRequest
-      | PlainMessage<EstimateOffRampFeeRequest>
-      | undefined,
-  ): boolean {
+  static equals(a: EstimateOffRampFeeRequest | PlainMessage<EstimateOffRampFeeRequest> | undefined, b: EstimateOffRampFeeRequest | PlainMessage<EstimateOffRampFeeRequest> | undefined): boolean {
     return proto3.util.equals(EstimateOffRampFeeRequest, a, b);
   }
 }
@@ -1949,63 +1334,25 @@ export class EstimateOffRampFeeResponse extends Message<EstimateOffRampFeeRespon
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.EstimateOffRampFeeResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 20,
-      name: "fiat_asset_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 30,
-      name: "crypto_asset_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 40,
-      name: "exchange_rate",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
-    {
-      no: 60,
-      name: "processing_fee_amount",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
+    { no: 20, name: "fiat_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "crypto_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 40, name: "exchange_rate", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 60, name: "processing_fee_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): EstimateOffRampFeeResponse {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): EstimateOffRampFeeResponse {
     return new EstimateOffRampFeeResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): EstimateOffRampFeeResponse {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): EstimateOffRampFeeResponse {
     return new EstimateOffRampFeeResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): EstimateOffRampFeeResponse {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): EstimateOffRampFeeResponse {
     return new EstimateOffRampFeeResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a:
-      | EstimateOffRampFeeResponse
-      | PlainMessage<EstimateOffRampFeeResponse>
-      | undefined,
-    b:
-      | EstimateOffRampFeeResponse
-      | PlainMessage<EstimateOffRampFeeResponse>
-      | undefined,
-  ): boolean {
+  static equals(a: EstimateOffRampFeeResponse | PlainMessage<EstimateOffRampFeeResponse> | undefined, b: EstimateOffRampFeeResponse | PlainMessage<EstimateOffRampFeeResponse> | undefined): boolean {
     return proto3.util.equals(EstimateOffRampFeeResponse, a, b);
   }
 }
@@ -2036,40 +1383,23 @@ export class ScanCoordinates extends Message<ScanCoordinates> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.ScanCoordinates";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "account_number",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
+    { no: 10, name: "account_number", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 20, name: "sort_code", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): ScanCoordinates {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ScanCoordinates {
     return new ScanCoordinates().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): ScanCoordinates {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ScanCoordinates {
     return new ScanCoordinates().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): ScanCoordinates {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ScanCoordinates {
     return new ScanCoordinates().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a: ScanCoordinates | PlainMessage<ScanCoordinates> | undefined,
-    b: ScanCoordinates | PlainMessage<ScanCoordinates> | undefined,
-  ): boolean {
+  static equals(a: ScanCoordinates | PlainMessage<ScanCoordinates> | undefined, b: ScanCoordinates | PlainMessage<ScanCoordinates> | undefined): boolean {
     return proto3.util.equals(ScanCoordinates, a, b);
   }
 }
@@ -2096,31 +1426,20 @@ export class IbanCoordinates extends Message<IbanCoordinates> {
     { no: 10, name: "iban", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): IbanCoordinates {
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): IbanCoordinates {
     return new IbanCoordinates().fromBinary(bytes, options);
   }
 
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): IbanCoordinates {
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): IbanCoordinates {
     return new IbanCoordinates().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): IbanCoordinates {
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): IbanCoordinates {
     return new IbanCoordinates().fromJsonString(jsonString, options);
   }
 
-  static equals(
-    a: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined,
-    b: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined,
-  ): boolean {
+  static equals(a: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined, b: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined): boolean {
     return proto3.util.equals(IbanCoordinates, a, b);
   }
 }
+
