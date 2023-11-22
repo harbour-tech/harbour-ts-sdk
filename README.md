@@ -39,6 +39,9 @@ yarn buf:sync
 yarn buf
 ```
 
+The sync step copies over all the proto definitions from `https://github.com/harbour-tech/harbour-api`.
+Occasionally there might be updates to the API, so you can keep syncing them with this project via this command.
+
 TODO explain Connect and protobuf
 
 TODO squash commits to avoid exposing full proto publicly from first commit
