@@ -14,14 +14,11 @@ brew install bufbuild/buf/buf
 brew install protobuf
 ```
 
-TODO: do we need these instructions? Isn't it enough to install buf and then run yarn buf?
-Follow the instructions here to install the code generator for javascript:
-https://github.com/protocolbuffers/protobuf-javascript
-https://connect.build/docs/web/generating-code
-
 More info on:
 https://docs.buf.build/introduction
 https://connect.build/docs/introduction
+https://github.com/protocolbuffers/protobuf-javascript
+https://connect.build/docs/web/generating-code
 
 The base URLs are:
 - DEV: `https://dev-api.harborapps-nonprod.link`
