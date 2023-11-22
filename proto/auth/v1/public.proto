@@ -4,6 +4,7 @@ package auth.v1;
 import "auth/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 
+// Simple utility to verify that the API can be reached successfully.
 service PingService {
   rpc Ping (PingRequest) returns (PingResponse) {}
 }
@@ -14,130 +15,61 @@ message PingResponse {
   string message = 10;
 }
 
+// Note: this API was initially designed for a time when we only expected a single use case: a Harbour app installed
+// on a smart phone. So the main entity that is registered with the backend is a "device", which contains additional
+// information such as the app version. A new API is under way to support a broader spectrum of different apps,
+// potentially running on the same or different devices.
 service DeviceService {
   // When a device has no local data (fresh install) or outdated device id (data recovered from different device backup),
   // it has to generate a new keypair and register itself.
   // It is vital to store the private key securely on the device (eg: pin or biometrics protection to access).
   // After correct device registration, user should be presented with the SignIn/SignUp screen.
+  // A registered device is only linked to a user after a new user is created (sign up), or when signing back in.
   rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse) {}
+}
+
+service UserService {
+  // Initiate user sign in by providing a valid phone number associated with the given user.
+  rpc SignIn(SignInRequest) returns (SignInResponse) {}
+
+  // Confirm identity by entering the OTP sent to the user via SMS.
+  // On success, the device is linked to the user account and can perform all user operations.
+  rpc SignInConfirm(SignInConfirmRequest) returns (SignInConfirmResponse) {}
+
+  // There's no need to "log out" of the application, as the user is supposed to be always logged in, as long as they
+  // can authenticate with pin/biometrics to retrieve a valid access token.
+  // However, one might want to unlink the device from their account, in which case this RPC can be used.
+  // Note that this is an authenticated endpoint, thus requiring a valid access token in the request headers.
+  rpc SignOut(SignOutRequest) returns (SignOutResponse) {}
+
+  // TODO add sign up RPC
 }
 
 service AuthService {
   // Active devices can use this rpc to obtain access and refresh token.
   // The access token has a strict expiry (minutes), and should be refreshed before expiry.
-  // The refresh token has a longer expiry time (hours).
+  // The refresh token has a longer expiry time (fraction of an hour).
   // The app can keep store those somewhat securely, but pin/biometrics should not be required to fetch them,
   // as it would be terrible user experience to have to insert the PIN while using the app.
   // However, user inactivity must be detected in the app and these credentials deleted if so,
   // in order to force biometrics/pin use when the user comes back.
+  // The obtained token can be used for any authenticated RPCs, by adding an "Authorization" header to the request,
+  // in the format "Bearer xxx" (without quotes), where xxx is the access token.
   rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
 
   // Exchange the refresh token for a new access and refresh token.
   // Once exchanged, the previous refresh token gets invalidated and can not be re used.
   // Refresh tokens have a fixed lifespan and every new refresh token inherits this lifespan.
-  // This way if an attacker manages to steal a refresh token he wont be able to generate new
-  // tokens for ever as at some point will have to re authenticate.
+  // Eg: access token is 5 minutes, refresh token is 15 minutes.
+  // After 5 minutes the client refreshes: the new refresh token has 10 minutes expiry.
+  // After another 5 minutes, another refresh: the new refresh token has a 5 minute expiry.
+  // So essentially the session can be prolonged to almost 20 minutes worth of access tokens, more than enough to
+  // support a user navigating the app for an extended period of time.
+  // Upon inactivity, the app should delete the stored tokens and force the user to authenticate again via pin/biometrics.
+  // The refresh token is limited in time to mitigate potential attackers gaining prolonged access.
   rpc Refresh(RefreshRequest) returns (RefreshResponse) {}
 }
 
-service UserService {
-  //    -- -> signup
-  //    -- -> send device id, phone number, full name, signed
-  //    --      <- server determines if phone number is already associated with user, if so returns an error, else creates user, sends OTP SMS and returns details on how long before retrying and an onboarding ID
-  //    --          if user already associated, return an error code
-  //    --          if already active, return an error code
-  //    --          if device id not found, return an error code
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
-
-  //    -- Accepts the user OTP value and a token.
-  //    -- Token is the one returned by CreateUser RPC and contains user/device info and the OTP id
-  //    -- Creates the user account and connects it with the appropriate device.
-  rpc CreateUserConfirm(CreateUserConfirmRequest) returns (CreateUserConfirmResponse) {}
-
-  //    -- -> sign in
-  //    -- -> send device id, phone number, signed
-  //    --      <- server determines if phone number is associated with user, if so sends SMS via OTP and returns details on how long before retrying is allowed
-  //    --          if no associated user, return an error code
-  //--          if already active, return an error code
-  //--          if device id not found, return an error code
-  rpc SignIn(SignInRequest) returns (SignInResponse) {}
-
-  //     -- Accepts the user OTP value and a token.
-  //     -- Token is the one returned by SignIn RPC and contains ...
-  rpc SignInConfirm(SignInConfirmRequest) returns (SignInConfirmResponse) {}
-
-  //     -- Fetch user details
-  //     -- Endpoint should be used only by authenticated users
-  rpc GetUserDetails(GetUserDetailsRequest) returns (GetUserDetailsResponse) {}
-
-  //     -- Sign out
-  //     -- unlink the device from the user account
-  //     -- the client doesn't need to delete private key and re-register, just go back to the initial screen for either user sign in or sign up
-  rpc SignOut(SignOutRequest) returns (SignOutResponse) {}
-
-  // Change phone number requires a signature, obliging the user to go through pin/biometrics.
-  // Note: it also requires a valid access token, so the user must be signed in.
-  // An OTP is sent to the user, which will have to be used to confirm the change.
-  rpc ChangePhoneNumber(ChangePhoneNumberRequest) returns (ChangePhoneNumberResponse) {}
-
-  // Confirm phone number change
-  rpc ConfirmPhoneNumber(ConfirmPhoneNumberRequest) returns (ConfirmPhoneNumberResponse) {}
-}
-
-message ConfirmPhoneNumberRequest {
-  string otp = 10; // the otp received
-  string user_id = 20; // required
-  string token = 30; // the token from the ChangePhoneNumberResponse
-}
-
-message ConfirmPhoneNumberResponse {
-  oneof result {
-    Error error = 10;
-  }
-
-  enum Error {
-    ERROR_UNSPECIFIED = 0;
-    // the wrong OTP was inserted
-    ERROR_OTP_INVALID = 1;
-    // the OTP code has expired
-    ERROR_OTP_EXPIRED = 2;
-    // OTP code was already used
-    ERROR_OTP_ALREADY_USED = 3;
-    // the wrong token was supplied
-    ERROR_TOKEN_INVALID = 4;
-    // Only returned in the extremely unlikely case that some one else managed to change their phone number in between
-    // the ChangePhoneNumber and ConfirmPhoneNumber RPCs.
-    // Should be impossible as two distinct users shouldn't be able to use the same mobile number, but better be able
-    // to recognise this error and show the proper message to the user.
-    ERROR_PHONE_DUPLICATE = 5;
-  }
-}
-
-message ChangePhoneNumberRequest {
-  PhoneNumber phone_num = 10; // Required
-  string user_id = 20; // Required
-
-  // A JWT with a `vendor_device_id` claim and an expiry not further than 10 seconds from now
-  string signature = 40;
-}
-
-message ChangePhoneNumberResponse {
-  oneof result {
-    Error error = 10;
-    string token = 20; // use along OTP to confirm phone number change
-  }
-  enum Error {
-    ERROR_UNSPECIFIED = 0;
-    // Phone number is already taken by a different user
-    ERROR_PHONE_DUPLICATE = 1;
-    // Phone number is invalid
-    ERROR_PHONE_INVALID = 2;
-    // The new prefix is different from the old prefix, suggesting that the user is trying to change their phone number
-    // to one of a different country. This might or might not be allowed depending on our risk appetite. If it's not
-    // allowed, this error will be returned.
-    ERROR_COUNTRY_CHANGE_DISALLOWED = 3;
-  }
-}
 
 message GetUserDetailsRequest{}
 
@@ -152,11 +84,6 @@ message GetUserDetailsResponse{
   string date_of_birth = 80;
   Address address = 90;
 
-  // If true, this is a test user and informs the client that any banking endpoint (such as pay out and exchange)
-  // should use the dry-run flag, and cards should not allowed to be issued.
-  // Changing phone number will be allowed from UI, but will have no effect on our db.
-  bool is_test_user = 100;
-
   message Address{
     string address_line1 = 10;
     string address_line2 = 20;
@@ -164,91 +91,6 @@ message GetUserDetailsResponse{
     string state = 40;
     string post_code = 50;
     string country = 60;
-  }
-}
-
-message CreateUserConfirmRequest{
-  // The OTP that was sent to user.
-  string value = 10;
-
-  // Returned by CreateUser RPC. Contains user data and the OTP ID.
-  string token = 20;
-}
-
-message CreateUserConfirmResponse{
-  oneof result {
-    Error error = 10;
-  }
-  enum Error{
-    ERROR_UNSPECIFIED = 0;
-
-    // OTP value does not match with the OTP provided by the user.
-    ERROR_INVALID_OTP = 1;
-
-    // OTP Already used
-    ERROR_ALREADY_USED_OTP = 2;
-
-    // OTP is correct but expired
-    ERROR_EXPIRED_OTP = 3;
-
-    // Phone number is already taken. Might have completed registration from another device.
-    ERROR_PHONE_DUPLICATE = 4;
-  }
-}
-
-
-// Create a new user. Won't be active, nor linked to the device, until the phone number is confirmed.
-// A successful request will trigger an OTP being sent via SMS (or other channels, see phone_num.prefix).
-// Any Unicode character is supported, os names can be typed in any language keyboard.
-message CreateUserRequest {
-  // The device ID returned by the backend when registering, mandatory.
-  // Submitting a wrong device id will produce an invalid_argument error response
-  string device_id = 10;
-
-  // Mandatory, the vendor device ID used when registering
-  string vendor_device_id = 20;
-
-  // Required
-  PhoneNumber phone_num = 30;
-
-  // Required, max len 100, must match ^[\p{L}\p{M} \p{Pd}\p{Pi}\p{Pf}'`]*$
-  // (any Unicode letter, or combination of letter with accents, spaces, any hyphen or dash dashes, any kind of apostrophe or single quote)
-  string first_name = 40;
-
-  // Optional, max len 100, must match ^[\p{L}\p{M} \p{Pd}\p{Pi}\p{Pf}'`]*$
-  string middle_names = 50;
-
-  // Required, max len 100, must match ^[\p{L}\p{M} \p{Pd}\p{Pi}\p{Pf}'`]*$
-  string last_name = 60;
-
-  // A JWT with a `vendor_device_id` claim and an expiry not further than 10 seconds from now
-  string signature = 70;
-}
-
-message CreateUserResponse {
-  oneof result {
-    Error error = 10;
-    // A token to be used to confirm the user along with the OTP
-    string token = 20;
-  }
-  enum Error {
-    ERROR_UNSPECIFIED = 0;
-
-    // Phone number is already taken. The user should be told to go through sign-in instead of sign-up.
-    ERROR_PHONE_DUPLICATE = 10;
-
-    // Very rare edge case in which the app has correctly registered a device (with an old vendor_device_id),
-    // then unused until it's restored on a new phone with a new vendor_device_id.
-    // In this case, the device should register itself again.
-    ERROR_VENDOR_DEVICE_ID_NOT_RECOGNIZED = 20;
-
-    // The backend might validate the phone number depending on country.
-    // If this error is returned, the user should be informed that they inserted an invalid phone number.
-    ERROR_INVALID_PHONE_NUM = 30;
-
-    // This error is only ever returned if the whitelist has been enabled.
-    // It means the input phone number doesn't match a whitelist entry, thus the user is not allowed to sign up.
-    ERROR_NOT_ALLOWED = 40;
   }
 }
 
@@ -275,8 +117,8 @@ message SignInResponse {
   enum Error {
     ERROR_UNSPECIFIED = 0;
     ERROR_USER_NOT_FOUND = 1; // user associated with the device is not found
-    ERROR_DEVICE_NOT_FOUND = 2;
-    ERROR_INVALID_PHONE_NUMBER = 3;
+    ERROR_DEVICE_NOT_FOUND = 2; // wrong device_id, likely a client bug
+    ERROR_INVALID_PHONE_NUMBER = 3; // phone number is not valid
   }
 }
 
@@ -338,8 +180,6 @@ message AuthenticateResponse {
     AuthCredentials credentials = 11;
   }
   enum Error {
-    // Protobuf defaults to this if server adds new enum values that are unknown to the client,
-    // and should be treated as an error
     ERROR_UNSPECIFIED = 0;
 
     // Token is invalid, or does not contain the right claims, or is expired,
@@ -375,29 +215,41 @@ message RefreshResponse {
     AuthCredentials credentials = 11;
   }
   enum Error {
-    // Protobuf defaults to this if server adds new enum values that are unknown to the client,
-    // and should be treated as an error.
-    // App should bring user back to pin/biometrics screen and go through auth again and notify a bug.
     ERROR_UNSPECIFIED = 0;
 
     // The refresh token is valid but in the meantime the device has been unlinked from the user
     // and needs to register again.
     ERROR_INACTIVE = 2;
 
-    // Refresh cannot be used to generate new tokens (invalid, expired).
+    // Refresh cannot be used to generate new tokens as it's either invalid or expired.
     // App should bring user back to pin/biometrics screen and go through auth again.
     ERROR_INVALID_REFRESH_TOKEN = 4;
   }
 }
 
 message RegisterDeviceRequest {
-  string vendor_device_id = 10; // required
-  string vendor_id = 20; // required
+  // Required device id. Typically each smartphone vendor assigns some sort of unique id to each device,
+  // which can be retrieved via the OS API for any app running.
+  string vendor_device_id = 10;
+
+  // Required identifier for vendor. Can be retrieved by OS API and then mapped to values such as:
+  // Apple, Samsung, Google, etc.
+  string vendor_id = 20;
+
+  // Required identifier for OS (eg: iOS, Android, etc)
   string os = 30; // required
-  string os_version = 40; // required
-  string app_version = 50; // required
-  string name = 60; // required, device name (eg: Martin's iPhone)
-  string public_key = 70; // RSA 4096 public key base64 encoded, if correctly generated should be 736 chars
+
+  // Required OS version (eg: 17.1)
+  string os_version = 40;
+
+  // Required app version
+  string app_version = 50;
+
+  // Required device name (eg: Martin's iPhone)
+  string name = 60;
+
+  // RSA 4096 public key base64 encoded, if correctly generated should be 736 chars
+  string public_key = 70;
 
   // In order to verify that the public key and signing algorithm is correct,
   // generate a signature as following:

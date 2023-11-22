@@ -14,40 +14,14 @@ message PingResponse {
   string message = 10;
 }
 
-service UserService { // all endpoints require an authenticated user
-  rpc GetReadiness (UserReadinessRequest) returns (UserReadinessResponse) {}
-
-  // User have read and accepted the terms/risks of exchange trading.
-  // Happens upon first exchange, and it is a one-time event.
-  rpc SetExchangeReadiness (SetExchangeReadinessRequest) returns (SetExchangeReadinessResponse) {}
-
+// All RPCs in this service require an authenticated user
+service UserService {
   // Fetch user details
   rpc GetUserDetails(GetUserDetailsRequest) returns (GetUserDetailsResponse) {}
 }
 
 message UserReadinessRequest {
   string user_id = 10;
-}
-
-// We have no guarantee on which parts will be ready first, so it doesn't make any sense to have a linear progression.
-// There are three main components that need to be ready: crypto, banking, and a generic other.
-// In the future we might release new versions of this API that return more detailed steps.
-// Handlers for this API will keep showing any new steps in the "other_ready" boolean, to ensure backwards compatibility
-// with older apps which are unaware of any new steps.
-// The app could simply reason in terms of %, eg show a 33% progress when there's a single item true,
-// 66% when there's two and finally go through when all three are true.
-message UserReadinessResponse {
-  bool crypto_ready = 10;
-  bool banking_ready = 20;
-  bool other_ready = 30;
-}
-
-
-message SetExchangeReadinessRequest {
-  string user_id = 10;
-}
-
-message SetExchangeReadinessResponse {
 }
 
 message PhoneNumber {
@@ -68,11 +42,6 @@ message GetUserDetailsResponse{
   string date_of_birth = 80;
   Address address = 90;
 
-  // If true, this is a test user and informs the client that any banking endpoint (such as pay out and exchange)
-  // should use the dry-run flag, and cards should not allowed to be issued.
-  // Changing phone number will be allowed from UI, but will have no effect on our db.
-  bool is_test_user = 100;
-
   message Address{
     string address_line1 = 10;
     string address_line2 = 20;
@@ -81,12 +50,4 @@ message GetUserDetailsResponse{
     string post_code = 50;
     string country = 60;
   }
-
-  Features features = 110;
-}
-
-message Features {
-  // If absent, the user hasn't yet accepted the exchange risk.
-  // If present, it means that they have accepted, and this timestamp is the moment in time they accepted.
-  optional google.protobuf.Timestamp exchange_risk_acknowledgement = 120;
 }

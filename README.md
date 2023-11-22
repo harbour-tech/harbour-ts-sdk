@@ -5,6 +5,7 @@
 Requirements:
 
 - Have [brew](https://brew.sh/) installed
+- Have [yarn](https://yarnpkg.com/) installed (or use `brew install yarn`)
 
 Then install the following dependencies for code generation:
 ```shell
@@ -20,9 +21,14 @@ More info on:
 https://docs.buf.build/introduction
 https://connect.build/docs/introduction
 
-The base URL for the dev environment is `https://api.harborapps-nonprod.link`, try it out:
+The base URLs are:
+- DEV: `https://api.harborapps-nonprod.link`
+- PROD: `https://api.harborapp.link`
+
+Try it out:
 ```shell
-curl --header "Content-Type: application/json" --data '{}' https://api.harborapps-nonprod.link/auth.v1.PingService/Ping
+export HARBOUR_API=https://dev-api.harborapps-nonprod.link
+curl --header "Content-Type: application/json" --data '{}' $HARBOUR_API/auth.v1.PingService/Ping
 ```
 
 ### TS code generation
@@ -32,3 +38,7 @@ yarn
 yarn buf:sync
 yarn buf
 ```
+
+TODO explain Connect and protobuf
+
+TODO squash commits to avoid exposing full proto publicly from first commit
