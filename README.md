@@ -22,7 +22,7 @@ https://docs.buf.build/introduction
 https://connect.build/docs/introduction
 
 The base URLs are:
-- DEV: `https://api.harborapps-nonprod.link`
+- DEV: `https://dev-api.harborapps-nonprod.link`
 - PROD: `https://api.harborapp.link`
 
 Try it out:
