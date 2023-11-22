@@ -18,7 +18,7 @@
   },
   "scripts": {
     "buf:generate": "buf generate && sed -i '' s/_pb.js/_pb/ gen/*/v1/public_*.ts",
-    "buf:sync": "cd _tmpSubmodule && git clone --depth 1 git@github.com:harbour-tech/be-api-gateway.git && cd .. && cp -rf _tmpSubmodule/be-api-gateway/proto/ proto/ && rm -fr _tmpSubmodule/be-api-gateway",
+    "buf:sync": "rm -rf proto && rm -rf _tmp && git clone --depth 1 git@github.com:harbour-tech/harbour-api.git _tmp && mv _tmp/proto proto/ && rm -rf _tmp",
     "buf": "yarn buf:sync && yarn buf:generate && yarn prettier --write ./gen/"
   }
 }
