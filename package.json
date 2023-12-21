@@ -7,18 +7,17 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@bufbuild/connect-web": "^0.11.0",
-    "@bufbuild/protobuf": "^1.3.0"
+    "@bufbuild/protobuf": "^1.6.0",
+    "@connectrpc/connect-web": "^1.2.0"
   },
   "devDependencies": {
-    "@bufbuild/protoc-gen-connect-web": "^0.9.0",
-    "@bufbuild/protoc-gen-es": "^1.2.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.1"
+    "eslint-plugin-prettier": "^5.1.0",
+    "prettier": "^3.1.1",
+    "@connectrpc/protoc-gen-connect-es": "^1.2.0"
   },
   "scripts": {
-    "buf:generate": "buf generate && sed -i '' s/_pb.js/_pb/ gen/*/v1/public_*.ts",
+    "buf:generate": "buf generate && sed -i '' s/_pb.js/_pb/ src/gen/*/v1/public_*.ts",
     "buf:sync": "rm -rf proto && rm -rf _tmp && git clone --depth 1 git@github.com:harbour-tech/harbour-api.git _tmp && mv _tmp/proto proto/ && rm -rf _tmp",
-    "buf": "yarn buf:sync && yarn buf:generate && yarn prettier --write ./gen/"
+    "buf": "yarn buf:sync && yarn buf:generate && yarn prettier --write ./src/gen/"
   }
 }

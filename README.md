@@ -1,5 +1,8 @@
 # harbour-ts-sdk
 
+## Flow Diagram
+![Flow](docs/ramp-api.png)
+
 ## Code generation
 
 Requirements:

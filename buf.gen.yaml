@@ -7,8 +7,8 @@ managed:
 #      - buf.build/googleapis/googleapis
 plugins:
   - name: es
-    out: gen
+    out: src/gen
     opt: target=ts
-  - name: connect-web
-    out: gen
+  - name: connect-es
+    out: src/gen
     opt: target=ts
