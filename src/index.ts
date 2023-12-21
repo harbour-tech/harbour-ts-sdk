@@ -45,8 +45,8 @@ export class RampClient {
     this.client = createPromiseClient(RampService, transport);
   }
 
-  public async getAccountInfo(): Promise<GetAccountInfoResponse> {
-    return this.client.getAccountInfo(new GetAccountInfoRequest());
+  public async getAccountInfo(request: GetAccountInfoRequest): Promise<GetAccountInfoResponse> {
+    return this.client.getAccountInfo(request);
   }
 
   public async whitelistAddress(request: WhitelistAddressRequest, signer: (address: string) => Promise<string>): Promise<WhitelistAddressResponse> {

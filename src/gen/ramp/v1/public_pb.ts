@@ -111,10 +111,10 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
   result:
     | {
         /**
-         * @generated from field: ramp.v1.GetAccountInfoResponse.Onboarding onboarding = 20;
+         * @generated from field: ramp.v1.GetAccountInfoResponse.Authentication authentication = 20;
          */
-        value: GetAccountInfoResponse_Onboarding;
-        case: "onboarding";
+        value: GetAccountInfoResponse_Authentication;
+        case: "authentication";
       }
     | {
         /**
@@ -135,9 +135,9 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 20,
-      name: "onboarding",
+      name: "authentication",
       kind: "message",
-      T: GetAccountInfoResponse_Onboarding,
+      T: GetAccountInfoResponse_Authentication,
       oneof: "result",
     },
     {
@@ -185,25 +185,25 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
 }
 
 /**
- * @generated from message ramp.v1.GetAccountInfoResponse.Onboarding
+ * @generated from message ramp.v1.GetAccountInfoResponse.Authentication
  */
-export class GetAccountInfoResponse_Onboarding extends Message<GetAccountInfoResponse_Onboarding> {
+export class GetAccountInfoResponse_Authentication extends Message<GetAccountInfoResponse_Authentication> {
   /**
-   * @generated from field: string onboarding_url = 10;
+   * @generated from field: string authentication_url = 10;
    */
-  onboardingUrl = "";
+  authenticationUrl = "";
 
-  constructor(data?: PartialMessage<GetAccountInfoResponse_Onboarding>) {
+  constructor(data?: PartialMessage<GetAccountInfoResponse_Authentication>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Onboarding";
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Authentication";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: "onboarding_url",
+      name: "authentication_url",
       kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
@@ -212,22 +212,28 @@ export class GetAccountInfoResponse_Onboarding extends Message<GetAccountInfoRes
   static fromBinary(
     bytes: Uint8Array,
     options?: Partial<BinaryReadOptions>,
-  ): GetAccountInfoResponse_Onboarding {
-    return new GetAccountInfoResponse_Onboarding().fromBinary(bytes, options);
+  ): GetAccountInfoResponse_Authentication {
+    return new GetAccountInfoResponse_Authentication().fromBinary(
+      bytes,
+      options,
+    );
   }
 
   static fromJson(
     jsonValue: JsonValue,
     options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Onboarding {
-    return new GetAccountInfoResponse_Onboarding().fromJson(jsonValue, options);
+  ): GetAccountInfoResponse_Authentication {
+    return new GetAccountInfoResponse_Authentication().fromJson(
+      jsonValue,
+      options,
+    );
   }
 
   static fromJsonString(
     jsonString: string,
     options?: Partial<JsonReadOptions>,
-  ): GetAccountInfoResponse_Onboarding {
-    return new GetAccountInfoResponse_Onboarding().fromJsonString(
+  ): GetAccountInfoResponse_Authentication {
+    return new GetAccountInfoResponse_Authentication().fromJsonString(
       jsonString,
       options,
     );
@@ -235,15 +241,15 @@ export class GetAccountInfoResponse_Onboarding extends Message<GetAccountInfoRes
 
   static equals(
     a:
-      | GetAccountInfoResponse_Onboarding
-      | PlainMessage<GetAccountInfoResponse_Onboarding>
+      | GetAccountInfoResponse_Authentication
+      | PlainMessage<GetAccountInfoResponse_Authentication>
       | undefined,
     b:
-      | GetAccountInfoResponse_Onboarding
-      | PlainMessage<GetAccountInfoResponse_Onboarding>
+      | GetAccountInfoResponse_Authentication
+      | PlainMessage<GetAccountInfoResponse_Authentication>
       | undefined,
   ): boolean {
-    return proto3.util.equals(GetAccountInfoResponse_Onboarding, a, b);
+    return proto3.util.equals(GetAccountInfoResponse_Authentication, a, b);
   }
 }
 
@@ -259,26 +265,26 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
   /**
    * this might become just "bank_account", as we haven't decide yet if we require on ramp with whitelisted bank account only
    *
-   * @generated from oneof ramp.v1.GetAccountInfoResponse.Account.off_ramp_bank_account
+   * @generated from oneof ramp.v1.GetAccountInfoResponse.Account.bank_account
    */
-  offRampBankAccount:
+  bankAccount:
     | {
         /**
          * only for scheme SCAN
          *
-         * @generated from field: ramp.v1.ScanCoordinates on_ramp_scan_coord = 10;
+         * @generated from field: ramp.v1.ScanCoordinates scan = 10;
          */
         value: ScanCoordinates;
-        case: "onRampScanCoord";
+        case: "scan";
       }
     | {
         /**
          * for both SEPA and SWIFT schemes
          *
-         * @generated from field: ramp.v1.IbanCoordinates on_ramp_iban_coord = 20;
+         * @generated from field: ramp.v1.IbanCoordinates iban = 20;
          */
         value: IbanCoordinates;
-        case: "onRampIbanCoord";
+        case: "iban";
       }
     | { case: undefined; value?: undefined } = { case: undefined };
 
@@ -299,17 +305,17 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
     },
     {
       no: 10,
-      name: "on_ramp_scan_coord",
+      name: "scan",
       kind: "message",
       T: ScanCoordinates,
-      oneof: "off_ramp_bank_account",
+      oneof: "bank_account",
     },
     {
       no: 20,
-      name: "on_ramp_iban_coord",
+      name: "iban",
       kind: "message",
       T: IbanCoordinates,
-      oneof: "off_ramp_bank_account",
+      oneof: "bank_account",
     },
   ]);
 
@@ -887,19 +893,19 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
         /**
          * only for scheme SCAN
          *
-         * @generated from field: ramp.v1.ScanCoordinates off_ramp_scan_coord = 10;
+         * @generated from field: ramp.v1.ScanCoordinates scan = 10;
          */
         value: ScanCoordinates;
-        case: "offRampScanCoord";
+        case: "scan";
       }
     | {
         /**
          * for both SEPA and SWIFT schemes
          *
-         * @generated from field: ramp.v1.IbanCoordinates off_ramp_iban_coord = 20;
+         * @generated from field: ramp.v1.IbanCoordinates iban = 20;
          */
         value: IbanCoordinates;
-        case: "offRampIbanCoord";
+        case: "iban";
       }
     | { case: undefined; value?: undefined } = { case: undefined };
 
@@ -913,14 +919,14 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: "off_ramp_scan_coord",
+      name: "scan",
       kind: "message",
       T: ScanCoordinates,
       oneof: "bank_account",
     },
     {
       no: 20,
-      name: "off_ramp_iban_coord",
+      name: "iban",
       kind: "message",
       T: IbanCoordinates,
       oneof: "bank_account",
@@ -1116,60 +1122,5 @@ export class IbanCoordinates extends Message<IbanCoordinates> {
     b: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined,
   ): boolean {
     return proto3.util.equals(IbanCoordinates, a, b);
-  }
-}
-
-/**
- * @generated from message ramp.v1.PhoneNumber
- */
-export class PhoneNumber extends Message<PhoneNumber> {
-  /**
-   * @generated from field: string prefix = 10;
-   */
-  prefix = "";
-
-  /**
-   * @generated from field: string number = 20;
-   */
-  number = "";
-
-  constructor(data?: PartialMessage<PhoneNumber>) {
-    super();
-    proto3.util.initPartial(data, this);
-  }
-
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "ramp.v1.PhoneNumber";
-  static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: "prefix", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 20, name: "number", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-  ]);
-
-  static fromBinary(
-    bytes: Uint8Array,
-    options?: Partial<BinaryReadOptions>,
-  ): PhoneNumber {
-    return new PhoneNumber().fromBinary(bytes, options);
-  }
-
-  static fromJson(
-    jsonValue: JsonValue,
-    options?: Partial<JsonReadOptions>,
-  ): PhoneNumber {
-    return new PhoneNumber().fromJson(jsonValue, options);
-  }
-
-  static fromJsonString(
-    jsonString: string,
-    options?: Partial<JsonReadOptions>,
-  ): PhoneNumber {
-    return new PhoneNumber().fromJsonString(jsonString, options);
-  }
-
-  static equals(
-    a: PhoneNumber | PlainMessage<PhoneNumber> | undefined,
-    b: PhoneNumber | PlainMessage<PhoneNumber> | undefined,
-  ): boolean {
-    return proto3.util.equals(PhoneNumber, a, b);
   }
 }

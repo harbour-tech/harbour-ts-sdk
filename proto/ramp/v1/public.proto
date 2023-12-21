@@ -18,19 +18,19 @@ message GetAccountInfoRequest {}
 
 message GetAccountInfoResponse {
   oneof result {
-    Onboarding onboarding = 20;
+    Authentication authentication = 20;
     Account account = 30;
   }
 
-  message Onboarding {
-    string onboarding_url = 10;
+  message Authentication {
+    string authentication_url = 10;
   }
 
   message Account {
     repeated Wallet wallets = 40;
-    oneof off_ramp_bank_account { // this might become just "bank_account", as we haven't decide yet if we require on ramp with whitelisted bank account only
-      ScanCoordinates on_ramp_scan_coord = 10; // only for scheme SCAN
-      IbanCoordinates on_ramp_iban_coord = 20; // for both SEPA and SWIFT schemes
+    oneof bank_account { // this might become just "bank_account", as we haven't decide yet if we require on ramp with whitelisted bank account only
+      ScanCoordinates scan = 10; // only for scheme SCAN
+      IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
     }
   }
 
@@ -76,8 +76,8 @@ message RemoveAddressResponse {}
 message SetBankAccountRequest {
   // First and beneficiary name is not required. KYC info will be used as beneficiary name
   oneof bank_account {
-    ScanCoordinates off_ramp_scan_coord = 10; // only for scheme SCAN
-    IbanCoordinates off_ramp_iban_coord = 20; // for both SEPA and SWIFT schemes
+    ScanCoordinates scan = 10; // only for scheme SCAN
+    IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
   }
 }
 
@@ -103,9 +103,4 @@ enum SignatureType {
   SIGNATURE_TYPE_UNSPECIFIED = 0;
   SIGNATURE_TYPE_RSA = 1;
   SIGNATURE_TYPE_SECP256K1 = 2;
-}
-
-message PhoneNumber {
-  string prefix = 10;
-  string number = 20;
 }

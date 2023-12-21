@@ -3,47 +3,44 @@
 ## Flow Diagram
 ![Flow](docs/ramp-api.png)
 
-## Code generation
+## Usage of SDK
 
-Requirements:
+1. Make sure following dependencies are installed:
+    ```shell
+    npm install @bufbuild/protobuf @connectrpc/connect @connectrpc/connect-web
+    ```
+2. Copy `src/index.ts` and `src/gen/**` to you project
+3. Look into example of usage below or in the `examples/example.ts`
 
-- Have [brew](https://brew.sh/) installed
-- Have [yarn](https://yarnpkg.com/) installed (or use `brew install yarn`)
-- Have [npm](https://www.npmjs.com/) installed (or use `brew install npm`)
+## Example
+Example of SDK initialization and usage
+```Typscript
+import {Wallet} from 'ethers';
+import crypto from 'crypto';
 
-Then install the following dependencies for code generation:
-```shell
-brew install bufbuild/buf/buf
-brew install protobuf
+import Ramp from '.'
+import {GetAccountInfoRequest, Network, SignatureType, WhitelistAddressRequest} from "./gen/ramp/v1/public_pb";
+
+const privateKey = "0x"+crypto.randomBytes(32).toString('hex');
+const wallet = new Wallet(privateKey);
+
+const ramp = new Ramp(
+  "https://...",
+  SignatureType.SECP256K1,
+  wallet.signingKey.publicKey,
+  wallet.signMessage
+)
+
+const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest())
+
+await ramp.whitelistAddress(new WhitelistAddressRequest({
+  network: Network.ETHEREUM,
+  address: wallet.address,
+  name: "My Wallet 1",
+}), wallet.signMessage )
 ```
 
-More info on:
-https://docs.buf.build/introduction
-https://connect.build/docs/introduction
-https://github.com/protocolbuffers/protobuf-javascript
-https://connect.build/docs/web/generating-code
+Use following endpoints:
+- TBD
 
-The base URLs are:
-- DEV: `https://dev-api.harborapps-nonprod.link`
-- PROD: `https://api.harborapp.link`
-
-Try it out:
-```shell
-export HARBOUR_API=https://dev-api.harborapps-nonprod.link
-curl --header "Content-Type: application/json" --data '{}' $HARBOUR_API/auth.v1.PingService/Ping
-```
-
-### TS code generation
-
-```
-yarn
-yarn buf:sync
-yarn buf
-```
-
-The sync step copies over all the proto definitions from `https://github.com/harbour-tech/harbour-api`.
-Occasionally there might be updates to the API, so you can keep syncing them with this project via this command.
-
-TODO explain Connect and protobuf
-
-TODO squash commits to avoid exposing full proto publicly from first commit
+TODO: squash commits to avoid exposing full proto publicly from first commit
