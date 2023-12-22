@@ -1,4 +1,7 @@
 syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
 package ramp.v1;
 
 // signature_type is supplied with every request in the header
@@ -12,6 +15,7 @@ service RampService {
   rpc RemoveAddress (RemoveAddressRequest) returns (RemoveAddressResponse) {}
 
   rpc SetBankAccount (SetBankAccountRequest) returns (SetBankAccountResponse) {}
+  rpc GetBankAccount (GetBankAccountRequest) returns (GetBankAccountResponse) {}
 }
 
 message GetAccountInfoRequest {}
@@ -31,6 +35,7 @@ message GetAccountInfoResponse {
     oneof bank_account { // this might become just "bank_account", as we haven't decide yet if we require on ramp with whitelisted bank account only
       ScanCoordinates scan = 10; // only for scheme SCAN
       IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
+      string recipient = 30; // account holder name
     }
   }
 
@@ -85,6 +90,22 @@ message SetBankAccountResponse {
 
 }
 
+message GetBankAccountRequest {
+  // First and beneficiary name is not required. KYC info will be used as beneficiary name
+  oneof bank_account {
+    ScanCoordinates scan = 10; // only for scheme SCAN
+    IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
+  }
+}
+
+message GetBankAccountResponse {
+  oneof bank_account {
+    google.protobuf.Empty empty = 10;
+    ScanCoordinates scan = 20;
+    IbanCoordinates iban = 30;
+  }
+}
+
 message ScanCoordinates {
   string account_number = 10; // always 8 digits
   string sort_code = 20; // always 6 digits (if using an input mask such as ##-##-##, remove the dashes before submitting)
@@ -96,11 +117,15 @@ message IbanCoordinates {
 
 enum Network {
   NETWORK_UNSPECIFIED = 0;
-  NETWORK_ETHEREUM = 2;
+  NETWORK_ETHEREUM_MAINNET = 10;
+  NETWORK_ETHEREUM_SEPOLIA = 11;
+  NETWORK_AVALANCHE_MAINNET = 21;
+  NETWORK_AVALANCHE_FUJI = 22;
 }
 
 enum SignatureType {
   SIGNATURE_TYPE_UNSPECIFIED = 0;
   SIGNATURE_TYPE_RSA = 1;
   SIGNATURE_TYPE_SECP256K1 = 2;
+  SIGNATURE_TYPE_SECP256R1 = 3;
 }

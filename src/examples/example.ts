@@ -14,6 +14,7 @@ const privateKey = "0x"+crypto.randomBytes(32).toString('hex');
 const wallet = new Wallet(privateKey);
 
 const ramp = new RampClient(
+    // note: this is just a placeholder URL for now, not functioning
   "https://dev-api.harborapps-nonprod.link",
   SignatureType.SECP256K1,
   wallet.signingKey.publicKey,
