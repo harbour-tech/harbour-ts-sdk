@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetAccountInfoRequest, GetAccountInfoResponse, GetBankAccountRequest, GetBankAccountResponse, RemoveAddressRequest, RemoveAddressResponse, SetBankAccountRequest, SetBankAccountResponse, WhitelistAddressRequest, WhitelistAddressResponse } from "./public_pb";
+import { GetAccountInfoRequest, GetAccountInfoResponse, RemoveAddressRequest, RemoveAddressResponse, SetBankAccountRequest, SetBankAccountResponse, WhitelistAddressRequest, WhitelistAddressResponse } from "./public_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -51,15 +51,6 @@ export const RampService = {
       name: "SetBankAccount",
       I: SetBankAccountRequest,
       O: SetBankAccountResponse,
-      kind: MethodKind.Unary,
-    },
-    /**
-     * @generated from rpc ramp.v1.RampService.GetBankAccount
-     */
-    getBankAccount: {
-      name: "GetBankAccount",
-      I: GetBankAccountRequest,
-      O: GetBankAccountResponse,
       kind: MethodKind.Unary,
     },
   }
