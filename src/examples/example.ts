@@ -24,7 +24,7 @@ const ramp = new RampClient(
 const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest())
 
 await ramp.whitelistAddress(new WhitelistAddressRequest({
-  network: Network.ETHEREUM,
+  network: Network.ETHEREUM_MAINNET,
   address: wallet.address,
   name: "My Wallet 1",
 }), wallet.signMessage )
