@@ -15,7 +15,6 @@ service RampService {
   rpc RemoveAddress (RemoveAddressRequest) returns (RemoveAddressResponse) {}
 
   rpc SetBankAccount (SetBankAccountRequest) returns (SetBankAccountResponse) {}
-  rpc GetBankAccount (GetBankAccountRequest) returns (GetBankAccountResponse) {}
 }
 
 message GetAccountInfoRequest {}
@@ -31,31 +30,56 @@ message GetAccountInfoResponse {
   }
 
   message Account {
-    repeated Wallet wallets = 40;
-    oneof bank_account { // this might become just "bank_account", as we haven't decide yet if we require on ramp with whitelisted bank account only
-      ScanCoordinates scan = 10; // only for scheme SCAN
-      IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
-      string recipient = 30; // account holder name
+    repeated Wallet wallets = 10;
+
+    // A bank account created by Harbour in the name of the user, where funds can be sent
+    oneof onramp_bank_account {
+      ScanCoordinates onramp_scan = 100; // only for scheme SCAN (UK payments)
+      IbanCoordinates onramp_iban = 110; // for both SEPA and SWIFT schemes
     }
+
+    // A bank account set by the user for off-ramping, see rpc SetBankAccount
+    oneof offramp_bank_account {
+      ScanCoordinates offramp_scan = 200; // only for scheme SCAN (UK payments)
+      IbanCoordinates offramp_iban = 210; // for both SEPA and SWIFT schemes
+    }
+
+    string account_holder = 20; // account holder name for on and off-ramping
   }
 
   message Wallet {
     Network network = 10;
     string address = 20;
-    repeated Asset assets = 30;
+    repeated RampAsset assets = 30;
 
-    message Asset {
-      string asset = 10; // BTC, USDC etc. // should be more details like address of the smart contract of an asset?
+    message RampAsset {
+      Asset asset = 10;
       OnRamp on_ramp = 20;
       OffRamp off_ramp = 30;
+
+      message Asset {
+        string short_name = 10; //BTC, USDC etc.
+        // TBD: smart contract address, long name...
+      }
     }
 
     message OnRamp {
-      string payment_reference = 20; // e.g. "ETH USDC 1" or ETU1
+      string payment_reference = 10; // e.g. "ETH USDC 1" or ETU1
+      float estimated_rate = 30; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
+      Fee estimated_network_fee = 40; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
+      Fee processing_fee = 50;
     }
 
     message OffRamp {
       string address = 10;
+      float estimated_rate = 30; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
+      Fee estimated_network_fee = 40; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
+      Fee processing_fee = 50;
+    }
+
+    message Fee {
+      string fix = 10; // denominated in the currency of bank account (EUR, GBP)
+      string percent = 20;
     }
   }
 }
@@ -79,7 +103,7 @@ message RemoveAddressRequest {
 message RemoveAddressResponse {}
 
 message SetBankAccountRequest {
-  // First and beneficiary name is not required. KYC info will be used as beneficiary name
+  // first and last beneficiary name is not required. KYC info will be used as beneficiary name
   oneof bank_account {
     ScanCoordinates scan = 10; // only for scheme SCAN
     IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
@@ -88,22 +112,6 @@ message SetBankAccountRequest {
 
 message SetBankAccountResponse {
 
-}
-
-message GetBankAccountRequest {
-  // First and beneficiary name is not required. KYC info will be used as beneficiary name
-  oneof bank_account {
-    ScanCoordinates scan = 10; // only for scheme SCAN
-    IbanCoordinates iban = 20; // for both SEPA and SWIFT schemes
-  }
-}
-
-message GetBankAccountResponse {
-  oneof bank_account {
-    google.protobuf.Empty empty = 10;
-    ScanCoordinates scan = 20;
-    IbanCoordinates iban = 30;
-  }
 }
 
 message ScanCoordinates {
@@ -127,5 +135,4 @@ enum SignatureType {
   SIGNATURE_TYPE_UNSPECIFIED = 0;
   SIGNATURE_TYPE_RSA = 1;
   SIGNATURE_TYPE_SECP256K1 = 2;
-  SIGNATURE_TYPE_SECP256R1 = 3;
 }
