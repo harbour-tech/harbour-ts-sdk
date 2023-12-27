@@ -62,12 +62,18 @@ export enum SignatureType {
    * @generated from enum value: SIGNATURE_TYPE_SECP256K1 = 2;
    */
   SECP256K1 = 2,
+
+  /**
+   * @generated from enum value: SIGNATURE_TYPE_SECP256R1 = 3;
+   */
+  SECP256R1 = 3,
 }
 // Retrieve enum metadata with: proto3.getEnumType(SignatureType)
 proto3.util.setEnumType(SignatureType, "ramp.v1.SignatureType", [
   { no: 0, name: "SIGNATURE_TYPE_UNSPECIFIED" },
   { no: 1, name: "SIGNATURE_TYPE_RSA" },
   { no: 2, name: "SIGNATURE_TYPE_SECP256K1" },
+  { no: 3, name: "SIGNATURE_TYPE_SECP256R1" },
 ]);
 
 /**
