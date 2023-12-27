@@ -7,7 +7,7 @@ package ramp.v1;
 // signature_type is supplied with every request in the header
 // public_key is supplied with every request in the header
 // timestamp is supplied with every request in the header and timestamp is validated as (+-1 minute from now) and used as a salt
-// signature is supplied with every request in the header as sing(request body + salt, private_key) and validated as verify(request body + salt, public_key)
+// signature is supplied with every request in the header as sing(request body + timestamp, private_key) and validated as verify(request body + timestamp, public_key)
 service RampService {
   rpc GetAccountInfo (GetAccountInfoRequest) returns (GetAccountInfoResponse) {}
 
