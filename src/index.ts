@@ -1,7 +1,7 @@
 import {createPromiseClient, PromiseClient} from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 
-import { RampService } from "gen/ramp/v1/public_connect";
+import { RampService } from "./gen/ramp/v1/public_connect";
 
 import {
   GetAccountInfoRequest,
@@ -12,30 +12,37 @@ import {
   WhitelistAddressResponse,
   RemoveAddressResponse,
   SetBankAccountResponse,
-  SignatureType
-} from 'gen/ramp/v1/public_pb';
+} from './gen/ramp/v1/public_pb';
+import {PartialMessage} from "@bufbuild/protobuf";
 
 export class RampClient {
-  private client: PromiseClient<typeof RampService>;
-
-  // Harbour endpoint url
-  // signer callback to sign message body
-  private signatureType: SignatureType;
-  private publicKey: any;
+  public client: PromiseClient<typeof RampService>;
 
   constructor(
     endpoint: string,
-    signatureType: SignatureType,
-    publicKey: any/*TODO: needs to be clarified*/,
-    signer: (body: Uint8Array /*TODO: needs to be clarified*/) => Promise<string>) {
-    this.signatureType = signatureType;
-    this.publicKey = publicKey;
+    signatureType: string,
+    encoding: string,
+    signer: SignerFunction) {
 
     //TODO: not implemented yet
-    const fetchWithSignature: typeof globalThis.fetch = (r, i) => {
-      const signature = signer(new Uint8Array())
-      //TODO: add necessary headers: signatureType, publicKey, signature
-      return fetch(r, i)
+    const fetchWithSignature: typeof globalThis.fetch = async (r, init) => {
+      if (!(init?.body instanceof Uint8Array)) {
+        throw "unsupported body type"
+      }
+      const bodyText = new TextDecoder().decode(init.body);
+      const timestamp = Date.now().toString();
+      const data = bodyText + timestamp
+      const signature = await signer(data)
+
+      const headers = new Headers(init?.headers);
+      headers.append("X-Signature", signature.signature);
+      headers.append("X-Signature-Type", signatureType);
+      headers.append("X-Signature-PublicKey", signature.publicKey);
+      headers.append("X-Encoding", encoding);
+      headers.append("X-Signature-Timestamp", timestamp);
+
+      const modifiedInit: RequestInit = { ...init, headers };
+      return fetch(r, modifiedInit)
     }
 
     const transport = createConnectTransport({
@@ -45,7 +52,7 @@ export class RampClient {
     this.client = createPromiseClient(RampService, transport);
   }
 
-  public async getAccountInfo(request: GetAccountInfoRequest): Promise<GetAccountInfoResponse> {
+  public async getAccountInfo(request: PartialMessage<GetAccountInfoRequest>): Promise<GetAccountInfoResponse> {
     return this.client.getAccountInfo(request);
   }
 
@@ -71,3 +78,9 @@ export class RampClient {
 }
 
 export default RampClient;
+
+export interface Signature {
+  signature: string
+  publicKey: string
+}
+export type SignerFunction = (data: string) => Promise<Signature>;

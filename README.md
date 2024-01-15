@@ -5,12 +5,8 @@
 
 ## Usage of SDK
 
-1. Make sure following dependencies are installed:
-    ```shell
-    npm install @bufbuild/protobuf @connectrpc/connect @connectrpc/connect-web
-    ```
-2. Copy `src/index.ts` and `src/gen/**` to you project
-3. Look into example of usage below or in the `examples/example.ts`
+1. Copy `src/index.ts` and `src/gen/**` to you project
+2. Look into example of usage below or in the `examples/example.ts`
 
 ## Example
 Example of SDK initialization and usage
@@ -42,5 +38,3 @@ await ramp.whitelistAddress(new WhitelistAddressRequest({
 
 Use following endpoints:
 - TBD
-
-TODO: squash commits to avoid exposing full proto publicly from first commit
