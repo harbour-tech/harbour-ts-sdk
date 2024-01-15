@@ -7,6 +7,60 @@ import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialM
 import { Message, proto3 } from "@bufbuild/protobuf";
 
 /**
+ * @generated from enum ramp.v1.Ecosystem
+ */
+export enum Ecosystem {
+  /**
+   * @generated from enum value: ECOSYSTEM_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * any EVM compatible chain - addresses are expected to be the right-most 160 bits of the keccak256 hash of the public key
+   *
+   * @generated from enum value: ECOSYSTEM_ETHEREUM = 10;
+   */
+  ETHEREUM = 10,
+
+  /**
+   * any Cosmos ecosystem chain - addresses are expected to be compatible with the Cosmos SDK (such as 160 bit BECH32)
+   *
+   * @generated from enum value: ECOSYSTEM_COSMOS = 20;
+   */
+  COSMOS = 20,
+}
+// Retrieve enum metadata with: proto3.getEnumType(Ecosystem)
+proto3.util.setEnumType(Ecosystem, "ramp.v1.Ecosystem", [
+  { no: 0, name: "ECOSYSTEM_UNSPECIFIED" },
+  { no: 10, name: "ECOSYSTEM_ETHEREUM" },
+  { no: 20, name: "ECOSYSTEM_COSMOS" },
+]);
+
+/**
+ * An AssetId helps the client to identify an exact token and customise the UI.
+ * The AssetId is universal across all chains, in fact our responses always include the Network, and the AssetID.
+ * So ASSET_ID_USDC could either be the Ethereum, or Avalanche, or Polygon USDC token.
+ *
+ * @generated from enum ramp.v1.AssetId
+ */
+export enum AssetId {
+  /**
+   * @generated from enum value: ASSET_ID_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: ASSET_ID_USDC = 10;
+   */
+  USDC = 10,
+}
+// Retrieve enum metadata with: proto3.getEnumType(AssetId)
+proto3.util.setEnumType(AssetId, "ramp.v1.AssetId", [
+  { no: 0, name: "ASSET_ID_UNSPECIFIED" },
+  { no: 10, name: "ASSET_ID_USDC" },
+]);
+
+/**
  * @generated from enum ramp.v1.Network
  */
 export enum Network {
@@ -21,27 +75,27 @@ export enum Network {
   ETHEREUM_MAINNET = 10,
 
   /**
-   * @generated from enum value: NETWORK_ETHEREUM_SEPOLIA = 11;
+   * @generated from enum value: NETWORK_ETHEREUM_SEPOLIA = 20;
    */
-  ETHEREUM_SEPOLIA = 11,
+  ETHEREUM_SEPOLIA = 20,
 
   /**
-   * @generated from enum value: NETWORK_AVALANCHE_MAINNET = 21;
+   * @generated from enum value: NETWORK_AVAX_FUJI = 30;
    */
-  AVALANCHE_MAINNET = 21,
+  AVAX_FUJI = 30,
 
   /**
-   * @generated from enum value: NETWORK_AVALANCHE_FUJI = 22;
+   * @generated from enum value: NETWORK_AVAX_C_MAINNET = 40;
    */
-  AVALANCHE_FUJI = 22,
+  AVAX_C_MAINNET = 40,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Network)
 proto3.util.setEnumType(Network, "ramp.v1.Network", [
   { no: 0, name: "NETWORK_UNSPECIFIED" },
   { no: 10, name: "NETWORK_ETHEREUM_MAINNET" },
-  { no: 11, name: "NETWORK_ETHEREUM_SEPOLIA" },
-  { no: 21, name: "NETWORK_AVALANCHE_MAINNET" },
-  { no: 22, name: "NETWORK_AVALANCHE_FUJI" },
+  { no: 20, name: "NETWORK_ETHEREUM_SEPOLIA" },
+  { no: 30, name: "NETWORK_AVAX_FUJI" },
+  { no: 40, name: "NETWORK_AVAX_C_MAINNET" },
 ]);
 
 /**
@@ -75,6 +129,74 @@ proto3.util.setEnumType(SignatureType, "ramp.v1.SignatureType", [
   { no: 2, name: "SIGNATURE_TYPE_SECP256K1" },
   { no: 3, name: "SIGNATURE_TYPE_SECP256R1" },
 ]);
+
+/**
+ * @generated from message ramp.v1.PingRequest
+ */
+export class PingRequest extends Message<PingRequest> {
+  constructor(data?: PartialMessage<PingRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.PingRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): PingRequest {
+    return new PingRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): PingRequest {
+    return new PingRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): PingRequest {
+    return new PingRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: PingRequest | PlainMessage<PingRequest> | undefined, b: PingRequest | PlainMessage<PingRequest> | undefined): boolean {
+    return proto3.util.equals(PingRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.PingResponse
+ */
+export class PingResponse extends Message<PingResponse> {
+  /**
+   * @generated from field: string message = 10;
+   */
+  message = "";
+
+  constructor(data?: PartialMessage<PingResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.PingResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "message", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): PingResponse {
+    return new PingResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): PingResponse {
+    return new PingResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): PingResponse {
+    return new PingResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: PingResponse | PlainMessage<PingResponse> | undefined, b: PingResponse | PlainMessage<PingResponse> | undefined): boolean {
+    return proto3.util.equals(PingResponse, a, b);
+  }
+}
 
 /**
  * @generated from message ramp.v1.GetAccountInfoRequest
@@ -199,6 +321,8 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
  */
 export class GetAccountInfoResponse_Account extends Message<GetAccountInfoResponse_Account> {
   /**
+   * list of whitelisted addresses
+   *
    * @generated from field: repeated ramp.v1.GetAccountInfoResponse.Wallet wallets = 10;
    */
   wallets: GetAccountInfoResponse_Wallet[] = [];
@@ -294,9 +418,16 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
  */
 export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoResponse_Wallet> {
   /**
-   * @generated from field: ramp.v1.Network network = 10;
+   * user given name
+   *
+   * @generated from field: string name = 5;
    */
-  network = Network.UNSPECIFIED;
+  name = "";
+
+  /**
+   * @generated from field: ramp.v1.Ecosystem ecosystem = 10;
+   */
+  ecosystem = Ecosystem.UNSPECIFIED;
 
   /**
    * @generated from field: string address = 20;
@@ -316,7 +447,8 @@ export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoRespons
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
+    { no: 5, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 10, name: "ecosystem", kind: "enum", T: proto3.getEnumType(Ecosystem) },
     { no: 20, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 30, name: "assets", kind: "message", T: GetAccountInfoResponse_Wallet_RampAsset, repeated: true },
   ]);
@@ -392,9 +524,21 @@ export class GetAccountInfoResponse_Wallet_RampAsset extends Message<GetAccountI
  */
 export class GetAccountInfoResponse_Wallet_RampAsset_Asset extends Message<GetAccountInfoResponse_Wallet_RampAsset_Asset> {
   /**
-   * BTC, USDC etc.
+   * @generated from field: ramp.v1.Network network = 10;
+   */
+  network = Network.UNSPECIFIED;
+
+  /**
+   * the client can use this to match an asset with precision and display custom wording / icon
    *
-   * @generated from field: string short_name = 10;
+   * @generated from field: ramp.v1.AssetId asset_id = 20;
+   */
+  assetId = AssetId.UNSPECIFIED;
+
+  /**
+   * to be used as a fallback if the client doesn't recognise the asset_id (eg: out of date proto definitions)
+   *
+   * @generated from field: string short_name = 30;
    */
   shortName = "";
 
@@ -406,7 +550,9 @@ export class GetAccountInfoResponse_Wallet_RampAsset_Asset extends Message<GetAc
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet.RampAsset.Asset";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: "short_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 10, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
+    { no: 20, name: "asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
+    { no: 30, name: "short_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Wallet_RampAsset_Asset {
@@ -596,14 +742,17 @@ export class GetAccountInfoResponse_Wallet_Fee extends Message<GetAccountInfoRes
  */
 export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
   /**
+   * user given name, could be same name as in the Self Custody wallet if supported by wallet vendor
+   * (the maximum length of the name is 100 symbols)
+   *
    * @generated from field: string name = 10;
    */
   name = "";
 
   /**
-   * @generated from field: ramp.v1.Network network = 20;
+   * @generated from field: ramp.v1.Ecosystem ecosystem = 20;
    */
-  network = Network.UNSPECIFIED;
+  ecosystem = Ecosystem.UNSPECIFIED;
 
   /**
    * @generated from field: string address = 30;
@@ -627,7 +776,7 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
   static readonly typeName = "ramp.v1.WhitelistAddressRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 10, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 20, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
+    { no: 20, name: "ecosystem", kind: "enum", T: proto3.getEnumType(Ecosystem) },
     { no: 30, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 40, name: "address_signature", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
@@ -685,9 +834,9 @@ export class WhitelistAddressResponse extends Message<WhitelistAddressResponse> 
  */
 export class RemoveAddressRequest extends Message<RemoveAddressRequest> {
   /**
-   * @generated from field: ramp.v1.Network network = 20;
+   * @generated from field: ramp.v1.Ecosystem ecosystem = 20;
    */
-  network = Network.UNSPECIFIED;
+  ecosystem = Ecosystem.UNSPECIFIED;
 
   /**
    * @generated from field: string address = 30;
@@ -702,7 +851,7 @@ export class RemoveAddressRequest extends Message<RemoveAddressRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.RemoveAddressRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 20, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
+    { no: 20, name: "ecosystem", kind: "enum", T: proto3.getEnumType(Ecosystem) },
     { no: 30, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
@@ -811,6 +960,10 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
 }
 
 /**
+ * TODO the client should be able to comply to basic validation rules such as min/max length for ibans, sort codes and account numbers
+ * however complex validation such as IBAN or SCAN checksums and sort code directory should be performed by us
+ * thus we need to define proper error responses
+ *
  * @generated from message ramp.v1.SetBankAccountResponse
  */
 export class SetBankAccountResponse extends Message<SetBankAccountResponse> {

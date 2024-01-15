@@ -19,7 +19,7 @@ import {Wallet} from 'ethers';
 import crypto from 'crypto';
 
 import Ramp from '.'
-import {GetAccountInfoRequest, Network, SignatureType, WhitelistAddressRequest} from "./gen/ramp/v1/public_pb";
+import {GetAccountInfoRequest, Ecosystem, SignatureType, WhitelistAddressRequest} from "./gen/ramp/v1/public_pb";
 
 const privateKey = "0x"+crypto.randomBytes(32).toString('hex');
 const wallet = new Wallet(privateKey);
@@ -34,7 +34,7 @@ const ramp = new Ramp(
 const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest())
 
 await ramp.whitelistAddress(new WhitelistAddressRequest({
-  network: Network.ETHEREUM,
+  ecosystem: Ecosystem.ETHEREUM,
   address: wallet.address,
   name: "My Wallet 1",
 }), wallet.signMessage )
