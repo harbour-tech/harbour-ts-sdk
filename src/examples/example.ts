@@ -3,8 +3,8 @@ import crypto from 'crypto';
 
 import RampClient from '../'
 import {
+  Ecosystem,
   GetAccountInfoRequest,
-  Network,
   SetBankAccountRequest,
   SignatureType,
   WhitelistAddressRequest
@@ -24,7 +24,7 @@ const ramp = new RampClient(
 const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest())
 
 await ramp.whitelistAddress(new WhitelistAddressRequest({
-  network: Network.ETHEREUM_MAINNET,
+  ecosystem: Ecosystem.ETHEREUM,
   address: wallet.address,
   name: "My Wallet 1",
 }), wallet.signMessage )
