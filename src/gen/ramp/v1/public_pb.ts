@@ -99,38 +99,6 @@ proto3.util.setEnumType(Network, "ramp.v1.Network", [
 ]);
 
 /**
- * @generated from enum ramp.v1.SignatureType
- */
-export enum SignatureType {
-  /**
-   * @generated from enum value: SIGNATURE_TYPE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: SIGNATURE_TYPE_RSA = 1;
-   */
-  RSA = 1,
-
-  /**
-   * @generated from enum value: SIGNATURE_TYPE_SECP256K1 = 2;
-   */
-  SECP256K1 = 2,
-
-  /**
-   * @generated from enum value: SIGNATURE_TYPE_SECP256R1 = 3;
-   */
-  SECP256R1 = 3,
-}
-// Retrieve enum metadata with: proto3.getEnumType(SignatureType)
-proto3.util.setEnumType(SignatureType, "ramp.v1.SignatureType", [
-  { no: 0, name: "SIGNATURE_TYPE_UNSPECIFIED" },
-  { no: 1, name: "SIGNATURE_TYPE_RSA" },
-  { no: 2, name: "SIGNATURE_TYPE_SECP256K1" },
-  { no: 3, name: "SIGNATURE_TYPE_SECP256R1" },
-]);
-
-/**
  * @generated from message ramp.v1.PingRequest
  */
 export class PingRequest extends Message<PingRequest> {
@@ -238,12 +206,16 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
    */
   result: {
     /**
+     * when result is authentication user needs to be onboarded or logged in
+     *
      * @generated from field: ramp.v1.GetAccountInfoResponse.Authentication authentication = 20;
      */
     value: GetAccountInfoResponse_Authentication;
     case: "authentication";
   } | {
     /**
+     * when result is account user is logged
+     *
      * @generated from field: ramp.v1.GetAccountInfoResponse.Account account = 30;
      */
     value: GetAccountInfoResponse_Account;
@@ -284,6 +256,8 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
  */
 export class GetAccountInfoResponse_Authentication extends Message<GetAccountInfoResponse_Authentication> {
   /**
+   * authentication_url should be loaded in the i-frame or browser window in order to log in or onboard user
+   *
    * @generated from field: string authentication_url = 10;
    */
   authenticationUrl = "";
@@ -321,7 +295,7 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
  */
 export class GetAccountInfoResponse_Account extends Message<GetAccountInfoResponse_Account> {
   /**
-   * list of whitelisted addresses
+   * list of whitelisted addresses. On-ramping could be done only to whitelisted address
    *
    * @generated from field: repeated ramp.v1.GetAccountInfoResponse.Wallet wallets = 10;
    */
@@ -418,7 +392,7 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
  */
 export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoResponse_Wallet> {
   /**
-   * user given name
+   * user given name, less then 100 symbols
    *
    * @generated from field: string name = 5;
    */
@@ -430,11 +404,15 @@ export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoRespons
   ecosystem = Ecosystem.UNSPECIFIED;
 
   /**
+   * address of a wallet in blockchain
+   *
    * @generated from field: string address = 20;
    */
   address = "";
 
   /**
+   * assets available for on- and off- ramping
+   *
    * @generated from field: repeated ramp.v1.GetAccountInfoResponse.Wallet.RampAsset assets = 30;
    */
   assets: GetAccountInfoResponse_Wallet_RampAsset[] = [];
@@ -529,7 +507,7 @@ export class GetAccountInfoResponse_Wallet_RampAsset_Asset extends Message<GetAc
   network = Network.UNSPECIFIED;
 
   /**
-   * the client can use this to match an asset with precision and display custom wording / icon
+   * the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
    *
    * @generated from field: ramp.v1.AssetId asset_id = 20;
    */
@@ -577,7 +555,7 @@ export class GetAccountInfoResponse_Wallet_RampAsset_Asset extends Message<GetAc
  */
 export class GetAccountInfoResponse_Wallet_OnRamp extends Message<GetAccountInfoResponse_Wallet_OnRamp> {
   /**
-   * e.g. "ETH USDC 1" or ETU1
+   * e.g. "ETU1"
    *
    * @generated from field: string payment_reference = 10;
    */
@@ -591,13 +569,16 @@ export class GetAccountInfoResponse_Wallet_OnRamp extends Message<GetAccountInfo
   estimatedRate = 0;
 
   /**
-   * can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
+   * denominated in the currency of bank account (EUR, GBP), can be slightly different as network fee is taken at
+   * the moment funds hit Harbour wallet / bank account
    *
    * @generated from field: ramp.v1.GetAccountInfoResponse.Wallet.Fee estimated_network_fee = 40;
    */
   estimatedNetworkFee?: GetAccountInfoResponse_Wallet_Fee;
 
   /**
+   * denominated in the currency of bank account (EUR, GBP)
+   *
    * @generated from field: ramp.v1.GetAccountInfoResponse.Wallet.Fee processing_fee = 50;
    */
   processingFee?: GetAccountInfoResponse_Wallet_Fee;
@@ -638,6 +619,8 @@ export class GetAccountInfoResponse_Wallet_OnRamp extends Message<GetAccountInfo
  */
 export class GetAccountInfoResponse_Wallet_OffRamp extends Message<GetAccountInfoResponse_Wallet_OffRamp> {
   /**
+   * address, crypto asset should be send to for offramping
+   *
    * @generated from field: string address = 10;
    */
   address = "";
@@ -650,13 +633,8 @@ export class GetAccountInfoResponse_Wallet_OffRamp extends Message<GetAccountInf
   estimatedRate = 0;
 
   /**
-   * can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
+   * denominated in the currency of bank account (EUR, GBP)
    *
-   * @generated from field: ramp.v1.GetAccountInfoResponse.Wallet.Fee estimated_network_fee = 40;
-   */
-  estimatedNetworkFee?: GetAccountInfoResponse_Wallet_Fee;
-
-  /**
    * @generated from field: ramp.v1.GetAccountInfoResponse.Wallet.Fee processing_fee = 50;
    */
   processingFee?: GetAccountInfoResponse_Wallet_Fee;
@@ -671,7 +649,6 @@ export class GetAccountInfoResponse_Wallet_OffRamp extends Message<GetAccountInf
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 10, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 30, name: "estimated_rate", kind: "scalar", T: 2 /* ScalarType.FLOAT */ },
-    { no: 40, name: "estimated_network_fee", kind: "message", T: GetAccountInfoResponse_Wallet_Fee },
     { no: 50, name: "processing_fee", kind: "message", T: GetAccountInfoResponse_Wallet_Fee },
   ]);
 
@@ -697,13 +674,15 @@ export class GetAccountInfoResponse_Wallet_OffRamp extends Message<GetAccountInf
  */
 export class GetAccountInfoResponse_Wallet_Fee extends Message<GetAccountInfoResponse_Wallet_Fee> {
   /**
-   * denominated in the currency of bank account (EUR, GBP)
+   * fixed part of a fee, could be zero, e.g. 0.50€
    *
    * @generated from field: string fix = 10;
    */
   fix = "";
 
   /**
+   * percentage part of a fee, could be zero, e.g. 0.50%
+   *
    * @generated from field: string percent = 20;
    */
   percent = "";
@@ -755,13 +734,17 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
   ecosystem = Ecosystem.UNSPECIFIED;
 
   /**
+   * address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
+   *
+   * limited to 255 characters
+   *
    * @generated from field: string address = 30;
    */
   address = "";
 
   /**
-   * for the Ethereum: the address filed should be signed with https://docs.metamask.io/wallet/reference/personal_sign/ using
-   * private key of this address
+   * the address should be signed with its private key
+   * for the Ethereum: the address should be signed with https://docs.metamask.io/wallet/reference/personal_sign/
    *
    * @generated from field: string address_signature = 40;
    */
@@ -839,6 +822,8 @@ export class RemoveAddressRequest extends Message<RemoveAddressRequest> {
   ecosystem = Ecosystem.UNSPECIFIED;
 
   /**
+   * address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
+   *
    * @generated from field: string address = 30;
    */
   address = "";
@@ -960,13 +945,17 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
 }
 
 /**
- * TODO the client should be able to comply to basic validation rules such as min/max length for ibans, sort codes and account numbers
- * however complex validation such as IBAN or SCAN checksums and sort code directory should be performed by us
- * thus we need to define proper error responses
+ * The client should comply to basic validation rules such as min/max length for ibans, sort codes and account numbers
+ * complex validation such as IBAN or SCAN checksums and sort code directory is performed by Harbour
  *
  * @generated from message ramp.v1.SetBankAccountResponse
  */
 export class SetBankAccountResponse extends Message<SetBankAccountResponse> {
+  /**
+   * @generated from field: repeated ramp.v1.SetBankAccountResponse.Error errors = 10;
+   */
+  errors: SetBankAccountResponse_Error[] = [];
+
   constructor(data?: PartialMessage<SetBankAccountResponse>) {
     super();
     proto3.util.initPartial(data, this);
@@ -975,6 +964,7 @@ export class SetBankAccountResponse extends Message<SetBankAccountResponse> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.SetBankAccountResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "errors", kind: "enum", T: proto3.getEnumType(SetBankAccountResponse_Error), repeated: true },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SetBankAccountResponse {
@@ -993,6 +983,43 @@ export class SetBankAccountResponse extends Message<SetBankAccountResponse> {
     return proto3.util.equals(SetBankAccountResponse, a, b);
   }
 }
+
+/**
+ * @generated from enum ramp.v1.SetBankAccountResponse.Error
+ */
+export enum SetBankAccountResponse_Error {
+  /**
+   * @generated from enum value: ERROR_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Returned when the routing code is wrong (eg: sort code for UK and BIC for ibans).
+   * Note: the client still needs to perform basic validation, such as guaranteeing that the sort code is exactly 6 digits,
+   * else it won't even get this response and just get a code invalid argument.
+   * However, the backend will perform more advanced validation, such as checking that the sort code exists, in which
+   * case it will return this error.
+   *
+   * @generated from enum value: ERROR_BANK_CODE_INVALID = 1;
+   */
+  BANK_CODE_INVALID = 1,
+
+  /**
+   * Same as above, but for the account number (eg: account number for UK and IBAN for ibans).
+   * In case of UK account numbers, the account number is validated against the sort code, to determine whether it's
+   * valid according to the destination bank.
+   * In case of IBAN, basic mathematical checks will be performed, according to the IBAN standard, to verify its validity.
+   *
+   * @generated from enum value: ERROR_BANK_NUMBER_INVALID = 2;
+   */
+  BANK_NUMBER_INVALID = 2,
+}
+// Retrieve enum metadata with: proto3.getEnumType(SetBankAccountResponse_Error)
+proto3.util.setEnumType(SetBankAccountResponse_Error, "ramp.v1.SetBankAccountResponse.Error", [
+  { no: 0, name: "ERROR_UNSPECIFIED" },
+  { no: 1, name: "ERROR_BANK_CODE_INVALID" },
+  { no: 2, name: "ERROR_BANK_NUMBER_INVALID" },
+]);
 
 /**
  * @generated from message ramp.v1.ScanCoordinates

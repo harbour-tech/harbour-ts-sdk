@@ -13,17 +13,25 @@ message PingResponse {
   string message = 10;
 }
 
-// signature_type is supplied with every request in the header
-// public_key is supplied with every request in the header
-// timestamp is supplied with every request in the header and timestamp is validated as (+-1 minute from now) and used as a salt
-// signature is supplied with every request in the header as sing(request body + timestamp, private_key) and validated as verify(request body + timestamp, public_key)
 service RampService {
+  /**
+   * Returns account information. If result in the response is of type  authentication then user should be
+   * authenticated (onboarded or logged in). Authentication URL is provided in the result.
+   */
   rpc GetAccountInfo (GetAccountInfoRequest) returns (GetAccountInfoResponse) {}
 
+  /**
+   * Whitelists address. Crypto assets can only be on-ramped to address which belongs to the user. In order to proof address belongs to the
+   * user, address need to be signed with private key of this address.
+   */
   rpc WhitelistAddress (WhitelistAddressRequest) returns (WhitelistAddressResponse) {}
+
+  /**
+   * Removes whitelisted address
+   */
   rpc RemoveAddress (RemoveAddressRequest) returns (RemoveAddressResponse) {}
 
-  // Set a bank account for the off ramp
+  // Sets a bank account for the off ramp
   rpc SetBankAccount (SetBankAccountRequest) returns (SetBankAccountResponse) {}
 }
 
@@ -31,16 +39,19 @@ message GetAccountInfoRequest {}
 
 message GetAccountInfoResponse {
   oneof result {
+    // when result is authentication user needs to be onboarded or logged in
     Authentication authentication = 20;
+    // when result is account user is logged
     Account account = 30;
   }
 
   message Authentication {
+    // authentication_url should be loaded in the i-frame or browser window in order to log in or onboard user
     string authentication_url = 10;
   }
 
   message Account {
-    // list of whitelisted addresses
+    // list of whitelisted addresses. On-ramping could be done only to whitelisted address
     repeated Wallet wallets = 10;
 
     // A bank account created by Harbour in the name of the user, where funds can be sent
@@ -59,10 +70,10 @@ message GetAccountInfoResponse {
   }
 
   message Wallet {
-    string name = 5; // user given name
+    string name = 5; // user given name, less then 100 symbols
     Ecosystem ecosystem = 10;
-    string address = 20;
-    repeated RampAsset assets = 30;
+    string address = 20; // address of a wallet in blockchain
+    repeated RampAsset assets = 30; // assets available for on- and off- ramping
 
     message RampAsset {
       Asset asset = 10;
@@ -71,29 +82,32 @@ message GetAccountInfoResponse {
 
       message Asset {
         Network network = 10;
-        AssetId asset_id = 20; // the client can use this to match an asset with precision and display custom wording / icon
+        AssetId asset_id = 20; // the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
         string short_name = 30; // to be used as a fallback if the client doesn't recognise the asset_id (eg: out of date proto definitions)
         // TBD: smart contract address, long name...
       }
     }
 
     message OnRamp {
-      string payment_reference = 10; // e.g. "ETH USDC 1" or ETU1
+      string payment_reference = 10; // e.g. "ETU1"
       float estimated_rate = 30; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
-      Fee estimated_network_fee = 40; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
+      // denominated in the currency of bank account (EUR, GBP), can be slightly different as network fee is taken at
+      // the moment funds hit Harbour wallet / bank account
+      Fee estimated_network_fee = 40;
+      // denominated in the currency of bank account (EUR, GBP)
       Fee processing_fee = 50;
     }
 
     message OffRamp {
-      string address = 10;
+      string address = 10; // address, crypto asset should be send to for offramping
       float estimated_rate = 30; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
-      Fee estimated_network_fee = 40; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
+      // denominated in the currency of bank account (EUR, GBP)
       Fee processing_fee = 50;
     }
 
     message Fee {
-      string fix = 10; // denominated in the currency of bank account (EUR, GBP)
-      string percent = 20;
+      string fix = 10; // fixed part of a fee, could be zero, e.g. 0.50€
+      string percent = 20; // percentage part of a fee, could be zero, e.g. 0.50%
     }
   }
 }
@@ -103,9 +117,10 @@ message WhitelistAddressRequest {
   // (the maximum length of the name is 100 symbols)
   string name = 10;
   Ecosystem ecosystem = 20;
-  string address = 30;
-  // for the Ethereum: the address filed should be signed with https://docs.metamask.io/wallet/reference/personal_sign/ using
-  // private key of this address
+  // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
+  string address = 30; // limited to 255 characters
+  // the address should be signed with its private key
+  // for the Ethereum: the address should be signed with https://docs.metamask.io/wallet/reference/personal_sign/
   string address_signature = 40;
 }
 
@@ -113,6 +128,7 @@ message WhitelistAddressResponse {}
 
 message RemoveAddressRequest {
   Ecosystem ecosystem = 20;
+  // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
   string address = 30;
 }
 
@@ -126,11 +142,27 @@ message SetBankAccountRequest {
   }
 }
 
-// TODO the client should be able to comply to basic validation rules such as min/max length for ibans, sort codes and account numbers
-// however complex validation such as IBAN or SCAN checksums and sort code directory should be performed by us
-// thus we need to define proper error responses
+// The client should comply to basic validation rules such as min/max length for ibans, sort codes and account numbers
+// complex validation such as IBAN or SCAN checksums and sort code directory is performed by Harbour
 message SetBankAccountResponse {
+  repeated Error errors = 10;
 
+  enum Error {
+    ERROR_UNSPECIFIED = 0;
+
+    // Returned when the routing code is wrong (eg: sort code for UK and BIC for ibans).
+    // Note: the client still needs to perform basic validation, such as guaranteeing that the sort code is exactly 6 digits,
+    // else it won't even get this response and just get a code invalid argument.
+    // However, the backend will perform more advanced validation, such as checking that the sort code exists, in which
+    // case it will return this error.
+    ERROR_BANK_CODE_INVALID = 1;
+
+    // Same as above, but for the account number (eg: account number for UK and IBAN for ibans).
+    // In case of UK account numbers, the account number is validated against the sort code, to determine whether it's
+    // valid according to the destination bank.
+    // In case of IBAN, basic mathematical checks will be performed, according to the IBAN standard, to verify its validity.
+    ERROR_BANK_NUMBER_INVALID = 2;
+  }
 }
 
 message ScanCoordinates {
@@ -162,11 +194,4 @@ enum Network {
   NETWORK_ETHEREUM_SEPOLIA = 20;
   NETWORK_AVAX_FUJI = 30;
   NETWORK_AVAX_C_MAINNET = 40;
-}
-
-enum SignatureType {
-  SIGNATURE_TYPE_UNSPECIFIED = 0;
-  SIGNATURE_TYPE_RSA = 1;
-  SIGNATURE_TYPE_SECP256K1 = 2;
-  SIGNATURE_TYPE_SECP256R1 = 3;
 }

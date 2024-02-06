@@ -25,17 +25,16 @@ export const PingService = {
 } as const;
 
 /**
- * signature_type is supplied with every request in the header
- * public_key is supplied with every request in the header
- * timestamp is supplied with every request in the header and timestamp is validated as (+-1 minute from now) and used as a salt
- * signature is supplied with every request in the header as sing(request body + timestamp, private_key) and validated as verify(request body + timestamp, public_key)
- *
  * @generated from service ramp.v1.RampService
  */
 export const RampService = {
   typeName: "ramp.v1.RampService",
   methods: {
     /**
+     * *
+     * Returns account information. If result in the response is of type  authentication then user should be
+     * authenticated (onboarded or logged in). Authentication URL is provided in the result.
+     *
      * @generated from rpc ramp.v1.RampService.GetAccountInfo
      */
     getAccountInfo: {
@@ -45,6 +44,10 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
+     * *
+     * Whitelists address. Crypto assets can only be on-ramped to address which belongs to the user. In order to proof address belongs to the
+     * user, address need to be signed with private key of this address.
+     *
      * @generated from rpc ramp.v1.RampService.WhitelistAddress
      */
     whitelistAddress: {
@@ -54,6 +57,9 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
+     * *
+     * Removes whitelisted address
+     *
      * @generated from rpc ramp.v1.RampService.RemoveAddress
      */
     removeAddress: {
@@ -63,7 +69,7 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
-     * Set a bank account for the off ramp
+     * Sets a bank account for the off ramp
      *
      * @generated from rpc ramp.v1.RampService.SetBankAccount
      */

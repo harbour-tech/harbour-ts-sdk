@@ -1,12 +1,11 @@
-import {Wallet} from 'ethers';
+import {keccak256, toUtf8Bytes, Wallet} from 'ethers';
 import crypto from 'crypto';
 
-import RampClient from '../'
+import RampClient, {EthereumSignature, Signature} from '../'
 import {
   Ecosystem,
   GetAccountInfoRequest,
   SetBankAccountRequest,
-  SignatureType,
   WhitelistAddressRequest
 } from "../gen/ramp/v1/public_pb";
 
@@ -16,9 +15,13 @@ const wallet = new Wallet(privateKey);
 const ramp = new RampClient(
     // note: this is just a placeholder URL for now, not functioning
   "https://dev-api.harborapps-nonprod.link",
-  SignatureType.SECP256K1,
-  wallet.signingKey.publicKey,
-  wallet.signMessage
+  (data): Promise<Signature> => {
+    return Promise.resolve({
+      signature: wallet.signingKey.sign(keccak256(toUtf8Bytes(data))).serialized,
+      publicKey: wallet.signingKey.publicKey,
+      ...EthereumSignature
+    })
+  }
 )
 
 const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest())
