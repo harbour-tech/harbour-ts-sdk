@@ -1,19 +1,19 @@
-import {createPromiseClient, PromiseClient} from "@connectrpc/connect";
+import { createPromiseClient, PromiseClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 
 import { RampService } from "./gen/ramp/v1/public_connect";
 
 import {
   GetAccountInfoRequest,
-  WhitelistAddressRequest,
-  RemoveAddressRequest,
-  SetBankAccountRequest,
   GetAccountInfoResponse,
-  WhitelistAddressResponse,
+  RemoveAddressRequest,
   RemoveAddressResponse,
+  SetBankAccountRequest,
   SetBankAccountResponse,
-} from './gen/ramp/v1/public_pb';
-import {PartialMessage} from "@bufbuild/protobuf";
+  WhitelistAddressRequest,
+  WhitelistAddressResponse,
+} from "./gen/ramp/v1/public_pb";
+import { PartialMessage } from "@bufbuild/protobuf";
 
 export class RampClient {
   public client: PromiseClient<typeof RampService>;
@@ -26,23 +26,26 @@ export class RampClient {
   constructor(endpoint: string, signer: SignerFunction) {
     const fetchWithSignature: typeof globalThis.fetch = async (r, init) => {
       if (!(init?.body instanceof Uint8Array)) {
-        throw "unsupported body type"
+        throw "unsupported body type";
       }
       const bodyText = new TextDecoder().decode(init.body);
       const timestamp = Date.now().toString();
-      const data = bodyText + timestamp
-      const signature = await signer(data)
+      const data = bodyText + timestamp;
+      const signature = await signer(data);
 
       const headers = new Headers(init?.headers);
       headers.append("X-Signature", signature.signature);
-      headers.append("X-Signature-Type", `${signature.hashingAlgorithm}/${signature.signingAlgorithm}`);
+      headers.append(
+        "X-Signature-Type",
+        `${signature.hashingAlgorithm}/${signature.signingAlgorithm}`,
+      );
       headers.append("X-Signature-PublicKey", signature.publicKey);
       headers.append("X-Encoding", signature.encodingAlgorithm);
       headers.append("X-Signature-Timestamp", timestamp);
 
       const modifiedInit: RequestInit = { ...init, headers };
-      return fetch(r, modifiedInit)
-    }
+      return fetch(r, modifiedInit);
+    };
 
     const transport = createConnectTransport({
       baseUrl: endpoint,
@@ -55,7 +58,9 @@ export class RampClient {
    * Returns account information. If result in the response is of type  authentication then user should be
    * authenticated (onboarded or logged in). Authentication URL is provided in the result.
    */
-  public async getAccountInfo(request: PartialMessage<GetAccountInfoRequest>): Promise<GetAccountInfoResponse> {
+  public async getAccountInfo(
+    request: PartialMessage<GetAccountInfoRequest>,
+  ): Promise<GetAccountInfoResponse> {
     return this.client.getAccountInfo(request);
   }
 
@@ -63,16 +68,10 @@ export class RampClient {
    * Crypto assets can only be on-ramped to address which belongs to the user. In order to proof address belongs to the
    * user, address need to be signed with private key of this address.
    * @param request - whitelisting parameters
-   * @param signer - function returns signature for the whitelisting address
    */
-  public async whitelistAddress(request: PartialMessage<WhitelistAddressRequest>, signer: (address: string) => Promise<string>): Promise<WhitelistAddressResponse> {
-    const signature = await signer(request.address!)
-
-    if (!signature) {
-      throw "signature is required"
-    }
-
-    request.addressSignature = signature;
+  public async whitelistAddress(
+    request: PartialMessage<WhitelistAddressRequest>,
+  ): Promise<WhitelistAddressResponse> {
     return this.client.whitelistAddress(request);
   }
 
@@ -80,7 +79,9 @@ export class RampClient {
    * Removes whitelisted address
    * @param request - address removing parameters
    */
-  public async removeAddress(request: RemoveAddressRequest): Promise<RemoveAddressResponse> {
+  public async removeAddress(
+    request: RemoveAddressRequest,
+  ): Promise<RemoveAddressResponse> {
     return this.client.removeAddress(request);
   }
 
@@ -88,7 +89,9 @@ export class RampClient {
    * Set bank account for off-ramping.
    * @param request - bank account parameters
    */
-  public async setBankAccount(request: SetBankAccountRequest): Promise<SetBankAccountResponse> {
+  public async setBankAccount(
+    request: SetBankAccountRequest,
+  ): Promise<SetBankAccountResponse> {
     return this.client.setBankAccount(request);
   }
 }
@@ -122,17 +125,17 @@ export enum EncodingAlgorithm {
  * Signature configuration for signing requests to Harbour API
  */
 export interface SignatureConfig {
-  hashingAlgorithm: HashingAlgorithm
-  signingAlgorithm: SigningAlgorithm
-  encodingAlgorithm: EncodingAlgorithm
+  hashingAlgorithm: HashingAlgorithm;
+  signingAlgorithm: SigningAlgorithm;
+  encodingAlgorithm: EncodingAlgorithm;
 }
 
 /**
  * Signature with metadata for particular request to Harbour API
  */
 export interface Signature extends SignatureConfig {
-  signature: string
-  publicKey: string
+  signature: string;
+  publicKey: string;
 }
 
 /**
@@ -144,18 +147,17 @@ export type SignerFunction = (data: string) => Promise<Signature>;
 /**
  * Signature configuration for Ethereum ecosystem
  */
-export const EthereumSignature : SignatureConfig = {
+export const EthereumSignature: SignatureConfig = {
   hashingAlgorithm: HashingAlgorithm.Keccak256,
   signingAlgorithm: SigningAlgorithm.SECP256K1,
   encodingAlgorithm: EncodingAlgorithm.Hex,
-}
+};
 
 /**
  * Signature configuration for Cosmos ecosystem
  */
-export const CosmosSignature : SignatureConfig = {
+export const CosmosSignature: SignatureConfig = {
   hashingAlgorithm: HashingAlgorithm.SHA256,
   signingAlgorithm: SigningAlgorithm.SECP256K1,
   encodingAlgorithm: EncodingAlgorithm.Base64,
-}
-
+};

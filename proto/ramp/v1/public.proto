@@ -67,11 +67,22 @@ message GetAccountInfoResponse {
     }
 
     string account_holder = 20; // account holder name for on and off-ramping
+
+    // list of supported addresses
+    repeated Asset assets = 30;
+  }
+
+  message Asset {
+    Protocol protocol = 5;
+    Network network = 10;
+    AssetId asset_id = 20; // the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
+    string short_name = 30; // to be used as a fallback if the client doesn't recognise the asset_id (eg: out of date proto definitions)
+    // TBD: smart contract address, long name...
   }
 
   message Wallet {
     string name = 5; // user given name, less then 100 symbols
-    Ecosystem ecosystem = 10;
+    Protocol protocol = 10;
     string address = 20; // address of a wallet in blockchain
     repeated RampAsset assets = 30; // assets available for on- and off- ramping
 
@@ -79,13 +90,6 @@ message GetAccountInfoResponse {
       Asset asset = 10;
       OnRamp on_ramp = 20;
       OffRamp off_ramp = 30;
-
-      message Asset {
-        Network network = 10;
-        AssetId asset_id = 20; // the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
-        string short_name = 30; // to be used as a fallback if the client doesn't recognise the asset_id (eg: out of date proto definitions)
-        // TBD: smart contract address, long name...
-      }
     }
 
     message OnRamp {
@@ -116,9 +120,13 @@ message WhitelistAddressRequest {
   // user given name, could be same name as in the Self Custody wallet if supported by wallet vendor
   // (the maximum length of the name is 100 symbols)
   string name = 10;
-  Ecosystem ecosystem = 20;
+  // Ethereum, Avalanche, Terra and etc.
+  Protocol protocol = 20;
   // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
   string address = 30; // limited to 255 characters
+  // address must be derived from the provided public key
+  // public key in particular ecosystem, encoded accordingly to ecosystem rules (Ethereum - hex, Cosmos - base64)
+  string public_key = 35; // limited to 255 characters
   // the address should be signed with its private key
   // for the Ethereum: the address should be signed with https://docs.metamask.io/wallet/reference/personal_sign/
   string address_signature = 40;
@@ -180,6 +188,13 @@ enum Ecosystem {
   ECOSYSTEM_COSMOS = 20; // any Cosmos ecosystem chain - addresses are expected to be compatible with the Cosmos SDK (such as 160 bit BECH32)
 }
 
+enum Protocol {
+  PROTOCOL_UNSPECIFIED = 0;
+  PROTOCOL_ETHEREUM = 10;
+  PROTOCOL_AVAX = 20;
+  PROTOCOL_TERRA = 30;
+}
+
 // An AssetId helps the client to identify an exact token and customise the UI.
 // The AssetId is universal across all chains, in fact our responses always include the Network, and the AssetID.
 // So ASSET_ID_USDC could either be the Ethereum, or Avalanche, or Polygon USDC token.
@@ -194,4 +209,5 @@ enum Network {
   NETWORK_ETHEREUM_SEPOLIA = 20;
   NETWORK_AVAX_FUJI = 30;
   NETWORK_AVAX_C_MAINNET = 40;
+  NETWORK_TERRA2_MAINNET = 50;
 }

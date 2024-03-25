@@ -3,7 +3,18 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetAccountInfoRequest, GetAccountInfoResponse, PingRequest, PingResponse, RemoveAddressRequest, RemoveAddressResponse, SetBankAccountRequest, SetBankAccountResponse, WhitelistAddressRequest, WhitelistAddressResponse } from "./public_pb";
+import {
+  GetAccountInfoRequest,
+  GetAccountInfoResponse,
+  PingRequest,
+  PingResponse,
+  RemoveAddressRequest,
+  RemoveAddressResponse,
+  SetBankAccountRequest,
+  SetBankAccountResponse,
+  WhitelistAddressRequest,
+  WhitelistAddressResponse,
+} from "./public_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -21,7 +32,7 @@ export const PingService = {
       O: PingResponse,
       kind: MethodKind.Unary,
     },
-  }
+  },
 } as const;
 
 /**
@@ -79,6 +90,5 @@ export const RampService = {
       O: SetBankAccountResponse,
       kind: MethodKind.Unary,
     },
-  }
+  },
 } as const;
-
