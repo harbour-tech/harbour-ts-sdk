@@ -29,11 +29,15 @@ const ramp = new Ramp(
 
 const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest())
 
-await ramp.whitelistAddress(new WhitelistAddressRequest({
-  ecosystem: Ecosystem.ETHEREUM,
-  address: wallet.address,
-  name: "My Wallet 1",
-}), wallet.signMessage )
+await ramp.whitelistAddress(
+  new WhitelistAddressRequest({
+    protocol: Protocol.ETHEREUM,
+    address: wallet.address,
+    publicKey: wallet.signingKey.compressedPublicKey,
+    name: "My Wallet 1",
+    addressSignature: await wallet.signMessage(wallet.address),
+  }),
+);
 ```
 
 Use following endpoints:
