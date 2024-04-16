@@ -33,6 +33,9 @@ service RampService {
 
   // Sets a bank account for the off ramp
   rpc SetBankAccount (SetBankAccountRequest) returns (SetBankAccountResponse) {}
+
+  rpc EstimateOnRampFee (EstimateOnRampFeeRequest) returns (EstimateOnRampFeeResponse) {}
+  rpc EstimateOffRampFee (EstimateOffRampFeeRequest) returns (EstimateOffRampFeeResponse) {}
 }
 
 message GetAccountInfoRequest {}
@@ -69,10 +72,10 @@ message GetAccountInfoResponse {
     string account_holder = 20; // account holder name for on and off-ramping
 
     // list of supported addresses
-    repeated Asset assets = 30;
+    repeated CryptoAsset crypto_assets = 30;
   }
 
-  message Asset {
+  message CryptoAsset {
     Protocol protocol = 5;
     Network network = 10;
     AssetId asset_id = 20; // the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
@@ -87,7 +90,7 @@ message GetAccountInfoResponse {
     repeated RampAsset assets = 30; // assets available for on- and off- ramping
 
     message RampAsset {
-      Asset asset = 10;
+      CryptoAsset asset = 10;
       OnRamp on_ramp = 20;
       OffRamp off_ramp = 30;
     }
@@ -171,6 +174,39 @@ message SetBankAccountResponse {
     // In case of IBAN, basic mathematical checks will be performed, according to the IBAN standard, to verify its validity.
     ERROR_BANK_NUMBER_INVALID = 2;
   }
+}
+
+message EstimateOnRampFeeRequest {
+  string crypto_asset_id = 10;
+  oneof amount {
+    string fiat_asset_amount = 20;
+    // string crypto_asset_amount = 30; // TODO:
+  }
+}
+
+message EstimateOnRampFeeResponse {
+  string crypto_asset_id = 10;
+  string fiat_asset_amount = 20; // denominated in user's fiat currency
+  string crypto_asset_amount = 30; // denominated in crypto_asset
+  string exchange_rate = 40;
+  string network_fee_amount = 50; // denominated in user's fiat currency
+  string processing_fee_amount = 60; // denominated in user's fiat currency
+}
+
+message EstimateOffRampFeeRequest {
+  string crypto_asset_id = 10;
+  oneof amount {
+    string crypto_asset_amount = 20;
+    //string fiat_asset_amount = 30; // TODO:
+  }
+}
+
+message EstimateOffRampFeeResponse {
+  string crypto_asset_id = 10;
+  string fiat_asset_amount = 20; // denominated in user's fiat currency
+  string crypto_asset_amount = 30; // denominated in crypto_asset
+  string exchange_rate = 40;
+  string processing_fee_amount = 60; // denominated in user's fiat currency
 }
 
 message ScanCoordinates {
