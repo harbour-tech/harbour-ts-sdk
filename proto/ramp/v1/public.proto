@@ -177,7 +177,8 @@ message SetBankAccountResponse {
 }
 
 message EstimateOnRampFeeRequest {
-  string crypto_asset_id = 10;
+  AssetId crypto_asset_id = 10;
+  Protocol protocol = 15;
   oneof amount {
     string fiat_asset_amount = 20;
     // string crypto_asset_amount = 30; // TODO:
@@ -185,7 +186,6 @@ message EstimateOnRampFeeRequest {
 }
 
 message EstimateOnRampFeeResponse {
-  string crypto_asset_id = 10;
   string fiat_asset_amount = 20; // denominated in user's fiat currency
   string crypto_asset_amount = 30; // denominated in crypto_asset
   string exchange_rate = 40;
@@ -194,7 +194,8 @@ message EstimateOnRampFeeResponse {
 }
 
 message EstimateOffRampFeeRequest {
-  string crypto_asset_id = 10;
+  AssetId crypto_asset_id = 10;
+  Protocol protocol = 15;
   oneof amount {
     string crypto_asset_amount = 20;
     //string fiat_asset_amount = 30; // TODO:
@@ -202,7 +203,6 @@ message EstimateOffRampFeeRequest {
 }
 
 message EstimateOffRampFeeResponse {
-  string crypto_asset_id = 10;
   string fiat_asset_amount = 20; // denominated in user's fiat currency
   string crypto_asset_amount = 30; // denominated in crypto_asset
   string exchange_rate = 40;

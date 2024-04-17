@@ -4,6 +4,10 @@ import { createConnectTransport } from "@connectrpc/connect-web";
 import { RampService } from "./gen/ramp/v1/public_connect";
 
 import {
+  EstimateOffRampFeeRequest,
+  EstimateOffRampFeeResponse,
+  EstimateOnRampFeeRequest,
+  EstimateOnRampFeeResponse,
   GetAccountInfoRequest,
   GetAccountInfoResponse,
   RemoveAddressRequest,
@@ -93,6 +97,26 @@ export class RampClient {
     request: SetBankAccountRequest,
   ): Promise<SetBankAccountResponse> {
     return this.client.setBankAccount(request);
+  }
+
+  /**
+   * Esestimate on ramp fee
+   * @param request - on ramp parameters
+   */
+  public async estimateOnRampFee(
+    request: EstimateOnRampFeeRequest,
+  ): Promise<EstimateOnRampFeeResponse> {
+    return this.client.estimateOnRampFee(request);
+  }
+
+  /**
+   * Esestimate on ramp fee
+   * @param request - on ramp parameters
+   */
+  public async estimateOffRampFee(
+    request: EstimateOffRampFeeRequest,
+  ): Promise<EstimateOffRampFeeResponse> {
+    return this.client.estimateOffRampFee(request);
   }
 }
 
