@@ -51,6 +51,9 @@ message GetAccountInfoResponse {
   message Authentication {
     // authentication_url should be loaded in the i-frame or browser window in order to log in or onboard user
     string authentication_url = 10;
+    // token expiry in seconds, the frontend is expected to close the onboarding view (but the user can come back any time)
+    // don't worry about the time skew from api latency, there's a grace period on top of this expiry
+    int64 expires_in_sec = 20;
   }
 
   message Account {
@@ -229,6 +232,7 @@ enum Protocol {
   PROTOCOL_ETHEREUM = 10;
   PROTOCOL_AVAX = 20;
   PROTOCOL_TERRA = 30;
+  PROTOCOL_POLYGON = 40;
 }
 
 // An AssetId helps the client to identify an exact token and customise the UI.
@@ -246,4 +250,6 @@ enum Network {
   NETWORK_AVAX_FUJI = 30;
   NETWORK_AVAX_C_MAINNET = 40;
   NETWORK_TERRA2_MAINNET = 50;
+  NETWORK_POLYGON_MAINNET = 60;
+  NETWORK_POLYGON_AMOY = 70;
 }

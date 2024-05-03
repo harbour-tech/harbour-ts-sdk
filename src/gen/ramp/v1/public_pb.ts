@@ -11,7 +11,7 @@ import type {
   PartialMessage,
   PlainMessage,
 } from "@bufbuild/protobuf";
-import { Message, proto3 } from "@bufbuild/protobuf";
+import { Message, proto3, protoInt64 } from "@bufbuild/protobuf";
 
 /**
  * @generated from enum ramp.v1.Ecosystem
@@ -66,6 +66,11 @@ export enum Protocol {
    * @generated from enum value: PROTOCOL_TERRA = 30;
    */
   TERRA = 30,
+
+  /**
+   * @generated from enum value: PROTOCOL_POLYGON = 40;
+   */
+  POLYGON = 40,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Protocol)
 proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
@@ -73,6 +78,7 @@ proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
   { no: 10, name: "PROTOCOL_ETHEREUM" },
   { no: 20, name: "PROTOCOL_AVAX" },
   { no: 30, name: "PROTOCOL_TERRA" },
+  { no: 40, name: "PROTOCOL_POLYGON" },
 ]);
 
 /**
@@ -132,6 +138,16 @@ export enum Network {
    * @generated from enum value: NETWORK_TERRA2_MAINNET = 50;
    */
   TERRA2_MAINNET = 50,
+
+  /**
+   * @generated from enum value: NETWORK_POLYGON_MAINNET = 60;
+   */
+  POLYGON_MAINNET = 60,
+
+  /**
+   * @generated from enum value: NETWORK_POLYGON_AMOY = 70;
+   */
+  POLYGON_AMOY = 70,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Network)
 proto3.util.setEnumType(Network, "ramp.v1.Network", [
@@ -141,6 +157,8 @@ proto3.util.setEnumType(Network, "ramp.v1.Network", [
   { no: 30, name: "NETWORK_AVAX_FUJI" },
   { no: 40, name: "NETWORK_AVAX_C_MAINNET" },
   { no: 50, name: "NETWORK_TERRA2_MAINNET" },
+  { no: 60, name: "NETWORK_POLYGON_MAINNET" },
+  { no: 70, name: "NETWORK_POLYGON_AMOY" },
 ]);
 
 /**
@@ -374,6 +392,14 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
    */
   authenticationUrl = "";
 
+  /**
+   * token expiry in seconds, the frontend is expected to close the onboarding view (but the user can come back any time)
+   * don't worry about the time skew from api latency, there's a grace period on top of this expiry
+   *
+   * @generated from field: int64 expires_in_sec = 20;
+   */
+  expiresInSec = protoInt64.zero;
+
   constructor(data?: PartialMessage<GetAccountInfoResponse_Authentication>) {
     super();
     proto3.util.initPartial(data, this);
@@ -387,6 +413,12 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
       name: "authentication_url",
       kind: "scalar",
       T: 9 /* ScalarType.STRING */,
+    },
+    {
+      no: 20,
+      name: "expires_in_sec",
+      kind: "scalar",
+      T: 3 /* ScalarType.INT64 */,
     },
   ]);
 
