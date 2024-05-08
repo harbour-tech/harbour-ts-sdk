@@ -3,22 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import {
-  EstimateOffRampFeeRequest,
-  EstimateOffRampFeeResponse,
-  EstimateOnRampFeeRequest,
-  EstimateOnRampFeeResponse,
-  GetAccountInfoRequest,
-  GetAccountInfoResponse,
-  PingRequest,
-  PingResponse,
-  RemoveAddressRequest,
-  RemoveAddressResponse,
-  SetBankAccountRequest,
-  SetBankAccountResponse,
-  WhitelistAddressRequest,
-  WhitelistAddressResponse,
-} from "./public_pb";
+import { EstimateOffRampFeeRequest, EstimateOffRampFeeResponse, EstimateOnRampFeeRequest, EstimateOnRampFeeResponse, GetAccountInfoRequest, GetAccountInfoResponse, PingRequest, PingResponse, RemoveAddressRequest, RemoveAddressResponse, SetBankAccountRequest, SetBankAccountResponse, WhitelistAddressRequest, WhitelistAddressResponse } from "./public_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -36,7 +21,7 @@ export const PingService = {
       O: PingResponse,
       kind: MethodKind.Unary,
     },
-  },
+  }
 } as const;
 
 /**
@@ -112,5 +97,6 @@ export const RampService = {
       O: EstimateOffRampFeeResponse,
       kind: MethodKind.Unary,
     },
-  },
+  }
 } as const;
+

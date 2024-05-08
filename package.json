@@ -22,6 +22,6 @@
   "scripts": {
     "buf:generate": "buf generate && sed -i '' s/_pb.js/_pb/ src/gen/*/v1/public_*.ts",
     "buf:sync": "rm -rf proto && rm -rf _tmp && mkdir -p proto/ramp/v1/  && git clone --depth 1 git@github.com:harbour-tech/be-ramp-service.git _tmp && mv _tmp/proto/ramp/v1/public.proto proto/ramp/v1/ && rm -rf _tmp",
-    "buf": "yarn buf:sync && yarn buf:generate && yarn prettier --write ./src/gen/"
+    "buf": "npm run buf:sync && npm run buf:generate"
   }
 }
