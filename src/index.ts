@@ -134,7 +134,8 @@ export enum HashingAlgorithm {
  * Signing algorithm used for signing requests to Harbour API
  */
 export enum SigningAlgorithm {
-  SECP256K1 = "secp256k1",
+  SECP256K1 = "secp256k1", // PKCS8 encoded key
+  SECP256K1Amino = "secp256k1amino", // Amino encoded key
 }
 
 /**
@@ -142,7 +143,7 @@ export enum SigningAlgorithm {
  */
 export enum EncodingAlgorithm {
   Hex = "hex",
-  Base64 = "secp256k1",
+  Base64 = "base64",
 }
 
 /**
@@ -182,6 +183,6 @@ export const EthereumSignature: SignatureConfig = {
  */
 export const CosmosSignature: SignatureConfig = {
   hashingAlgorithm: HashingAlgorithm.SHA256,
-  signingAlgorithm: SigningAlgorithm.SECP256K1,
+  signingAlgorithm: SigningAlgorithm.SECP256K1Amino,
   encodingAlgorithm: EncodingAlgorithm.Base64,
 };
