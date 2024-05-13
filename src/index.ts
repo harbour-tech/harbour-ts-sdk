@@ -184,5 +184,5 @@ export const EthereumSignature: SignatureConfig = {
 export const CosmosSignature: SignatureConfig = {
   hashingAlgorithm: HashingAlgorithm.SHA256,
   signingAlgorithm: SigningAlgorithm.SECP256K1Amino,
-  encodingAlgorithm: EncodingAlgorithm.Base64,
+  encodingAlgorithm: EncodingAlgorithm.Hex,
 };
