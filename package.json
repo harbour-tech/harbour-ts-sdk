@@ -16,6 +16,7 @@
     "@bufbuild/protoc-gen-es": "^1.8.0",
     "@connectrpc/protoc-gen-connect-es": "^1.4.0",
     "@cosmostation/cosmosjs": "^0.11.2",
+    "@terra-money/terra.js": "^3.1.10",
     "@mysten/sui.js": "^0.51.0",
     "ethers": "^6.11.1",
     "secp256k1": "^3.8.0",
