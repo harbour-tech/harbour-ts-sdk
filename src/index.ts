@@ -142,7 +142,7 @@ export enum SigningAlgorithm {
  */
 export enum EncodingAlgorithm {
   Hex = "hex",
-  Base64 = "secp256k1",
+  Base64 = "base64",
 }
 
 /**

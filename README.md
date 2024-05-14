@@ -6,7 +6,7 @@
 ## Usage of SDK
 
 1. Copy `src/index.ts` and `src/gen/**` to you project
-2. Look into example of usage below or in the `examples/example.ts`
+2. Look into example of usage below or in the `examples/` folder
 
 ## Example
 Example of SDK initialization and usage
