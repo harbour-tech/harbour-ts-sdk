@@ -233,14 +233,16 @@ enum Protocol {
   PROTOCOL_AVAX = 20;
   PROTOCOL_TERRA = 30;
   PROTOCOL_POLYGON = 40;
+  PROTOCOL_ALEPH_ZERO = 50;
 }
 
 // An AssetId helps the client to identify an exact token and customise the UI.
 // The AssetId is universal across all chains, in fact our responses always include the Network, and the AssetID.
-// So ASSET_ID_USDC could either be the Ethereum, or Avalanche, or Polygon USDC token.
+// So ASSET_ID_USDC will always be the official Circle USDC on any chain, be that Ethereum, or Avalanche, or Polygon.
 enum AssetId {
   ASSET_ID_UNSPECIFIED = 0;
   ASSET_ID_USDC = 10;
+  ASSET_ID_AXL_USDC = 20;
 }
 
 enum Network {
@@ -252,4 +254,6 @@ enum Network {
   NETWORK_TERRA2_MAINNET = 50;
   NETWORK_POLYGON_MAINNET = 60;
   NETWORK_POLYGON_AMOY = 70;
+  NETWORK_ALEPH_ZERO_MAINNET = 80;
+  NETWORK_ALEPH_ZERO_TESTNET = 90;
 }
