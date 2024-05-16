@@ -10,9 +10,7 @@
   "dependencies": {
     "@bufbuild/protobuf": "^1.8.0",
     "@connectrpc/connect": "^1.4.0",
-    "@connectrpc/connect-web": "^1.4.0",
-    "@polkadot/keyring": "^12.6.2",
-    "@polkadot/util-crypto": "^12.6.2"
+    "@connectrpc/connect-web": "^1.4.0"
   },
   "devDependencies": {
     "@bufbuild/protoc-gen-es": "^1.8.0",
@@ -20,6 +18,8 @@
     "@cosmostation/cosmosjs": "^0.9.7",
     "@mysten/sui.js": "^0.51.0",
     "@polkadot/api": "^11.0.3",
+    "@polkadot/keyring": "^12.6.2",
+    "@polkadot/util-crypto": "^12.6.2",
     "@terra-money/terra.js": "^3.1.10",
     "@types/secp256k1": "^4.0.6",
     "ethers": "^6.11.1",
