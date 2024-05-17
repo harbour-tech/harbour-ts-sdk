@@ -6,7 +6,12 @@ import * as terra from '@terra-money/terra.js';
 import * as secp256k1 from 'secp256k1';
 
 import RampClient, {CosmosSignature, Signature} from "../";
-import {GetAccountInfoRequest,Protocol,SetBankAccountRequest,WhitelistAddressRequest} from "../gen/ramp/v1/public_pb";
+import {
+    GetAccountInfoRequest,
+    Protocol,
+    SetBankAccountRequest,
+    WhitelistAddressRequest
+} from "../gen/ramp/v1/public_pb";
 
 const mnemonic = "embody scale sign mutual whisper heavy umbrella capital rookie group glad wrap";
 const mk = new terra.MnemonicKey({mnemonic: mnemonic})
@@ -43,7 +48,7 @@ const ramp = new RampClient(
 
 // this will return an actual response with on- and off- ramping details
 const activeAccountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest());
-console.dir(activeAccountInfo, { depth: null });
+console.dir(activeAccountInfo, {depth: null});
 
 // The first time a user connects their wallet and selects and address for on-ramping, they need to whitelist their crypto wallet address.
 // Since the endpoint is idempotent, you can repeat the action every time, without worrying about "is it already whitelisted" logic,
@@ -53,28 +58,28 @@ const addressSig = signPayload(privateKey, address)
 
 console.log("Sending whitelist request")
 const whitelistResp = await ramp.whitelistAddress(
-  new WhitelistAddressRequest({
-    protocol: Protocol.TERRA,
-    address: address,
-    publicKey: publicKeyB64,
-    name: "My Terra Wallet #1",
-    addressSignature: addressSig,
-  }),
+    new WhitelistAddressRequest({
+        protocol: Protocol.TERRA,
+        address: address,
+        publicKey: publicKeyB64,
+        name: "My Terra Wallet #1",
+        addressSignature: addressSig,
+    }),
 );
 
 console.log("Whitelist response received")
-console.dir(whitelistResp, { depth: null });
+console.dir(whitelistResp, {depth: null});
 
 // One more step is required for off-ramping: the bank account on which the user is supposed to receive funds has to be set
 await ramp.setBankAccount(
-  new SetBankAccountRequest({
-    bankAccount: {
-      case: "iban",
-      value: {
-        iban: "DE44500105178191381683",
-      },
-    },
-  }),
+    new SetBankAccountRequest({
+        bankAccount: {
+            case: "iban",
+            value: {
+                iban: "DE44500105178191381683",
+            },
+        },
+    }),
 );
 
 // Note: the above only works for EU (EUR) customers, take a look at our proto definitions for a UK (GBP) customer example

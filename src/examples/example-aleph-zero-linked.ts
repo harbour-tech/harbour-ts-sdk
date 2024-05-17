@@ -1,3 +1,6 @@
+// In this example we demonstrate the API responses with all ramp information can be obtained by an AlephZero wallet
+// which is linked to an existing Harbour customer.
+// Run me with: npx tsx src/examples/example-aleph-zero-linked.ts
 import RampClient, {AlephZeroSignature, Signature} from "../";
 import {
     GetAccountInfoRequest,

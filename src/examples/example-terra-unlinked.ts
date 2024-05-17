@@ -7,7 +7,6 @@ import * as secp256k1 from 'secp256k1';
 
 import RampClient, {CosmosSignature, Signature} from "../";
 import {GetAccountInfoRequest} from "../gen/ramp/v1/public_pb";
-import * as process from "node:process";
 
 const mnemonic = "vibrant invest area pistol violin matter plate rapid army hunt betray donor";
 

@@ -1,4 +1,5 @@
-
+// In this example we demonstrate how a AlephZero wallet not yet linked to any user will generate a response with the onboarding URL
+// Run me with: npx tsx src/examples/example-aleph-zero-unlinked.ts
 import RampClient, {AlephZeroSignature, Signature} from "../";
 import {GetAccountInfoRequest} from "../gen/ramp/v1/public_pb";
 
