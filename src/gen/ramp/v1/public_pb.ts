@@ -64,6 +64,11 @@ export enum Protocol {
    * @generated from enum value: PROTOCOL_POLYGON = 40;
    */
   POLYGON = 40,
+
+  /**
+   * @generated from enum value: PROTOCOL_ALEPH_ZERO = 50;
+   */
+  ALEPH_ZERO = 50,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Protocol)
 proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
@@ -72,12 +77,13 @@ proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
   { no: 20, name: "PROTOCOL_AVAX" },
   { no: 30, name: "PROTOCOL_TERRA" },
   { no: 40, name: "PROTOCOL_POLYGON" },
+  { no: 50, name: "PROTOCOL_ALEPH_ZERO" },
 ]);
 
 /**
  * An AssetId helps the client to identify an exact token and customise the UI.
  * The AssetId is universal across all chains, in fact our responses always include the Network, and the AssetID.
- * So ASSET_ID_USDC could either be the Ethereum, or Avalanche, or Polygon USDC token.
+ * So ASSET_ID_USDC will always be the official Circle USDC on any chain, be that Ethereum, or Avalanche, or Polygon.
  *
  * @generated from enum ramp.v1.AssetId
  */
@@ -91,11 +97,17 @@ export enum AssetId {
    * @generated from enum value: ASSET_ID_USDC = 10;
    */
   USDC = 10,
+
+  /**
+   * @generated from enum value: ASSET_ID_AXL_USDC = 20;
+   */
+  AXL_USDC = 20,
 }
 // Retrieve enum metadata with: proto3.getEnumType(AssetId)
 proto3.util.setEnumType(AssetId, "ramp.v1.AssetId", [
   { no: 0, name: "ASSET_ID_UNSPECIFIED" },
   { no: 10, name: "ASSET_ID_USDC" },
+  { no: 20, name: "ASSET_ID_AXL_USDC" },
 ]);
 
 /**
@@ -141,6 +153,16 @@ export enum Network {
    * @generated from enum value: NETWORK_POLYGON_AMOY = 70;
    */
   POLYGON_AMOY = 70,
+
+  /**
+   * @generated from enum value: NETWORK_ALEPH_ZERO_MAINNET = 80;
+   */
+  ALEPH_ZERO_MAINNET = 80,
+
+  /**
+   * @generated from enum value: NETWORK_ALEPH_ZERO_TESTNET = 90;
+   */
+  ALEPH_ZERO_TESTNET = 90,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Network)
 proto3.util.setEnumType(Network, "ramp.v1.Network", [
@@ -152,6 +174,8 @@ proto3.util.setEnumType(Network, "ramp.v1.Network", [
   { no: 50, name: "NETWORK_TERRA2_MAINNET" },
   { no: 60, name: "NETWORK_POLYGON_MAINNET" },
   { no: 70, name: "NETWORK_POLYGON_AMOY" },
+  { no: 80, name: "NETWORK_ALEPH_ZERO_MAINNET" },
+  { no: 90, name: "NETWORK_ALEPH_ZERO_TESTNET" },
 ]);
 
 /**

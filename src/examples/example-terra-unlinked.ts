@@ -7,16 +7,15 @@ import * as secp256k1 from 'secp256k1';
 
 import RampClient, {CosmosSignature, Signature} from "../";
 import {GetAccountInfoRequest} from "../gen/ramp/v1/public_pb";
-import * as process from "node:process";
 
 const mnemonic = "vibrant invest area pistol violin matter plate rapid army hunt betray donor";
 
 const mk = new terra.MnemonicKey({mnemonic: mnemonic})
 const privateKey = mk.privateKey
-const privateKeyHex = privateKey.toString('base64')
+const privateKeyB64 = privateKey.toString('base64')
 const publicKeyB64 = mk.publicKey.key;
 
-console.log("Private Key base64: ", privateKeyHex);
+console.log("Private Key base64: ", privateKeyB64);
 console.log("Public Key base64: ", publicKeyB64);
 
 const signPayload = (pk: Buffer, payload: string): string => {

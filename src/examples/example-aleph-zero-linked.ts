@@ -1,11 +1,7 @@
-// In this example we demonstrate the API responses with all ramp information can be obtained by a Terra wallet
+// In this example we demonstrate the API responses with all ramp information can be obtained by an AlephZero wallet
 // which is linked to an existing Harbour customer.
-// Run me with: npx tsx src/examples/example-terra-linked.ts
-import crypto from "crypto";
-import * as terra from '@terra-money/terra.js';
-import * as secp256k1 from 'secp256k1';
-
-import RampClient, {CosmosSignature, Signature} from "../";
+// Run me with: npx tsx src/examples/example-aleph-zero-linked.ts
+import RampClient, {AlephZeroSignature, Signature} from "../";
 import {
     GetAccountInfoRequest,
     Protocol,
@@ -13,22 +9,33 @@ import {
     WhitelistAddressRequest
 } from "../gen/ramp/v1/public_pb";
 
-const mnemonic = "embody scale sign mutual whisper heavy umbrella capital rookie group glad wrap";
-const mk = new terra.MnemonicKey({mnemonic: mnemonic})
-const privateKey = mk.privateKey
-const privateKeyB64 = privateKey.toString('base64')
-const publicKeyB64 = mk.publicKey.key;
-const address = mk.accAddress
 
-console.log("Private Key base64: ", privateKeyB64);
-console.log("Public Key base64: ", publicKeyB64);
+import {Keyring} from '@polkadot/keyring';
+import {blake2AsU8a, cryptoWaitReady} from '@polkadot/util-crypto';
+import {u8aToHex} from "@polkadot/util";
+import {KeyringPair} from "@polkadot/keyring/types";
+
+const mnemonic = "traffic busy scale flight foam book cotton woman shift robust sound swap";
+
+
+// Wait for the WASM crypto to be ready
+await cryptoWaitReady();
+
+const keyring = new Keyring({type: 'sr25519'});
+
+const privateKey = keyring.addFromMnemonic(mnemonic);
+const publicKeyHex = u8aToHex(privateKey.publicKey);
+const address = keyring.encodeAddress(privateKey.publicKey, 42);
+
+console.log("Public Key Hex: ", publicKeyHex);
 console.log("Address: ", address);
 
-const signPayload = (pk: Buffer, payload: string): string => {
+const signPayload = (pk: KeyringPair, payload: string): string => {
     console.log("Signing payload: ", payload);
-    const hashed = crypto.createHash('sha256').update(payload).digest();
-    console.log("Hashed payload: ", hashed.toString('base64'));
-    let sig = secp256k1.default.sign(hashed, pk).signature.toString('base64');
+    // Hash the payload using BLAKE2b-256
+    const hashedPayload = blake2AsU8a(payload, 256);
+    console.log(`Hashed payload: `, u8aToHex(hashedPayload).toString());
+    let sig = u8aToHex(pk.sign(hashedPayload))
     console.log("Signature: ", sig);
     return sig;
 }
@@ -40,8 +47,8 @@ const ramp = new RampClient(
         const sig = signPayload(privateKey, payload);
         return Promise.resolve({
             signature: sig,
-            publicKey: publicKeyB64,
-            ...CosmosSignature,
+            publicKey: publicKeyHex,
+            ...AlephZeroSignature,
         });
     },
 );
@@ -59,10 +66,10 @@ const addressSig = signPayload(privateKey, address)
 console.log("Sending whitelist request")
 const whitelistResp = await ramp.whitelistAddress(
     new WhitelistAddressRequest({
-        protocol: Protocol.TERRA,
+        protocol: Protocol.ALEPH_ZERO,
         address: address,
-        publicKey: publicKeyB64,
-        name: "My Terra Wallet #1",
+        publicKey: publicKeyHex,
+        name: "My Aleph Zero Wallet #1",
         addressSignature: addressSig,
     }),
 );

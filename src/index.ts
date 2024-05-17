@@ -128,6 +128,7 @@ export default RampClient;
 export enum HashingAlgorithm {
   Keccak256 = "keccak256",
   SHA256 = "sha256",
+  Blake2b256 = "blake2b256",
 }
 
 /**
@@ -135,6 +136,7 @@ export enum HashingAlgorithm {
  */
 export enum SigningAlgorithm {
   SECP256K1 = "secp256k1",
+  SR25519 = "sr25519"
 }
 
 /**
@@ -185,3 +187,9 @@ export const CosmosSignature: SignatureConfig = {
   signingAlgorithm: SigningAlgorithm.SECP256K1,
   encodingAlgorithm: EncodingAlgorithm.Base64,
 };
+
+export const AlephZeroSignature: SignatureConfig = {
+  hashingAlgorithm: HashingAlgorithm.Blake2b256,
+  signingAlgorithm: SigningAlgorithm.SR25519,
+  encodingAlgorithm: EncodingAlgorithm.Hex,
+}
