@@ -1,19 +1,15 @@
-import crypto from "crypto";
-import RampClient, {AlephZeroSignature, CosmosSignature, Signature} from "../";
+import RampClient, {AlephZeroSignature, Signature} from "../";
 import {
     GetAccountInfoRequest,
     Protocol,
     SetBankAccountRequest,
     WhitelistAddressRequest
 } from "../gen/ramp/v1/public_pb";
-import * as process from "node:process";
 
-import {ApiPromise, WsProvider} from '@polkadot/api';
+
 import {Keyring} from '@polkadot/keyring';
-import {blake2AsHex, blake2AsU8a, cryptoWaitReady} from '@polkadot/util-crypto';
-import * as secp256k1 from "secp256k1";
-import {hexToU8a, u8aToHex} from "@polkadot/util";
-import {blake2b} from "@polkadot/wasm-crypto";
+import {blake2AsU8a, cryptoWaitReady} from '@polkadot/util-crypto';
+import {u8aToHex} from "@polkadot/util";
 import {KeyringPair} from "@polkadot/keyring/types";
 
 const mnemonic = "traffic busy scale flight foam book cotton woman shift robust sound swap";
@@ -56,7 +52,7 @@ const ramp = new RampClient(
 
 // this will return an actual response with on- and off- ramping details
 const activeAccountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest());
-console.dir(activeAccountInfo, { depth: null });
+console.dir(activeAccountInfo, {depth: null});
 
 // The first time a user connects their wallet and selects and address for on-ramping, they need to whitelist their crypto wallet address.
 // Since the endpoint is idempotent, you can repeat the action every time, without worrying about "is it already whitelisted" logic,
@@ -76,7 +72,7 @@ const whitelistResp = await ramp.whitelistAddress(
 );
 
 console.log("Whitelist response received")
-console.dir(whitelistResp, { depth: null });
+console.dir(whitelistResp, {depth: null});
 
 // One more step is required for off-ramping: the bank account on which the user is supposed to receive funds has to be set
 await ramp.setBankAccount(
