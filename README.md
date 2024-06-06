@@ -1,6 +1,7 @@
-# harbour-ts-sdk
+# Harbour Typescript SDK
 
 ## Flow Diagram
+
 https://www.figma.com/design/dw4ygEpoyyVBCn27ZH7XvP/Harbour-Wallet-Integration?node-id=0-1&t=cMGSCUtJcd5rVOMk-0
 
 ## Usage of SDK
