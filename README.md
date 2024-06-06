@@ -1,12 +1,12 @@
 # harbour-ts-sdk
 
 ## Flow Diagram
-![Flow](docs/ramp-api.png)
+https://www.figma.com/design/dw4ygEpoyyVBCn27ZH7XvP/Harbour-Wallet-Integration?node-id=0-1&t=cMGSCUtJcd5rVOMk-0
 
 ## Usage of SDK
 
 1. Copy `src/index.ts` and `src/gen/**` to you project
-2. Look into example of usage below or in the `examples/` folder
+2. Look into example of usage below or, for more sophisticated examples, in the `examples/` folder
 
 ## Example
 Example of SDK initialization and usage
@@ -39,6 +39,3 @@ await ramp.whitelistAddress(
   }),
 );
 ```
-
-Use following endpoints:
-- TBD
