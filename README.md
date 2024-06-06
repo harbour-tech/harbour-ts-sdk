@@ -10,7 +10,9 @@ https://www.figma.com/design/dw4ygEpoyyVBCn27ZH7XvP/Harbour-Wallet-Integration?n
 2. Look into example of usage below or, for more sophisticated examples, in the `examples/` folder
 
 ## Example
+
 Example of SDK initialization and usage
+
 ```Typscript
 import {Wallet} from 'ethers';
 import crypto from 'crypto';
@@ -40,3 +42,52 @@ await ramp.whitelistAddress(
   }),
 );
 ```
+
+## Supported regions
+
+We support onboarding customers from any country of the European Union:
+
+- Austria (AT)
+- Belgium (BE)
+- Bulgaria (BG)
+- Croatia (HR)
+- Cyprus (CY)
+- Czech Republic (CZ)
+- Denmark (DK)
+- Estonia (EE)
+- Finland (FI)
+- France (FR)
+- Germany (DE)
+- Greece (GR)
+- Hungary (HU)
+- Ireland (IE)
+- Italy (IT)
+- Latvia (LV)
+- Lithuania (LT)
+- Luxembourg (LU)
+- Malta (MT)
+- Netherlands (NL)
+- Poland (PL)
+- Portugal (PT)
+- Romania (RO)
+- Slovakia (SK)
+- Slovenia (SI)
+- Spain (ES)
+- Sweden (SE)
+
+## Supported tokens
+
+We support on- and off-ramping of the following tokens:
+
+#### Dev API
+
+- USDC on Avalanche Fuji C-Chain Testnet (`0x5425890298aed601595a70AB815c96711a31Bc65`)
+- USDC on Ethereum Sepolia Testnet (`0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`)
+
+#### Production API
+
+- USDC on Ethereum Mainnet (`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48`)
+- USDC on Avalanche Mainnet C-Chain (`0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e`)
+- USDC on Polygon Mainnet (`0x3c499c542cef5e3811e1192ce70d8cc03d5c3359`)
+
+Coming soon: axlUSDC on Terra, and potentially other Cosmos family chains.
