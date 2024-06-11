@@ -1,4 +1,4 @@
-// run me with: npx tsx src/examples/example-cosmos.ts
+// NOTE: broken example, Cosmos support is coming soon
 import crypto from "crypto";
 import * as cosmos from '@cosmostation/cosmosjs';
 import * as secp256k1 from 'secp256k1';
