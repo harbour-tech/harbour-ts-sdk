@@ -74,7 +74,7 @@ message GetAccountInfoResponse {
 
     string account_holder = 20; // account holder name for on and off-ramping
 
-    // list of supported addresses
+    // list of supported assets
     repeated CryptoAsset crypto_assets = 30;
   }
 
@@ -83,7 +83,22 @@ message GetAccountInfoResponse {
     Network network = 10;
     AssetId asset_id = 20; // the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
     string short_name = 30; // to be used as a fallback if the client doesn't recognise the asset_id (eg: out of date proto definitions)
-    // TBD: smart contract address, long name...
+
+    oneof details {
+      EthereumErc20Token ethereum_erc20_token = 40;
+      CosmosIcs20Token cosmos_ics20_token = 50;
+      SubstratePsp22Token substrate_psp22_token = 60;
+    }
+
+    message EthereumErc20Token {
+      string token_address = 10; // ERC20 token address
+    }
+    message CosmosIcs20Token {
+      string ibc_address = 10; // IBC token address
+    }
+    message SubstratePsp22Token {
+      string token_address = 10; // Substrate PSP22 token address
+    }
   }
 
   message Wallet {
@@ -100,24 +115,10 @@ message GetAccountInfoResponse {
 
     message OnRamp {
       string payment_reference = 10; // e.g. "ETU1"
-      float estimated_rate = 30; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
-      // denominated in the currency of bank account (EUR, GBP), can be slightly different as network fee is taken at
-      // the moment funds hit Harbour wallet / bank account
-      Fee estimated_network_fee = 40;
-      // denominated in the currency of bank account (EUR, GBP)
-      Fee processing_fee = 50;
     }
 
     message OffRamp {
       string address = 10; // address, crypto asset should be send to for offramping
-      float estimated_rate = 30; // can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
-      // denominated in the currency of bank account (EUR, GBP)
-      Fee processing_fee = 50;
-    }
-
-    message Fee {
-      string fix = 10; // fixed part of a fee, could be zero, e.g. 0.50€
-      string percent = 20; // percentage part of a fee, could be zero, e.g. 0.50%
     }
   }
 }
@@ -141,7 +142,7 @@ message WhitelistAddressRequest {
 message WhitelistAddressResponse {}
 
 message RemoveAddressRequest {
-  Ecosystem ecosystem = 20;
+  Protocol protocol = 10;
   // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
   string address = 30;
 }
@@ -176,6 +177,9 @@ message SetBankAccountResponse {
     // valid according to the destination bank.
     // In case of IBAN, basic mathematical checks will be performed, according to the IBAN standard, to verify its validity.
     ERROR_BANK_NUMBER_INVALID = 2;
+
+    // Returned when the user tries to set the bank account same as the magic-ramp account.
+    ERROR_SAME_BANK_ACCOUNT = 3;
   }
 }
 
@@ -243,6 +247,7 @@ enum AssetId {
   ASSET_ID_UNSPECIFIED = 0;
   ASSET_ID_USDC = 10;
   ASSET_ID_AXL_USDC = 20;
+  ASSET_ID_1USD = 30;
 }
 
 enum Network {
