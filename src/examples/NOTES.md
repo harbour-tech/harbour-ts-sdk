@@ -16,6 +16,12 @@ PubKey b64: `Ay0OHiHq7thmZv8e+oImMwmukp7W9C7WszEYXQYztXiA`
 Device ID: `64a4aaf1-0814-46fa-b95e-3cc006594554`
 User ID: `c51f65e6-0167-4451-a1fe-4b554069fbcf`
 
+#### Ethereum
+
+PubKey compressed: `0x02792b75fc27f4f3f9cd33ef5130fdd8286c3416836728e1f783c41bf52a2bd5ab`
+Device ID: `08e5e05e-c4f3-4750-a528-72cc79a35747`
+User ID: `c51f65e6-0167-4451-a1fe-4b554069fbcf`
+
 ## Restoring a broken link
 
 It is vital to keep these examples working for our integrating parties. Should we ever detect a "linked" example being
