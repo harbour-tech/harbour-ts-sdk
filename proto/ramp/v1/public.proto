@@ -76,6 +76,8 @@ message GetAccountInfoResponse {
 
     // list of supported assets
     repeated CryptoAsset crypto_assets = 30;
+
+    AccountLimits limits = 40;
   }
 
   message CryptoAsset {
@@ -120,6 +122,22 @@ message GetAccountInfoResponse {
     message OffRamp {
       string address = 10; // address, crypto asset should be send to for offramping
     }
+  }
+
+  message AccountLimits {
+    // limit for single on-ramp in fiat currency
+    string onramp_single_limit = 10;
+    // daily limit for on-ramp in fiat currency
+    string onramp_daily_limit = 20;
+    // current usage for on-ramp in fiat currency
+    string onramp_current_daily_usage = 30;
+
+    // single limit for off-ramp in crypto currency (USDC)
+    string offramp_single_limit = 40;
+    // daily limit for off-ramp in crypto currency (USDC)
+    string offramp_daily_limit = 50;
+    // current usage for off-ramp in crypto currency (USDC)
+    string offramp_current_daily_usage = 60;
   }
 }
 
@@ -184,6 +202,7 @@ message SetBankAccountResponse {
 }
 
 message EstimateOnRampFeeRequest {
+  CurrencyId fiat_asset_id = 5; // optional - just for a transitional period
   AssetId crypto_asset_id = 10;
   Protocol protocol = 15;
   oneof amount {
@@ -201,6 +220,7 @@ message EstimateOnRampFeeResponse {
 }
 
 message EstimateOffRampFeeRequest {
+  CurrencyId fiat_asset_id = 5; // optional - just for a transitional period
   AssetId crypto_asset_id = 10;
   Protocol protocol = 15;
   oneof amount {
@@ -248,6 +268,12 @@ enum AssetId {
   ASSET_ID_USDC = 10;
   ASSET_ID_AXL_USDC = 20;
   ASSET_ID_1USD = 30;
+}
+
+enum CurrencyId {
+  CURRENCY_ID_UNSPECIFIED = 0;
+  CURRENCY_ID_EUR = 10;
+  CURRENCY_ID_GBP = 20;
 }
 
 enum Network {
