@@ -32,7 +32,6 @@ const signPayload = (pk: KeyringPair, payload: string): string => {
 }
 
 const ramp = new RampClient(
-    // note: this is just a placeholder URL for now, not functioning
     "https://dev-api.harborapps-nonprod.link",
     (payload): Promise<Signature> => {
         const sig = signPayload(privateKey, payload);

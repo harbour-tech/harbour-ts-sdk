@@ -30,7 +30,6 @@ const signPayload = (payload: string): string => {
 signPayload("{}123");
 
 const ramp = new RampClient(
-  // note: this is just a placeholder URL for now, not functioning
   "https://dev-api.harborapps-nonprod.link",
   (payload): Promise<Signature> => {
     const sig = signPayload(payload);

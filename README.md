@@ -9,6 +9,10 @@ https://www.figma.com/design/dw4ygEpoyyVBCn27ZH7XvP/Harbour-Wallet-Integration?n
 1. Copy `src/index.ts` and `src/gen/**` to you project
 2. Look into example of usage below or, for more sophisticated examples, in the `examples/` folder
 
+Dev API: https://dev-api.harborapps-nonprod.link
+Prod API: https://api.harborapp.link
+
+
 ## Example
 
 Example of SDK initialization and usage
