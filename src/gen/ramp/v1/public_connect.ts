@@ -25,14 +25,15 @@ export const PingService = {
 } as const;
 
 /**
+ * All the RPCs in this service require the authentication headers, except the ones for estimating fees.
+ *
  * @generated from service ramp.v1.RampService
  */
 export const RampService = {
   typeName: "ramp.v1.RampService",
   methods: {
     /**
-     * *
-     * Returns account information. If result in the response is of type  authentication then user should be
+     * Returns account information. If result in the response is of type authentication then user should be
      * authenticated (onboarded or logged in). Authentication URL is provided in the result.
      *
      * @generated from rpc ramp.v1.RampService.GetAccountInfo
@@ -44,9 +45,8 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
-     * *
-     * Whitelists address. Crypto assets can only be on-ramped to address which belongs to the user. In order to proof address belongs to the
-     * user, address need to be signed with private key of this address.
+     * Whitelists address. Crypto assets can only be on-ramped to address which belongs to the user.
+     * In order to proof address belongs to the user, address need to be signed with private key of this address.
      *
      * @generated from rpc ramp.v1.RampService.WhitelistAddress
      */
@@ -57,8 +57,7 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
-     * *
-     * Removes whitelisted address
+     *  Removes whitelisted address
      *
      * @generated from rpc ramp.v1.RampService.RemoveAddress
      */
@@ -80,6 +79,8 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
+     * Authentication headers are not required for these RPCs.
+     *
      * @generated from rpc ramp.v1.RampService.EstimateOnRampFee
      */
     estimateOnRampFee: {

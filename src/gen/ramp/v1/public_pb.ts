@@ -3,15 +3,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import type {
-  BinaryReadOptions,
-  FieldList,
-  JsonReadOptions,
-  JsonValue,
-  PartialMessage,
-  PlainMessage
-} from "@bufbuild/protobuf";
-import {Message, proto3, protoInt64} from "@bufbuild/protobuf";
+import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
+import { Message, proto3, protoInt64 } from "@bufbuild/protobuf";
 
 /**
  * @generated from enum ramp.v1.Ecosystem
@@ -121,6 +114,32 @@ proto3.util.setEnumType(AssetId, "ramp.v1.AssetId", [
   { no: 10, name: "ASSET_ID_USDC" },
   { no: 20, name: "ASSET_ID_AXL_USDC" },
   { no: 30, name: "ASSET_ID_1USD" },
+]);
+
+/**
+ * @generated from enum ramp.v1.CurrencyId
+ */
+export enum CurrencyId {
+  /**
+   * @generated from enum value: CURRENCY_ID_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: CURRENCY_ID_EUR = 10;
+   */
+  EUR = 10,
+
+  /**
+   * @generated from enum value: CURRENCY_ID_GBP = 20;
+   */
+  GBP = 20,
+}
+// Retrieve enum metadata with: proto3.getEnumType(CurrencyId)
+proto3.util.setEnumType(CurrencyId, "ramp.v1.CurrencyId", [
+  { no: 0, name: "CURRENCY_ID_UNSPECIFIED" },
+  { no: 10, name: "CURRENCY_ID_EUR" },
+  { no: 20, name: "CURRENCY_ID_GBP" },
 ]);
 
 /**
@@ -463,6 +482,11 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
    */
   cryptoAssets: GetAccountInfoResponse_CryptoAsset[] = [];
 
+  /**
+   * @generated from field: ramp.v1.GetAccountInfoResponse.AccountLimits limits = 40;
+   */
+  limits?: GetAccountInfoResponse_AccountLimits;
+
   constructor(data?: PartialMessage<GetAccountInfoResponse_Account>) {
     super();
     proto3.util.initPartial(data, this);
@@ -478,6 +502,7 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
     { no: 210, name: "offramp_iban", kind: "message", T: IbanCoordinates, oneof: "offramp_bank_account" },
     { no: 20, name: "account_holder", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 30, name: "crypto_assets", kind: "message", T: GetAccountInfoResponse_CryptoAsset, repeated: true },
+    { no: 40, name: "limits", kind: "message", T: GetAccountInfoResponse_AccountLimits },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Account {
@@ -888,6 +913,85 @@ export class GetAccountInfoResponse_Wallet_OffRamp extends Message<GetAccountInf
 }
 
 /**
+ * @generated from message ramp.v1.GetAccountInfoResponse.AccountLimits
+ */
+export class GetAccountInfoResponse_AccountLimits extends Message<GetAccountInfoResponse_AccountLimits> {
+  /**
+   * limit for single on-ramp in fiat currency
+   *
+   * @generated from field: string onramp_single_limit = 10;
+   */
+  onrampSingleLimit = "";
+
+  /**
+   * daily limit for on-ramp in fiat currency
+   *
+   * @generated from field: string onramp_daily_limit = 20;
+   */
+  onrampDailyLimit = "";
+
+  /**
+   * current usage for on-ramp in fiat currency
+   *
+   * @generated from field: string onramp_current_daily_usage = 30;
+   */
+  onrampCurrentDailyUsage = "";
+
+  /**
+   * single limit for off-ramp in crypto currency (USDC)
+   *
+   * @generated from field: string offramp_single_limit = 40;
+   */
+  offrampSingleLimit = "";
+
+  /**
+   * daily limit for off-ramp in crypto currency (USDC)
+   *
+   * @generated from field: string offramp_daily_limit = 50;
+   */
+  offrampDailyLimit = "";
+
+  /**
+   * current usage for off-ramp in crypto currency (USDC)
+   *
+   * @generated from field: string offramp_current_daily_usage = 60;
+   */
+  offrampCurrentDailyUsage = "";
+
+  constructor(data?: PartialMessage<GetAccountInfoResponse_AccountLimits>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.AccountLimits";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "onramp_single_limit", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "onramp_daily_limit", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "onramp_current_daily_usage", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 40, name: "offramp_single_limit", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 50, name: "offramp_daily_limit", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 60, name: "offramp_current_daily_usage", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_AccountLimits {
+    return new GetAccountInfoResponse_AccountLimits().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_AccountLimits {
+    return new GetAccountInfoResponse_AccountLimits().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_AccountLimits {
+    return new GetAccountInfoResponse_AccountLimits().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetAccountInfoResponse_AccountLimits | PlainMessage<GetAccountInfoResponse_AccountLimits> | undefined, b: GetAccountInfoResponse_AccountLimits | PlainMessage<GetAccountInfoResponse_AccountLimits> | undefined): boolean {
+    return proto3.util.equals(GetAccountInfoResponse_AccountLimits, a, b);
+  }
+}
+
+/**
  * @generated from message ramp.v1.WhitelistAddressRequest
  */
 export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
@@ -1218,6 +1322,13 @@ proto3.util.setEnumType(SetBankAccountResponse_Error, "ramp.v1.SetBankAccountRes
  */
 export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> {
   /**
+   * optional - just for a transitional period
+   *
+   * @generated from field: ramp.v1.CurrencyId fiat_asset_id = 5;
+   */
+  fiatAssetId = CurrencyId.UNSPECIFIED;
+
+  /**
    * @generated from field: ramp.v1.AssetId crypto_asset_id = 10;
    */
   cryptoAssetId = AssetId.ASSET_ID_UNSPECIFIED;
@@ -1248,6 +1359,7 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.EstimateOnRampFeeRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 5, name: "fiat_asset_id", kind: "enum", T: proto3.getEnumType(CurrencyId) },
     { no: 10, name: "crypto_asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
     { no: 15, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 20, name: "fiat_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "amount" },
@@ -1344,6 +1456,13 @@ export class EstimateOnRampFeeResponse extends Message<EstimateOnRampFeeResponse
  */
 export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest> {
   /**
+   * optional - just for a transitional period
+   *
+   * @generated from field: ramp.v1.CurrencyId fiat_asset_id = 5;
+   */
+  fiatAssetId = CurrencyId.UNSPECIFIED;
+
+  /**
    * @generated from field: ramp.v1.AssetId crypto_asset_id = 10;
    */
   cryptoAssetId = AssetId.ASSET_ID_UNSPECIFIED;
@@ -1374,6 +1493,7 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.EstimateOffRampFeeRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 5, name: "fiat_asset_id", kind: "enum", T: proto3.getEnumType(CurrencyId) },
     { no: 10, name: "crypto_asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
     { no: 15, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 20, name: "crypto_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "amount" },
