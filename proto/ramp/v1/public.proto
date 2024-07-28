@@ -74,9 +74,26 @@ message GetAccountInfoResponse {
     repeated CryptoAsset crypto_assets = 30;
 
     AccountLimits limits = 40;
+
+    // Field is optional as it depends on downstream microservices. In case of error
+    // fetching points, we want this API to keep working. If this ends up being null,
+    // the client should show something like N/A or 'error fetching points' to the 
+    // user, but not 0 points, to avoid alarming them.
+    optional Reward reward = 50;
+
+    message Reward{
+      // the amount of reward points the user has earned
+      int64 points = 10;
+
+      // referral code the user can use to refer others and earn more points
+      string referral_code = 20;
+    }
   }
 
   message CryptoAsset {
+    // asset status for on/off ramping
+    RampStatus status = 1;
+
     Protocol protocol = 5;
     Network network = 10;
     AssetId asset_id = 20; // the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
@@ -96,6 +113,20 @@ message GetAccountInfoResponse {
     }
     message SubstratePsp22Token {
       string token_address = 10; // Substrate PSP22 token address
+    }
+    message RampStatus {
+      Status onramp = 10;
+      Status offramp = 20;
+  
+      enum Status {
+        // All is good, asset can be on/off ramped
+        STATUS_UNSPECIFIED = 0;
+        // Our system is experiencing degradation (longer waits) but still operational.
+        // The UI should warn users.
+        STATUS_DEGRADED = 20;
+        // Exceptional scenarios: ramping halted. The UI should prevent users from taking any action.
+        STATUS_HALTED = 30;
+      }
     }
   }
 
@@ -198,12 +229,12 @@ message SetBankAccountResponse {
 }
 
 message EstimateOnRampFeeRequest {
-  CurrencyId fiat_asset_id = 5; // optional - just for a transitional period
+  // All fields are mandatory
+  CurrencyId fiat_asset_id = 5;
   AssetId crypto_asset_id = 10;
   Protocol protocol = 15;
   oneof amount {
     string fiat_asset_amount = 20;
-    // string crypto_asset_amount = 30; // TODO:
   }
 }
 
@@ -221,7 +252,6 @@ message EstimateOffRampFeeRequest {
   Protocol protocol = 15;
   oneof amount {
     string crypto_asset_amount = 20;
-    //string fiat_asset_amount = 30; // TODO:
   }
 }
 

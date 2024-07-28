@@ -487,6 +487,16 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
    */
   limits?: GetAccountInfoResponse_AccountLimits;
 
+  /**
+   * Field is optional as it depends on downstream microservices. In case of error
+   * fetching points, we want this API to keep working. If this ends up being null,
+   * the client should show something like N/A or 'error fetching points' to the 
+   * user, but not 0 points, to avoid alarming them.
+   *
+   * @generated from field: optional ramp.v1.GetAccountInfoResponse.Account.Reward reward = 50;
+   */
+  reward?: GetAccountInfoResponse_Account_Reward;
+
   constructor(data?: PartialMessage<GetAccountInfoResponse_Account>) {
     super();
     proto3.util.initPartial(data, this);
@@ -503,6 +513,7 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
     { no: 20, name: "account_holder", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 30, name: "crypto_assets", kind: "message", T: GetAccountInfoResponse_CryptoAsset, repeated: true },
     { no: 40, name: "limits", kind: "message", T: GetAccountInfoResponse_AccountLimits },
+    { no: 50, name: "reward", kind: "message", T: GetAccountInfoResponse_Account_Reward, opt: true },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Account {
@@ -523,9 +534,63 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
 }
 
 /**
+ * @generated from message ramp.v1.GetAccountInfoResponse.Account.Reward
+ */
+export class GetAccountInfoResponse_Account_Reward extends Message<GetAccountInfoResponse_Account_Reward> {
+  /**
+   * the amount of reward points the user has earned
+   *
+   * @generated from field: int64 points = 10;
+   */
+  points = protoInt64.zero;
+
+  /**
+   * referral code the user can use to refer others and earn more points
+   *
+   * @generated from field: string referral_code = 20;
+   */
+  referralCode = "";
+
+  constructor(data?: PartialMessage<GetAccountInfoResponse_Account_Reward>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Account.Reward";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "points", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
+    { no: 20, name: "referral_code", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_Account_Reward {
+    return new GetAccountInfoResponse_Account_Reward().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Account_Reward {
+    return new GetAccountInfoResponse_Account_Reward().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_Account_Reward {
+    return new GetAccountInfoResponse_Account_Reward().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetAccountInfoResponse_Account_Reward | PlainMessage<GetAccountInfoResponse_Account_Reward> | undefined, b: GetAccountInfoResponse_Account_Reward | PlainMessage<GetAccountInfoResponse_Account_Reward> | undefined): boolean {
+    return proto3.util.equals(GetAccountInfoResponse_Account_Reward, a, b);
+  }
+}
+
+/**
  * @generated from message ramp.v1.GetAccountInfoResponse.CryptoAsset
  */
 export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoResponse_CryptoAsset> {
+  /**
+   * asset status for on/off ramping
+   *
+   * @generated from field: ramp.v1.GetAccountInfoResponse.CryptoAsset.RampStatus status = 1;
+   */
+  status?: GetAccountInfoResponse_CryptoAsset_RampStatus;
+
   /**
    * @generated from field: ramp.v1.Protocol protocol = 5;
    */
@@ -581,6 +646,7 @@ export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoRe
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.CryptoAsset";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "status", kind: "message", T: GetAccountInfoResponse_CryptoAsset_RampStatus },
     { no: 5, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 10, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
     { no: 20, name: "asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
@@ -723,6 +789,82 @@ export class GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token extends Mess
     return proto3.util.equals(GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token, a, b);
   }
 }
+
+/**
+ * @generated from message ramp.v1.GetAccountInfoResponse.CryptoAsset.RampStatus
+ */
+export class GetAccountInfoResponse_CryptoAsset_RampStatus extends Message<GetAccountInfoResponse_CryptoAsset_RampStatus> {
+  /**
+   * @generated from field: ramp.v1.GetAccountInfoResponse.CryptoAsset.RampStatus.Status onramp = 10;
+   */
+  onramp = GetAccountInfoResponse_CryptoAsset_RampStatus_Status.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.GetAccountInfoResponse.CryptoAsset.RampStatus.Status offramp = 20;
+   */
+  offramp = GetAccountInfoResponse_CryptoAsset_RampStatus_Status.UNSPECIFIED;
+
+  constructor(data?: PartialMessage<GetAccountInfoResponse_CryptoAsset_RampStatus>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.CryptoAsset.RampStatus";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "onramp", kind: "enum", T: proto3.getEnumType(GetAccountInfoResponse_CryptoAsset_RampStatus_Status) },
+    { no: 20, name: "offramp", kind: "enum", T: proto3.getEnumType(GetAccountInfoResponse_CryptoAsset_RampStatus_Status) },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_CryptoAsset_RampStatus {
+    return new GetAccountInfoResponse_CryptoAsset_RampStatus().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_CryptoAsset_RampStatus {
+    return new GetAccountInfoResponse_CryptoAsset_RampStatus().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_CryptoAsset_RampStatus {
+    return new GetAccountInfoResponse_CryptoAsset_RampStatus().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetAccountInfoResponse_CryptoAsset_RampStatus | PlainMessage<GetAccountInfoResponse_CryptoAsset_RampStatus> | undefined, b: GetAccountInfoResponse_CryptoAsset_RampStatus | PlainMessage<GetAccountInfoResponse_CryptoAsset_RampStatus> | undefined): boolean {
+    return proto3.util.equals(GetAccountInfoResponse_CryptoAsset_RampStatus, a, b);
+  }
+}
+
+/**
+ * @generated from enum ramp.v1.GetAccountInfoResponse.CryptoAsset.RampStatus.Status
+ */
+export enum GetAccountInfoResponse_CryptoAsset_RampStatus_Status {
+  /**
+   * All is good, asset can be on/off ramped
+   *
+   * @generated from enum value: STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Our system is experiencing degradation (longer waits) but still operational.
+   * The UI should warn users.
+   *
+   * @generated from enum value: STATUS_DEGRADED = 20;
+   */
+  DEGRADED = 20,
+
+  /**
+   * Exceptional scenarios: ramping halted. The UI should prevent users from taking any action.
+   *
+   * @generated from enum value: STATUS_HALTED = 30;
+   */
+  HALTED = 30,
+}
+// Retrieve enum metadata with: proto3.getEnumType(GetAccountInfoResponse_CryptoAsset_RampStatus_Status)
+proto3.util.setEnumType(GetAccountInfoResponse_CryptoAsset_RampStatus_Status, "ramp.v1.GetAccountInfoResponse.CryptoAsset.RampStatus.Status", [
+  { no: 0, name: "STATUS_UNSPECIFIED" },
+  { no: 20, name: "STATUS_DEGRADED" },
+  { no: 30, name: "STATUS_HALTED" },
+]);
 
 /**
  * @generated from message ramp.v1.GetAccountInfoResponse.Wallet
@@ -1322,7 +1464,7 @@ proto3.util.setEnumType(SetBankAccountResponse_Error, "ramp.v1.SetBankAccountRes
  */
 export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> {
   /**
-   * optional - just for a transitional period
+   * All fields are mandatory
    *
    * @generated from field: ramp.v1.CurrencyId fiat_asset_id = 5;
    */
@@ -1343,8 +1485,6 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
    */
   amount: {
     /**
-     * string crypto_asset_amount = 30; // TODO:
-     *
      * @generated from field: string fiat_asset_amount = 20;
      */
     value: string;
@@ -1477,8 +1617,6 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
    */
   amount: {
     /**
-     * string fiat_asset_amount = 30; // TODO:
-     *
      * @generated from field: string crypto_asset_amount = 20;
      */
     value: string;
