@@ -1,97 +1,77 @@
-# Harbour Typescript SDK
+# Harbour Ramp Docs
 
-## Flow Diagram
+Harbour is an on- and off-ramp service which provides near-instant fiat <-> stablecoin conversion.
 
-https://www.figma.com/design/dw4ygEpoyyVBCn27ZH7XvP/Harbour-Wallet-Integration?node-id=0-1&t=cMGSCUtJcd5rVOMk-0
+## Developer Documentation
 
-## Usage of SDK
+Looking to integrate with our API natively? Check out the [SDK documentation](./docs/index-sdk.md).
 
-1. Copy `src/index.ts` and `src/gen/**` to you project
-2. Look into example of usage below or, for more sophisticated examples, in the `examples/` folder
+Alternatively, check out our [web integration docs](./docs/index-ramp.md) for a quick and easy way to integrate Harbour
+in app or extension by simply redirecting users to our web app.
 
-Dev API: https://dev-api.harborapps-nonprod.link
-Prod API: https://api.harborapp.link
+## How it works
 
+Harbour is different from most ramp providers as it creates a unique, dedicated bank account per customer, registered
+in their own name. Customers can buy crypto by simply executing an instant bank transfer to their dedicated account,
+and will receive an instant bank payment from their dedicated Harbour account to their personal account when selling
+crypto.
 
-## Example
+By providing a dedicated bank account, Harbour offers the highest chance of success for fiat transactions, as opposed
+to the traditional method of sending money to a bank account in the name of a Crypto institution, which is often
+blocked by traditional banks.
 
-Example of SDK initialization and usage
+TODO maybe add an image?
 
-```Typscript
-import {Wallet} from 'ethers';
-import crypto from 'crypto';
+### Availability
 
-import Ramp from '.'
-import {GetAccountInfoRequest, Ecosystem, SignatureType, WhitelistAddressRequest} from "./gen/ramp/v1/public_pb";
+Harbour is available to any adult resident in European Union. So far it supports USDC on:
 
-const privateKey = "0x"+crypto.randomBytes(32).toString('hex');
-const wallet = new Wallet(privateKey);
+- Ethereum
+- Polygon
+- Avalanche
 
-const ramp = new Ramp(
-  "https://...",
-  SignatureType.SECP256K1,
-  wallet.signingKey.publicKey,
-  wallet.signMessage
-)
+And soon launching on other chains, both EVM and non-EVM.
 
-const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest())
+### Speed
 
-await ramp.whitelistAddress(
-  new WhitelistAddressRequest({
-    protocol: Protocol.ETHEREUM,
-    address: wallet.address,
-    publicKey: wallet.signingKey.compressedPublicKey,
-    name: "My Wallet 1",
-    addressSignature: await wallet.signMessage(wallet.address),
-  }),
-);
-```
+Harbour operates by keeping a liquidity pool in both fiat and crypto. This allows us to instantly pay out crypto or fiat
+to the customer upon receiving a payment. If the customer's bank supports instant payments (SEPA Instant Credit Transfer
+in Europe or Instant Faster Payments in the UK), transactions will be completed in just a little over the time for 
+finality on the given blockchain, making Harbour the first near-instant ramp provider in the world.
 
-## Supported regions
+### Cost efficiency
 
-We support onboarding customers from any country of the European Union:
+Harbour operates on the basis of "address ownership". Customers are required to use their crypto wallet to prove
+ownership of any address they wish to on-ramp into or off-ramp from. This minimises risk and the operational burden
+of managing dedicated deposit addresses and the network fees associated with sweeping them.
 
-- Austria (AT)
-- Belgium (BE)
-- Bulgaria (BG)
-- Croatia (HR)
-- Cyprus (CY)
-- Czech Republic (CZ)
-- Denmark (DK)
-- Estonia (EE)
-- Finland (FI)
-- France (FR)
-- Germany (DE)
-- Greece (GR)
-- Hungary (HU)
-- Ireland (IE)
-- Italy (IT)
-- Latvia (LV)
-- Lithuania (LT)
-- Luxembourg (LU)
-- Malta (MT)
-- Netherlands (NL)
-- Poland (PL)
-- Portugal (PT)
-- Romania (RO)
-- Slovakia (SK)
-- Slovenia (SI)
-- Spain (ES)
-- Sweden (SE)
+Harbour aims to be the cheapest and fastest ramp provider in the market, thus our product was designed with efficiency
+in mind.
 
-## Supported tokens
+### Integration
 
-We support on- and off-ramping of the following tokens:
+As mentioned in the [developer documentation](#developer-documentation), Harbour offers two ways to integrate:
 
-#### Dev API
+1. The integrating app can use our SDK to interact with our API directly. This allows for embedding of the buy/sell
+   functionality without leaving the app and with its native UI/UX.
+2. Or simply redirect the user to our web app, where they can complete the transaction in a few clicks.
 
-- USDC on Avalanche Fuji C-Chain Testnet (`0x5425890298aed601595a70AB815c96711a31Bc65`)
-- USDC on Ethereum Sepolia Testnet (`0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`)
+Harbour is responsible for identity verification, KYC/AML, and compliance with local regulations.
+Upon their first contact with Harbour, customers are required to sign up with their phone number and provide proof of
+identity. The process is fully automated and takes less than 5 minutes in most cases.
 
-#### Production API
+Sign up and ID verification is the only step where the UX is entirely handled by Harbour. Whether it's embedded as an
+iframe or the customer is sent a signup link, the process is entirely in control of Harbour and abstracted away from
+the integrating app.
 
-- USDC on Ethereum Mainnet (`0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48`)
-- USDC on Avalanche Mainnet C-Chain (`0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e`)
-- USDC on Polygon Mainnet (`0x3c499c542cef5e3811e1192ce70d8cc03d5c3359`)
+Upon successful signup, the integrating app can opt for the native integration or redirecting users to the Harbour web
+app when they wish to use our ramp services.
 
-Coming soon: axlUSDC on Terra, and potentially other Cosmos family chains.
+A very special feature of Harbour is the ability to recognise digital signatures from the customer's wallet.
+For each address the customer interacts from, we map the public key to the customer in our database.
+This way, a returning customer will never have to go through a login step or remember a password.
+The Harbour web app can also be themed accordingly with the origin app's branding, making the transition seamless.
+
+The only instance in which a login is required is when the customer comes from a new address, in which case they'll
+briefly confirm their identity by an SMS OTP and a security question. Similarly to the signup process, the login process
+is handled by Harbour and requires no integration work except for iframe embedding or web redirect.
