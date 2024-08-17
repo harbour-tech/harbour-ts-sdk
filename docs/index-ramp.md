@@ -77,9 +77,9 @@ to our web app. Note that:
 
 - Initially we'll only support redirects
 - We plan on supporting iframes in the future, by optimizing our UI for any screen size
-- If the integrating app does not provide a digital signature, the user will only be able to use our web app in a
-  desktop browser, with the wallet extension installed, in order to prove ownership of the address, as mentioned in
-  the [how it works](#how-it-works) section.
+- In our first beta iteration, we require a signature to demonstrate ownership if the address used for ramping. In
+  future iterations the signature will be optional and the user will have to connect their wallet on the Harbour web app
+  and will be asked to sign a payload.
 
 <table>
   <th>Query Param</th>
@@ -88,12 +88,89 @@ to our web app. Note that:
   <th>Description</th>
   <tbody>
     <tr>
-        <td>token</td>
+        <td>asset</td>
         <td>yes</td>
         <td>ETH_USD | POLY_USDC | AVAX_USDC</td>
         <td>Optional token to buy or sell. If missing or empty, Harbour's UI will ask the user what they intend to use.</td>
     </tr>
+    <tr>
+        <td>op</td>
+        <td>yes</td>
+        <td>buy | sell</td>
+        <td>Optional operation specifier. If missing, Harbour's UI will ask the user whether they want to buy or sell.</td>
+    </tr>
+    <tr>
+        <td>amount</td>
+        <td>yes</td>
+        <td>any numeric</td>
+        <td>
+            Optional amount specifier. If missing, Harbour's UI will ask the user the amount the want to ramp.
+            For the time being we only operate with stablecoins, so any decimal digit after the second (after cents) will be ignored.
+        </td>
+    </tr>
+    <tr>
+        <td>sig</td>
+        <td>no</td>
+        <td>any string</td>
+        <td>
+          Mandatory url-encoded signature to demonstrate ownership of a cryptographic public key.
+          Check the "Producing a valid signature" section below for more details.
+        </td>
+    </tr>
+    <tr>
+        <td>pubkey</td>
+        <td>no</td>
+        <td>any string</td>
+        <td>Mandatory url-encoded public key of the crypto address the user wants to ramp to/from.</td>
+    </tr>
+    <tr>
+        <td>address</td>
+        <td>no</td>
+        <td>any string</td>
+        <td>Mandatory blockchain address the user wants to ramp from/to.</td>
+    </tr>
+    <tr>
+        <td>origin</td>
+        <td>yes</td>
+        <td>any string</td>
+        <td>
+          Optional unique identifier for the originating app. Get in touch with our team to know your ID and get Harbour's UI 
+          to adhere to your color scheme and earn Harbour points on every user that interacts with our service.
+          </td>
+    </tr>
   </tbody>
 </table>
 
-TODO finish off this table
+### Producing a valid signature
+
+#### Ethereum
+
+Following are the instructions to produce a valid signature given an Ethereum address and public key.
+Check the [redirect specification](#redirect-specification) for a list of all URL parameters that can be passed.
+
+Let's analyze `address` and `pubkey`. The address has to be passed in the format expected by the Ethereum protocol,
+such as `0x123...`. The pubkey can be passed in either base64/urlencoded or hex encoded strings.
+If you wish to use hex encoding, ensure you prefix the address with 0x so that our code recognises it as a hex string,
+else it will default to try parsing it as base64.
+
+The address has to be the address on which the user wants to get their funds when buying, or from which they intend to
+send the funds when selling. The pubkey has to be the key from which the address is derived. You can pass either the
+compressed or uncompressed public key.
+
+The last parameter is `sig`, which is the signature of a Harbour custom payload, produced by using the private key
+corresponding to the public key discussed above. Again, it can either be in base64/urlencoded or hex encoded.
+
+The payload is built as such:
+
+- take the address bytes
+- get the current timestamp as unix epoch milliseconds
+- convert the timestamp to a string
+- get the Unicode bytes of such string
+- append the timestamp bytes to the address bytes
+
+The payload has to be hashed with keccak256, and the resulting hash has to be signed with the private key, and the
+resulting bytes have to be encoded in either base64 or hex. Note: you need to hash the raw payload, without using the
+`\x19Ethereum Signed Message:\n` prefix. Should that be an issue, let our team now so that we can accommodate with
+further functionality.
+
+`TODO add code sample`

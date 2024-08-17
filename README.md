@@ -20,7 +20,7 @@ By providing a dedicated bank account, Harbour offers the highest chance of succ
 to the traditional method of sending money to a bank account in the name of a Crypto institution, which is often
 blocked by traditional banks.
 
-TODO maybe add an image?
+![Ramp Diagram](./docs/assets/buysell.drawio.png)
 
 ### Availability
 
