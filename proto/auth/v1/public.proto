@@ -1,0 +1,52 @@
+syntax = "proto3";
+package auth.v1;
+
+import "google/protobuf/timestamp.proto";
+
+service AuthService {
+  // Authenticate a wallet using a public key and signature (signature contains the signed public key).
+  // The client also needs to specify the hashing algorithm used and the type of the public key. The returned token
+  // can be used to access the snap API and is valid for a limited time.
+  rpc AuthenticateWallet(AuthenticateWalletRequest) returns (AuthenticateWalletResponse);
+}
+
+message AuthenticateWalletRequest {
+  bytes public_key = 10;
+  PublicKeyType public_key_type = 20;
+  HashingAlgo hashing_algo = 25;
+  bytes signature = 30;
+
+  enum PublicKeyType {
+    PUBLIC_KEY_TYPE_UNSPECIFIED = 0;
+    PUBLIC_KEY_TYPE_SECP256K1 = 1;
+    PUBLIC_KEY_TYPE_SR25519 = 2;
+  }
+
+  enum HashingAlgo {
+    HASHING_ALGO_UNSPECIFIED = 0;
+    HASHING_ALGO_SHA256 = 1;
+    HASHING_ALGO_KECCAK256 = 2;
+    HASHING_ALGO_ETHEREUM = 3;
+    HASHING_ALGO_BLAKE2B = 4;
+  }
+}
+
+message AuthenticateWalletResponse {
+  oneof result {
+    Error error = 10;
+    PublicKeyToken public_key_token = 20;
+  }
+
+  enum Error {
+    ERROR_UNSPECIFIED = 0;
+    ERROR_UNSUPPORTED_PUBLIC_KEY_TYPE = 1;
+    ERROR_UNSUPPORTED_HASHING_ALGO = 2;
+    ERROR_INVALID_SIGNATURE = 3;
+    ERROR_INVALID_PUBLIC_KEY = 4;
+  }
+}
+
+message PublicKeyToken {
+  string token = 10;
+  google.protobuf.Timestamp expires_at = 20;
+}
