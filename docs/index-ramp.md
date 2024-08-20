@@ -173,4 +173,25 @@ resulting bytes have to be encoded in either base64 or hex. Note: you need to ha
 `\x19Ethereum Signed Message:\n` prefix. Should that be an issue, let our team now so that we can accommodate with
 further functionality.
 
-`TODO add code sample`
+To ensure you implement the correct signature algorithm right away, we've
+prepared [an example](../src/examples/example-eth-new-api.ts) with Node.js and TypeScript, which is hopefully close
+enough to your own stack.
+
+If you try running the script, you should get a bunch of console logs and a valid access token from our dev backend.
+To put your implementation to the test, you can set up a test case with the following inputs:
+
+- private key: `0x4ffa17bae4e3eb082aecc21145c6e40b16f10f7e950a4ccfdcc176c9199d42fd`
+- corresponding pub key uncompressed: `0xe32a36ecddcf5269a998a9c6d27ccb56ba59f0cc9ae5961e5747304fc06ad090`
+- timestamp: `1724162236365`
+
+Note that the private key corresponds to our example file. With the above inputs, your signing function should determine
+the following:
+
+- keccak hash of pubkey + timestamp is `0xe32a36ecddcf5269a998a9c6d27ccb56ba59f0cc9ae5961e5747304fc06ad090`
+- signature is expected to be
+  `0xb619c9699b6f98e0bac45d02bca3d5b854fc6e23f8b7c10f02f91ed41bf8f9df1e606392b4f54422da7a3c4992bc984b7aafcd3fd9ed57369f271f9278f96cd91b`
+
+If your signing function passes the above spec, it is guaranteed to function with our backend, given the following
+requirements:
+- the timestamp must be within 1 minute of the current time
+- a valid Ethereum key must be used, according to secp256k1
