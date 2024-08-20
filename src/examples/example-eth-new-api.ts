@@ -1,5 +1,5 @@
-// In this example we demonstrate how an Ethereum wallet not yet linked to any user will generate a response with the onboarding URL
-// Run me with: npx tsx src/examples/example-eth-linked.ts
+// In this example we demonstrate how an Ethereum wallet will generate the required signature for redirecting to the Harbour Ramp web app.
+// Run me with: npx tsx src/examples/example-eth-new-api.ts
 
 import {keccak256, toUtf8Bytes, Wallet} from "ethers";
 
@@ -12,12 +12,10 @@ import {
 
 const mnemonic = "smooth clump orphan else enjoy blue legend panda waste weapon wire aunt"
 const wallet = Wallet.fromPhrase(mnemonic);
-const compressedPubKey = wallet.signingKey.compressedPublicKey;
 
 console.log("Private key: ", wallet.signingKey.privateKey);
-console.log("Public key: ", wallet.signingKey.publicKey);
-console.log("Public key compressed: ", compressedPubKey);
-console.log("Address: ", wallet.address);
+console.log("Public key (hex): ", wallet.signingKey.publicKey);
+console.log("Public key (b64): ", hexToBase64(wallet.signingKey.publicKey));
 
 const signPayload = (payload: Uint8Array): string => {
     console.log("Signing payload: ", payload);
@@ -37,8 +35,9 @@ const pkPayload = hexToBinary(wallet.signingKey.publicKey);
 const signature = signPayload(pkPayload);
 
 console.log("Sending whitelist request")
-console.log("Public key: ", hexToBase64(wallet.signingKey.publicKey));
-console.log("Signature: ", hexToBase64(signature));
+console.log("Signature (hex): ", signature);
+console.log("Signature (b64): ", hexToBase64(signature));
+
 const whitelistResp = await auth.authenticateWallet(
     new AuthenticateWalletRequest({
         publicKey: hexToBinary(wallet.signingKey.publicKey),
@@ -60,12 +59,9 @@ function hexToBinary(hexString: string): Uint8Array {
 }
 
 function hexToBase64(hexString: string): string {
-    // Remove '0x' prefix if present
-    const hex = hexString.startsWith('0x') ? hexString.slice(2) : hexString;
+    return Buffer.from(hexToBinary(hexString)).toString('base64');
+}
 
-    // Convert the hex string to a Uint8Array
-    const bytes = new Uint8Array(hex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);
-
-    // Convert the Uint8Array to a Base64 string
-    return Buffer.from(bytes).toString('base64');
+function base64ToBinary(base64String: string): Uint8Array { // unused here, but useful for other cases
+    return Uint8Array.from(Buffer.from(base64String, 'base64'));
 }
