@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
-import { Message, proto3, Timestamp } from "@bufbuild/protobuf";
+import { Message, proto3, protoInt64, Timestamp } from "@bufbuild/protobuf";
 
 /**
  * @generated from message auth.v1.AuthenticateWalletRequest
@@ -26,6 +26,19 @@ export class AuthenticateWalletRequest extends Message<AuthenticateWalletRequest
   hashingAlgo = AuthenticateWalletRequest_HashingAlgo.UNSPECIFIED;
 
   /**
+   * the timestamp has to be recent, not older than 1 minute, and included in the signature
+   *
+   * @generated from field: int64 timestamp = 26;
+   */
+  timestamp = protoInt64.zero;
+
+  /**
+   * signature of the public key + timestamp
+   * - the timestamp has to be recent, not older than 1 minute
+   * - the timestamp has to be a unix milliseconds epoch, not nanosecond
+   * - the milliseconds number has to be converted to string, and then we get the string bytes
+   * - the string bytes will be appended to the pubkey without any delimiter
+   *
    * @generated from field: bytes signature = 30;
    */
   signature = new Uint8Array(0);
@@ -41,6 +54,7 @@ export class AuthenticateWalletRequest extends Message<AuthenticateWalletRequest
     { no: 10, name: "public_key", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
     { no: 20, name: "public_key_type", kind: "enum", T: proto3.getEnumType(AuthenticateWalletRequest_PublicKeyType) },
     { no: 25, name: "hashing_algo", kind: "enum", T: proto3.getEnumType(AuthenticateWalletRequest_HashingAlgo) },
+    { no: 26, name: "timestamp", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
     { no: 30, name: "signature", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
   ]);
 

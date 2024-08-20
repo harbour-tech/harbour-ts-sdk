@@ -14,6 +14,13 @@ message AuthenticateWalletRequest {
   bytes public_key = 10;
   PublicKeyType public_key_type = 20;
   HashingAlgo hashing_algo = 25;
+  // the timestamp has to be recent, not older than 1 minute, and included in the signature
+  int64 timestamp = 26;
+  // signature of the public key + timestamp
+  // - the timestamp has to be recent, not older than 1 minute
+  // - the timestamp has to be a unix milliseconds epoch, not nanosecond
+  // - the milliseconds number has to be converted to string, and then we get the string bytes
+  // - the string bytes will be appended to the pubkey without any delimiter
   bytes signature = 30;
 
   enum PublicKeyType {
