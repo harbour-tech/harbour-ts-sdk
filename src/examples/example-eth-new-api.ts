@@ -13,12 +13,10 @@ import {
 const mnemonic = "smooth clump orphan else enjoy blue legend panda waste weapon wire aunt"
 const wallet = Wallet.fromPhrase(mnemonic);
 
-console.log("Private key: ", wallet.signingKey.privateKey);
+console.log("Private key (hex): ", wallet.signingKey.privateKey);
 console.log("Public key (hex): ", wallet.signingKey.publicKey);
-console.log("Public key (b64): ", hexToBase64(wallet.signingKey.publicKey));
 
 const signPayload = (payload: Uint8Array): string => {
-    console.log("Signing payload: ", payload);
     const hashed = keccak256(payload);
     console.log("Hashed payload: ", hashed);
     const sig = wallet.signingKey.sign(hashed).serialized;
@@ -35,13 +33,12 @@ const pkBytes = hexToBinary(wallet.signingKey.publicKey);
 const timestamp = new Date().getTime();
 const timestampBytes = new TextEncoder().encode(timestamp.toString());
 const payload = new Uint8Array(pkBytes.length + timestampBytes.length);
-payload.set(timestampBytes, 0);
-payload.set(pkBytes, timestampBytes.length);
+payload.set(pkBytes, 0);
+payload.set(timestampBytes, pkBytes.length);
 const signature = signPayload(payload);
 
 console.log("Sending whitelist request")
-console.log("Signature (hex): ", signature);
-console.log("Signature (b64): ", hexToBase64(signature));
+console.log("Timestamp: ", timestamp);
 
 const whitelistResp = await auth.authenticateWallet(
     new AuthenticateWalletRequest({
@@ -49,7 +46,7 @@ const whitelistResp = await auth.authenticateWallet(
         publicKeyType: AuthenticateWalletRequest_PublicKeyType.SECP256K1,
         hashingAlgo: AuthenticateWalletRequest_HashingAlgo.KECCAK256,
         signature: hexToBinary(signature),
-        timestamp: timestamp,
+        timestamp: BigInt(timestamp)
     }),
 );
 
