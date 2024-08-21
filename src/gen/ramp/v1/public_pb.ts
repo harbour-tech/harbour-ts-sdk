@@ -4,7 +4,33 @@
 // @ts-nocheck
 
 import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
-import { Message, proto3, protoInt64 } from "@bufbuild/protobuf";
+import { Message, proto3, protoInt64, Timestamp } from "@bufbuild/protobuf";
+
+/**
+ * @generated from enum ramp.v1.RampType
+ */
+export enum RampType {
+  /**
+   * @generated from enum value: RAMP_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: RAMP_TYPE_ON_RAMP = 10;
+   */
+  ON_RAMP = 10,
+
+  /**
+   * @generated from enum value: RAMP_TYPE_OFF_RAMP = 20;
+   */
+  OFF_RAMP = 20,
+}
+// Retrieve enum metadata with: proto3.getEnumType(RampType)
+proto3.util.setEnumType(RampType, "ramp.v1.RampType", [
+  { no: 0, name: "RAMP_TYPE_UNSPECIFIED" },
+  { no: 10, name: "RAMP_TYPE_ON_RAMP" },
+  { no: 20, name: "RAMP_TYPE_OFF_RAMP" },
+]);
 
 /**
  * @generated from enum ramp.v1.Ecosystem
@@ -1154,6 +1180,84 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
 
   /**
    * address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
+   * Deprecated in favour of signed_address
+   *
+   * limited to 255 characters
+   *
+   * @generated from field: string address = 30 [deprecated = true];
+   * @deprecated
+   */
+  address = "";
+
+  /**
+   * address must be derived from the provided public key
+   * public key in particular ecosystem, encoded accordingly to ecosystem rules (Ethereum - hex, Cosmos - base64)
+   * Deprecated in favour of signed_address
+   *
+   * limited to 255 characters
+   *
+   * @generated from field: string public_key = 35 [deprecated = true];
+   * @deprecated
+   */
+  publicKey = "";
+
+  /**
+   * the address should be signed with its private key
+   * for the Ethereum: the address should be signed with https://docs.metamask.io/wallet/reference/personal_sign/
+   * Deprecated in favour of signed_address
+   *
+   * @generated from field: string address_signature = 40 [deprecated = true];
+   * @deprecated
+   */
+  addressSignature = "";
+
+  /**
+   * this field is only required when the public key used to authenticate this request is different from the key used to derive the address
+   * if this field is present in the request it takes precedence over the address, public_key and address_signature of the WhitelistAddressRequest
+   *
+   * @generated from field: ramp.v1.WhitelistAddressRequest.SignedAddress signed_address = 50;
+   */
+  signedAddress?: WhitelistAddressRequest_SignedAddress;
+
+  constructor(data?: PartialMessage<WhitelistAddressRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.WhitelistAddressRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
+    { no: 30, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 35, name: "public_key", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 40, name: "address_signature", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 50, name: "signed_address", kind: "message", T: WhitelistAddressRequest_SignedAddress },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): WhitelistAddressRequest {
+    return new WhitelistAddressRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): WhitelistAddressRequest {
+    return new WhitelistAddressRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): WhitelistAddressRequest {
+    return new WhitelistAddressRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: WhitelistAddressRequest | PlainMessage<WhitelistAddressRequest> | undefined, b: WhitelistAddressRequest | PlainMessage<WhitelistAddressRequest> | undefined): boolean {
+    return proto3.util.equals(WhitelistAddressRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.WhitelistAddressRequest.SignedAddress
+ */
+export class WhitelistAddressRequest_SignedAddress extends Message<WhitelistAddressRequest_SignedAddress> {
+  /**
+   * address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
    *
    * limited to 255 characters
    *
@@ -1179,35 +1283,33 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
    */
   addressSignature = "";
 
-  constructor(data?: PartialMessage<WhitelistAddressRequest>) {
+  constructor(data?: PartialMessage<WhitelistAddressRequest_SignedAddress>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "ramp.v1.WhitelistAddressRequest";
+  static readonly typeName = "ramp.v1.WhitelistAddressRequest.SignedAddress";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 20, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 30, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 35, name: "public_key", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 40, name: "address_signature", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): WhitelistAddressRequest {
-    return new WhitelistAddressRequest().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): WhitelistAddressRequest_SignedAddress {
+    return new WhitelistAddressRequest_SignedAddress().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): WhitelistAddressRequest {
-    return new WhitelistAddressRequest().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): WhitelistAddressRequest_SignedAddress {
+    return new WhitelistAddressRequest_SignedAddress().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): WhitelistAddressRequest {
-    return new WhitelistAddressRequest().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): WhitelistAddressRequest_SignedAddress {
+    return new WhitelistAddressRequest_SignedAddress().fromJsonString(jsonString, options);
   }
 
-  static equals(a: WhitelistAddressRequest | PlainMessage<WhitelistAddressRequest> | undefined, b: WhitelistAddressRequest | PlainMessage<WhitelistAddressRequest> | undefined): boolean {
-    return proto3.util.equals(WhitelistAddressRequest, a, b);
+  static equals(a: WhitelistAddressRequest_SignedAddress | PlainMessage<WhitelistAddressRequest_SignedAddress> | undefined, b: WhitelistAddressRequest_SignedAddress | PlainMessage<WhitelistAddressRequest_SignedAddress> | undefined): boolean {
+    return proto3.util.equals(WhitelistAddressRequest_SignedAddress, a, b);
   }
 }
 
@@ -1716,6 +1818,207 @@ export class EstimateOffRampFeeResponse extends Message<EstimateOffRampFeeRespon
 }
 
 /**
+ * @generated from message ramp.v1.GetRampsRequest
+ */
+export class GetRampsRequest extends Message<GetRampsRequest> {
+  /**
+   * if not set default page will be used (index=0, size=10)
+   *
+   * @generated from field: optional ramp.v1.Page page = 10;
+   */
+  page?: Page;
+
+  /**
+   * required
+   *
+   * @generated from field: ramp.v1.RampType ramp_type = 20;
+   */
+  rampType = RampType.UNSPECIFIED;
+
+  constructor(data?: PartialMessage<GetRampsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetRampsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "page", kind: "message", T: Page, opt: true },
+    { no: 20, name: "ramp_type", kind: "enum", T: proto3.getEnumType(RampType) },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRampsRequest {
+    return new GetRampsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRampsRequest {
+    return new GetRampsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRampsRequest {
+    return new GetRampsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRampsRequest | PlainMessage<GetRampsRequest> | undefined, b: GetRampsRequest | PlainMessage<GetRampsRequest> | undefined): boolean {
+    return proto3.util.equals(GetRampsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.GetRampsResponse
+ */
+export class GetRampsResponse extends Message<GetRampsResponse> {
+  /**
+   * @generated from field: ramp.v1.PagedResult page = 10;
+   */
+  page?: PagedResult;
+
+  /**
+   * @generated from field: repeated ramp.v1.GetRampsResponse.Ramp ramps = 20;
+   */
+  ramps: GetRampsResponse_Ramp[] = [];
+
+  constructor(data?: PartialMessage<GetRampsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetRampsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "page", kind: "message", T: PagedResult },
+    { no: 20, name: "ramps", kind: "message", T: GetRampsResponse_Ramp, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRampsResponse {
+    return new GetRampsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRampsResponse {
+    return new GetRampsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRampsResponse {
+    return new GetRampsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRampsResponse | PlainMessage<GetRampsResponse> | undefined, b: GetRampsResponse | PlainMessage<GetRampsResponse> | undefined): boolean {
+    return proto3.util.equals(GetRampsResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.GetRampsResponse.Ramp
+ */
+export class GetRampsResponse_Ramp extends Message<GetRampsResponse_Ramp> {
+  /**
+   * @generated from field: string id = 10;
+   */
+  id = "";
+
+  /**
+   * @generated from field: ramp.v1.RampType type = 20;
+   */
+  type = RampType.UNSPECIFIED;
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: ramp.v1.AssetId crypto_asset = 30;
+   */
+  cryptoAsset = AssetId.ASSET_ID_UNSPECIFIED;
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: string fiat_amount = 40;
+   */
+  fiatAmount = "";
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: string crypto_amount = 50;
+   */
+  cryptoAmount = "";
+
+  /**
+   * string exchange_rate = 60; // could be empty if ramp is not completed yet
+   *
+   * @generated from field: ramp.v1.Protocol wallet_protocol = 70;
+   */
+  walletProtocol = Protocol.UNSPECIFIED;
+
+  /**
+   * @generated from field: string wallet_address = 80;
+   */
+  walletAddress = "";
+
+  /**
+   * in fiat, could be empty if ramp is not completed yet
+   *
+   * @generated from field: string network_fee_amount = 90;
+   */
+  networkFeeAmount = "";
+
+  /**
+   * in fiat, could be empty if ramp is not completed yet
+   *
+   * @generated from field: string processing_fee_amount = 100;
+   */
+  processingFeeAmount = "";
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: google.protobuf.Timestamp finalized_at = 110;
+   */
+  finalizedAt?: Timestamp;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp initiated_at = 120;
+   */
+  initiatedAt?: Timestamp;
+
+  constructor(data?: PartialMessage<GetRampsResponse_Ramp>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetRampsResponse.Ramp";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "type", kind: "enum", T: proto3.getEnumType(RampType) },
+    { no: 30, name: "crypto_asset", kind: "enum", T: proto3.getEnumType(AssetId) },
+    { no: 40, name: "fiat_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 50, name: "crypto_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 70, name: "wallet_protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
+    { no: 80, name: "wallet_address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 90, name: "network_fee_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 100, name: "processing_fee_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 110, name: "finalized_at", kind: "message", T: Timestamp },
+    { no: 120, name: "initiated_at", kind: "message", T: Timestamp },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRampsResponse_Ramp {
+    return new GetRampsResponse_Ramp().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRampsResponse_Ramp {
+    return new GetRampsResponse_Ramp().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRampsResponse_Ramp {
+    return new GetRampsResponse_Ramp().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRampsResponse_Ramp | PlainMessage<GetRampsResponse_Ramp> | undefined, b: GetRampsResponse_Ramp | PlainMessage<GetRampsResponse_Ramp> | undefined): boolean {
+    return proto3.util.equals(GetRampsResponse_Ramp, a, b);
+  }
+}
+
+/**
  * @generated from message ramp.v1.ScanCoordinates
  */
 export class ScanCoordinates extends Message<ScanCoordinates> {
@@ -1798,6 +2101,106 @@ export class IbanCoordinates extends Message<IbanCoordinates> {
 
   static equals(a: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined, b: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined): boolean {
     return proto3.util.equals(IbanCoordinates, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.Page
+ */
+export class Page extends Message<Page> {
+  /**
+   * zero based numbering
+   *
+   * @generated from field: optional uint64 index = 10;
+   */
+  index?: bigint;
+
+  /**
+   * max 100
+   *
+   * @generated from field: optional uint64 size = 20;
+   */
+  size?: bigint;
+
+  constructor(data?: PartialMessage<Page>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.Page";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "index", kind: "scalar", T: 4 /* ScalarType.UINT64 */, opt: true },
+    { no: 20, name: "size", kind: "scalar", T: 4 /* ScalarType.UINT64 */, opt: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Page {
+    return new Page().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Page {
+    return new Page().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Page {
+    return new Page().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: Page | PlainMessage<Page> | undefined, b: Page | PlainMessage<Page> | undefined): boolean {
+    return proto3.util.equals(Page, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.PagedResult
+ */
+export class PagedResult extends Message<PagedResult> {
+  /**
+   * zero based numbering
+   *
+   * @generated from field: uint64 index = 10;
+   */
+  index = protoInt64.zero;
+
+  /**
+   * @generated from field: uint64 size = 20;
+   */
+  size = protoInt64.zero;
+
+  /**
+   * true if next page is available
+   *
+   * @generated from field: bool has_more = 30;
+   */
+  hasMore = false;
+
+  constructor(data?: PartialMessage<PagedResult>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.PagedResult";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "index", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 20, name: "size", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 30, name: "has_more", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): PagedResult {
+    return new PagedResult().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): PagedResult {
+    return new PagedResult().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): PagedResult {
+    return new PagedResult().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: PagedResult | PlainMessage<PagedResult> | undefined, b: PagedResult | PlainMessage<PagedResult> | undefined): boolean {
+    return proto3.util.equals(PagedResult, a, b);
   }
 }
 
