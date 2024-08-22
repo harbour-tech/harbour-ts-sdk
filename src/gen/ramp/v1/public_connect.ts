@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { EstimateOffRampFeeRequest, EstimateOffRampFeeResponse, EstimateOnRampFeeRequest, EstimateOnRampFeeResponse, GetAccountInfoRequest, GetAccountInfoResponse, PingRequest, PingResponse, RemoveAddressRequest, RemoveAddressResponse, SetBankAccountRequest, SetBankAccountResponse, WhitelistAddressRequest, WhitelistAddressResponse } from "./public_pb";
+import { EstimateOffRampFeeRequest, EstimateOffRampFeeResponse, EstimateOnRampFeeRequest, EstimateOnRampFeeResponse, GetAccountInfoRequest, GetAccountInfoResponse, GetRampsRequest, GetRampsResponse, PingRequest, PingResponse, RemoveAddressRequest, RemoveAddressResponse, SetBankAccountRequest, SetBankAccountResponse, WhitelistAddressRequest, WhitelistAddressResponse } from "./public_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -96,6 +96,15 @@ export const RampService = {
       name: "EstimateOffRampFee",
       I: EstimateOffRampFeeRequest,
       O: EstimateOffRampFeeResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc ramp.v1.RampService.GetRamps
+     */
+    getRamps: {
+      name: "GetRamps",
+      I: GetRampsRequest,
+      O: GetRampsResponse,
       kind: MethodKind.Unary,
     },
   }

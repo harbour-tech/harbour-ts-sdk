@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package ramp.v1;
 
+import "google/protobuf/timestamp.proto";
+
 service PingService {
   rpc Ping (PingRequest) returns (PingResponse) {}
 }
@@ -32,6 +34,7 @@ service RampService {
   // Authentication headers are not required for these RPCs.
   rpc EstimateOnRampFee (EstimateOnRampFeeRequest) returns (EstimateOnRampFeeResponse) {}
   rpc EstimateOffRampFee (EstimateOffRampFeeRequest) returns (EstimateOffRampFeeResponse) {}
+  rpc GetRamps(GetRampsRequest) returns (GetRampsResponse) {}
 }
 
 message GetAccountInfoRequest {}
@@ -175,13 +178,31 @@ message WhitelistAddressRequest {
   // Ethereum, Avalanche, Terra and etc.
   Protocol protocol = 20;
   // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
-  string address = 30; // limited to 255 characters
+  // Deprecated in favour of signed_address
+  string address = 30 [deprecated=true]; // limited to 255 characters
   // address must be derived from the provided public key
   // public key in particular ecosystem, encoded accordingly to ecosystem rules (Ethereum - hex, Cosmos - base64)
-  string public_key = 35; // limited to 255 characters
+  // Deprecated in favour of signed_address
+  string public_key = 35 [deprecated=true]; // limited to 255 characters
   // the address should be signed with its private key
   // for the Ethereum: the address should be signed with https://docs.metamask.io/wallet/reference/personal_sign/
-  string address_signature = 40;
+  // Deprecated in favour of signed_address
+  string address_signature = 40  [deprecated=true];
+
+  // this field is only required when the public key used to authenticate this request is different from the key used to derive the address
+  // if this field is present in the request it takes precedence over the address, public_key and address_signature of the WhitelistAddressRequest
+  SignedAddress signed_address = 50;
+
+  message SignedAddress {
+    // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
+    string address = 30; // limited to 255 characters
+    // address must be derived from the provided public key
+    // public key in particular ecosystem, encoded accordingly to ecosystem rules (Ethereum - hex, Cosmos - base64)
+    string public_key = 35; // limited to 255 characters
+    // the address should be signed with its private key
+    // for the Ethereum: the address should be signed with https://docs.metamask.io/wallet/reference/personal_sign/
+    string address_signature = 40;
+  }
 }
 
 message WhitelistAddressResponse {}
@@ -262,6 +283,39 @@ message EstimateOffRampFeeResponse {
   string processing_fee_amount = 60; // denominated in user's fiat currency
 }
 
+
+message GetRampsRequest {
+  optional Page page = 10; // if not set default page will be used (index=0, size=10)
+    RampType ramp_type = 20; // required
+}
+
+message GetRampsResponse {
+  PagedResult page = 10;
+  repeated Ramp ramps = 20;
+
+  message Ramp {
+    string id = 10;
+    RampType type= 20;
+    AssetId crypto_asset = 30; // could be empty if ramp is not completed yet
+    string fiat_amount = 40; // could be empty if ramp is not completed yet
+    string crypto_amount = 50; // could be empty if ramp is not completed yet
+    //string exchange_rate = 60; // could be empty if ramp is not completed yet
+    Protocol wallet_protocol = 70;
+    string wallet_address = 80;
+    string network_fee_amount = 90; // in fiat, could be empty if ramp is not completed yet
+    string processing_fee_amount = 100; // in fiat, could be empty if ramp is not completed yet
+
+    google.protobuf.Timestamp finalized_at = 110; // could be empty if ramp is not completed yet
+    google.protobuf.Timestamp initiated_at = 120;
+  }
+}
+
+enum RampType {
+  RAMP_TYPE_UNSPECIFIED = 0;
+  RAMP_TYPE_ON_RAMP = 10;
+  RAMP_TYPE_OFF_RAMP = 20;
+}
+
 message ScanCoordinates {
   string account_number = 10; // always 8 digits
   string sort_code = 20; // always 6 digits (if using an input mask such as ##-##-##, remove the dashes before submitting)
@@ -269,6 +323,17 @@ message ScanCoordinates {
 
 message IbanCoordinates {
   string iban = 10; // up to 34 characters (please submit them all uppercase) and numbers
+}
+
+message Page {
+  optional uint64 index = 10; // zero based numbering
+  optional uint64 size = 20; // max 100
+}
+
+message PagedResult {
+  uint64 index = 10; // zero based numbering
+  uint64 size = 20;
+  bool has_more = 30; // true if next page is available
 }
 
 enum Ecosystem {
