@@ -90,7 +90,7 @@ to our web app. Note that:
     <tr>
         <td>asset</td>
         <td>yes</td>
-        <td>ETH_USD | POLY_USDC | AVAX_USDC</td>
+        <td>ETH_USDC | POLY_USDC | AVAX_USDC</td>
         <td>Optional token to buy or sell. If missing or empty, Harbour's UI will ask the user what they intend to use.</td>
     </tr>
     <tr>
@@ -128,6 +128,12 @@ to our web app. Note that:
         <td>no</td>
         <td>any string</td>
         <td>Mandatory blockchain address the user wants to ramp from/to.</td>
+    </tr>
+    <tr>
+        <td>ts</td>
+        <td>no</td>
+        <td>integer</td>
+        <td>Mandatory timestamp used when producing the signature (unix milliseconds).</td>
     </tr>
     <tr>
         <td>origin</td>
