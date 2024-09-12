@@ -95,6 +95,11 @@ export enum Protocol {
    * @generated from enum value: PROTOCOL_ALEPH_ZERO = 50;
    */
   ALEPH_ZERO = 50,
+
+  /**
+   * @generated from enum value: PROTOCOL_ALEPH_ZERO_L2 = 60;
+   */
+  ALEPH_ZERO_L2 = 60,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Protocol)
 proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
@@ -104,6 +109,7 @@ proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
   { no: 30, name: "PROTOCOL_TERRA" },
   { no: 40, name: "PROTOCOL_POLYGON" },
   { no: 50, name: "PROTOCOL_ALEPH_ZERO" },
+  { no: 60, name: "PROTOCOL_ALEPH_ZERO_L2" },
 ]);
 
 /**
@@ -221,6 +227,16 @@ export enum Network {
    * @generated from enum value: NETWORK_ALEPH_ZERO_TESTNET = 90;
    */
   ALEPH_ZERO_TESTNET = 90,
+
+  /**
+   * @generated from enum value: NETWORK_ALEPH_ZERO_L2_MAINNET = 100;
+   */
+  ALEPH_ZERO_L2_MAINNET = 100,
+
+  /**
+   * @generated from enum value: NETWORK_ALEPH_ZERO_L2_TESTNET = 110;
+   */
+  ALEPH_ZERO_L2_TESTNET = 110,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Network)
 proto3.util.setEnumType(Network, "ramp.v1.Network", [
@@ -234,6 +250,8 @@ proto3.util.setEnumType(Network, "ramp.v1.Network", [
   { no: 70, name: "NETWORK_POLYGON_AMOY" },
   { no: 80, name: "NETWORK_ALEPH_ZERO_MAINNET" },
   { no: 90, name: "NETWORK_ALEPH_ZERO_TESTNET" },
+  { no: 100, name: "NETWORK_ALEPH_ZERO_L2_MAINNET" },
+  { no: 110, name: "NETWORK_ALEPH_ZERO_L2_TESTNET" },
 ]);
 
 /**
@@ -308,6 +326,11 @@ export class PingResponse extends Message<PingResponse> {
  * @generated from message ramp.v1.GetAccountInfoRequest
  */
 export class GetAccountInfoRequest extends Message<GetAccountInfoRequest> {
+  /**
+   * @generated from field: optional string referral_code = 10;
+   */
+  referralCode?: string;
+
   constructor(data?: PartialMessage<GetAccountInfoRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -316,6 +339,7 @@ export class GetAccountInfoRequest extends Message<GetAccountInfoRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "referral_code", kind: "scalar", T: 9 /* ScalarType.STRING */, opt: true },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoRequest {
@@ -1835,6 +1859,13 @@ export class GetRampsRequest extends Message<GetRampsRequest> {
    */
   rampType = RampType.UNSPECIFIED;
 
+  /**
+   * optional
+   *
+   * @generated from field: optional ramp.v1.GetRampsRequest.DateRange date_range = 30;
+   */
+  dateRange?: GetRampsRequest_DateRange;
+
   constructor(data?: PartialMessage<GetRampsRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -1845,6 +1876,7 @@ export class GetRampsRequest extends Message<GetRampsRequest> {
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 10, name: "page", kind: "message", T: Page, opt: true },
     { no: 20, name: "ramp_type", kind: "enum", T: proto3.getEnumType(RampType) },
+    { no: 30, name: "date_range", kind: "message", T: GetRampsRequest_DateRange, opt: true },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRampsRequest {
@@ -1861,6 +1893,49 @@ export class GetRampsRequest extends Message<GetRampsRequest> {
 
   static equals(a: GetRampsRequest | PlainMessage<GetRampsRequest> | undefined, b: GetRampsRequest | PlainMessage<GetRampsRequest> | undefined): boolean {
     return proto3.util.equals(GetRampsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.GetRampsRequest.DateRange
+ */
+export class GetRampsRequest_DateRange extends Message<GetRampsRequest_DateRange> {
+  /**
+   * @generated from field: google.protobuf.Timestamp from = 10;
+   */
+  from?: Timestamp;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp to = 20;
+   */
+  to?: Timestamp;
+
+  constructor(data?: PartialMessage<GetRampsRequest_DateRange>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetRampsRequest.DateRange";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "from", kind: "message", T: Timestamp },
+    { no: 20, name: "to", kind: "message", T: Timestamp },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRampsRequest_DateRange {
+    return new GetRampsRequest_DateRange().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRampsRequest_DateRange {
+    return new GetRampsRequest_DateRange().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRampsRequest_DateRange {
+    return new GetRampsRequest_DateRange().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRampsRequest_DateRange | PlainMessage<GetRampsRequest_DateRange> | undefined, b: GetRampsRequest_DateRange | PlainMessage<GetRampsRequest_DateRange> | undefined): boolean {
+    return proto3.util.equals(GetRampsRequest_DateRange, a, b);
   }
 }
 

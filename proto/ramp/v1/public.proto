@@ -37,7 +37,9 @@ service RampService {
   rpc GetRamps(GetRampsRequest) returns (GetRampsResponse) {}
 }
 
-message GetAccountInfoRequest {}
+message GetAccountInfoRequest {
+  optional string referral_code = 10;
+}
 
 message GetAccountInfoResponse {
   oneof result {
@@ -286,7 +288,13 @@ message EstimateOffRampFeeResponse {
 
 message GetRampsRequest {
   optional Page page = 10; // if not set default page will be used (index=0, size=10)
-    RampType ramp_type = 20; // required
+  RampType ramp_type = 20; // required
+  optional DateRange date_range = 30; // optional
+
+  message DateRange {
+    google.protobuf.Timestamp from = 10;
+    google.protobuf.Timestamp to = 20;
+  }
 }
 
 message GetRampsResponse {
@@ -349,6 +357,7 @@ enum Protocol {
   PROTOCOL_TERRA = 30;
   PROTOCOL_POLYGON = 40;
   PROTOCOL_ALEPH_ZERO = 50;
+  PROTOCOL_ALEPH_ZERO_L2 = 60;
 }
 
 // An AssetId helps the client to identify an exact token and customise the UI.
@@ -378,4 +387,6 @@ enum Network {
   NETWORK_POLYGON_AMOY = 70;
   NETWORK_ALEPH_ZERO_MAINNET = 80;
   NETWORK_ALEPH_ZERO_TESTNET = 90;
+  NETWORK_ALEPH_ZERO_L2_MAINNET = 100;
+  NETWORK_ALEPH_ZERO_L2_TESTNET = 110;
 }
