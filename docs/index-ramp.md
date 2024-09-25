@@ -216,8 +216,8 @@ your function should determine the following:
 - signature is expected to be
   `0xb619c9699b6f98e0bac45d02bca3d5b854fc6e23f8b7c10f02f91ed41bf8f9df1e606392b4f54422da7a3c4992bc984b7aafcd3fd9ed57369f271f9278f96cd91b`
 
-Alternatively, should you choose to adopt personal message signing with the exact same keypair and timestamp, the
-signature should be:
+Alternatively, should you choose to adopt personal message signing, you can set up a test case with the exact same 
+keypair and timestamp, and expect the signature to be:
 `0x0d779dda1ca405ff07181d9c8a2743503c6479641e7c076dd379e39837a839626b80fedb71edf60597c484928b76c38672d6b229aac4de4750ef0df2eebf911e1b`.
 
 If your signing function passes the above spec, it is guaranteed to function with our backend, given the following
