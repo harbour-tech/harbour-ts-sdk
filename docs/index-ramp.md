@@ -118,6 +118,15 @@ to our web app. Note that:
         </td>
     </tr>
     <tr>
+        <td>hash</td>
+        <td>yes</td>
+        <td>any string</td>
+        <td>
+          For ethereum signatures produced via personal_sign instead of eth_sign, this parameter should be set to "ethereum".
+          More details are provided in the docs for producing the signature. For any other use case, it should be omitted.
+        </td>
+    </tr>
+    <tr>
         <td>pubkey</td>
         <td>no</td>
         <td>any string</td>
@@ -174,30 +183,45 @@ The payload is built as such:
 - get the Unicode bytes of such string
 - append the timestamp bytes to the address bytes
 
-The payload has to be hashed with keccak256, and the resulting hash has to be signed with the private key, and the
-resulting bytes have to be encoded in either base64 or hex. Note: you need to hash the raw payload, without using the
-`\x19Ethereum Signed Message:\n` prefix. Should that be an issue, let our team now so that we can accommodate with
-further functionality.
+The payload should then be signed, and you have two options to do so:
 
-To ensure you implement the correct signature algorithm right away, we've
-prepared [an example](../src/examples/example-eth-new-api.ts) with Node.js and TypeScript, which is hopefully close
-enough to your own stack.
+- Manually take care of hashing with keccak256 and then signing with the private key (raw signing).
+- Using a library which implements personal message signing. This is an algorithm that adds a special prefix
+  `"\x19Ethereum Signed Message:\n"` to the payload, and then hashes the result with keccak256 and finally signs it.
+
+Should you go with the message signing instead of raw signing, you need to add the `hash=ethereum` query parameter to
+our redirect URL.
+
+See the following examples on how to create a valid signature with ethers.js:
+
+- [raw signing example](../src/examples/example-eth-new-api.ts)
+- [personal message signing example](../src/examples/example-eth-new-api-personalsign.ts)
 
 If you try running the script, you should get a bunch of console logs and a valid access token from our dev backend.
+Note that you don't need to do this API integration yourself, it's just a convenient way to showcase exactly how you
+can build a valid signature.
+
 To put your implementation to the test, you can set up a test case with the following inputs:
 
 - private key: `0x4ffa17bae4e3eb082aecc21145c6e40b16f10f7e950a4ccfdcc176c9199d42fd`
 - corresponding pub key uncompressed: `0xe32a36ecddcf5269a998a9c6d27ccb56ba59f0cc9ae5961e5747304fc06ad090`
 - timestamp: `1724162236365`
 
-Note that the private key corresponds to our example file. With the above inputs, your signing function should determine
-the following:
+Note that the private key corresponds to our example file. With the above inputs, if you choose to adopt raw signing,
+your function should determine the following:
 
-- keccak hash of pubkey + timestamp is `0xe32a36ecddcf5269a998a9c6d27ccb56ba59f0cc9ae5961e5747304fc06ad090`
+- the hex-encoded payload (pubkey + timestamp) is
+  `0x04792b75fc27f4f3f9cd33ef5130fdd8286c3416836728e1f783c41bf52a2bd5ab54ad58e7f64cd6716dde3054d6063b8493ee8275d60cbba31444a97f8fc5afca31373234313632323336333635`
+- keccak hash of the payload is `0xe32a36ecddcf5269a998a9c6d27ccb56ba59f0cc9ae5961e5747304fc06ad090`
 - signature is expected to be
   `0xb619c9699b6f98e0bac45d02bca3d5b854fc6e23f8b7c10f02f91ed41bf8f9df1e606392b4f54422da7a3c4992bc984b7aafcd3fd9ed57369f271f9278f96cd91b`
 
+Alternatively, should you choose to adopt personal message signing, you can set up a test case with the exact same 
+keypair and timestamp, and expect the signature to be:
+`0x0d779dda1ca405ff07181d9c8a2743503c6479641e7c076dd379e39837a839626b80fedb71edf60597c484928b76c38672d6b229aac4de4750ef0df2eebf911e1b`.
+
 If your signing function passes the above spec, it is guaranteed to function with our backend, given the following
 requirements:
+
 - the timestamp must be within 1 minute of the current time
 - a valid Ethereum key must be used, according to secp256k1

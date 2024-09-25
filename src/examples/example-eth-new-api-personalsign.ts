@@ -1,7 +1,8 @@
-// In this example we demonstrate how an Ethereum wallet will generate the required signature for redirecting to the Harbour Ramp web app.
-// Run me with: npx tsx src/examples/example-eth-new-api.ts
+// In this example we demonstrate how an Ethereum wallet can generate the required signature for redirecting to
+// the Harbour Ramp web app, through Ethereum's personal_sign method.
+// Run me with: npx tsx src/examples/example-eth-new-api-personalsign.ts
 
-import {keccak256, Wallet} from "ethers";
+import {Wallet} from "ethers";
 
 import {AuthClient} from "../";
 import {
@@ -16,14 +17,6 @@ const wallet = Wallet.fromPhrase(mnemonic);
 console.log("Private key (hex): ", wallet.signingKey.privateKey);
 console.log("Public key (hex): ", wallet.signingKey.publicKey);
 
-const signPayload = (payload: Uint8Array): string => {
-    const hashed = keccak256(payload);
-    console.log("Hashed payload: ", hashed);
-    const sig = wallet.signingKey.sign(hashed).serialized;
-    console.log("Signature: ", sig);
-    return sig;
-}
-
 const auth = new AuthClient("https://dev-api.harborapps-nonprod.link");
 
 // The first time a user connects their wallet and selects and address for on-ramping, they need to whitelist their crypto wallet address.
@@ -35,26 +28,24 @@ const timestampBytes = new TextEncoder().encode(timestamp.toString());
 const payload = new Uint8Array(pkBytes.length + timestampBytes.length);
 payload.set(pkBytes, 0);
 payload.set(timestampBytes, pkBytes.length);
-
-console.log("Payload: ", uint8ArrayToHex(payload));
-const signature = signPayload(payload);
+const signature = await wallet.signMessage(payload);
 
 console.log("Sending auth wallet request")
 console.log("Signature: ", signature);
 console.log("Timestamp: ", timestamp);
 
-const authenticateResp = await auth.authenticateWallet(
+const authResp = await auth.authenticateWallet(
     new AuthenticateWalletRequest({
         publicKey: hexToBinary(wallet.signingKey.publicKey),
         publicKeyType: AuthenticateWalletRequest_PublicKeyType.SECP256K1,
-        hashingAlgo: AuthenticateWalletRequest_HashingAlgo.KECCAK256,
+        hashingAlgo: AuthenticateWalletRequest_HashingAlgo.ETHEREUM,
         signature: hexToBinary(signature),
         timestamp: BigInt(timestamp)
     }),
 );
 
 console.log("Auth wallet response received")
-console.dir(authenticateResp, {depth: null});
+console.dir(authResp, {depth: null});
 
 function hexToBinary(hexString: string): Uint8Array {
     // Remove '0x' prefix if present
@@ -62,18 +53,4 @@ function hexToBinary(hexString: string): Uint8Array {
 
     // Convert the hex string to a Uint8Array
     return new Uint8Array(hex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);
-}
-
-function hexToBase64(hexString: string): string {
-    return Buffer.from(hexToBinary(hexString)).toString('base64');
-}
-
-function base64ToBinary(base64String: string): Uint8Array { // unused here, but useful for other cases
-    return Uint8Array.from(Buffer.from(base64String, 'base64'));
-}
-
-function uint8ArrayToHex(uint8Array: Uint8Array): string {
-    return "0x" + Array.from(uint8Array)
-        .map(byte => byte.toString(16).padStart(2, '0'))
-        .join('');
 }
