@@ -3,8 +3,27 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { EstimateOffRampFeeRequest, EstimateOffRampFeeResponse, EstimateOnRampFeeRequest, EstimateOnRampFeeResponse, GetAccountInfoRequest, GetAccountInfoResponse, GetRampsRequest, GetRampsResponse, PingRequest, PingResponse, RemoveAddressRequest, RemoveAddressResponse, SetBankAccountRequest, SetBankAccountResponse, WhitelistAddressRequest, WhitelistAddressResponse } from "./public_pb";
-import { MethodKind } from "@bufbuild/protobuf";
+import {
+  EstimateOffRampFeeRequest,
+  EstimateOffRampFeeResponse,
+  EstimateOnRampFeeRequest,
+  EstimateOnRampFeeResponse,
+  GetAccountInfoRequest,
+  GetAccountInfoResponse,
+  GetAssetsRequest,
+  GetAssetsResponse,
+  GetRampsRequest,
+  GetRampsResponse,
+  PingRequest,
+  PingResponse,
+  RemoveAddressRequest,
+  RemoveAddressResponse,
+  SetBankAccountRequest,
+  SetBankAccountResponse,
+  WhitelistAddressRequest,
+  WhitelistAddressResponse
+} from "./public_pb";
+import {MethodKind} from "@bufbuild/protobuf";
 
 /**
  * @generated from service ramp.v1.PingService
@@ -79,6 +98,15 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
+     * @generated from rpc ramp.v1.RampService.GetRamps
+     */
+    getRamps: {
+      name: "GetRamps",
+      I: GetRampsRequest,
+      O: GetRampsResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
      * Authentication headers are not required for these RPCs.
      *
      * @generated from rpc ramp.v1.RampService.EstimateOnRampFee
@@ -99,12 +127,12 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
-     * @generated from rpc ramp.v1.RampService.GetRamps
+     * @generated from rpc ramp.v1.RampService.GetAssets
      */
-    getRamps: {
-      name: "GetRamps",
-      I: GetRampsRequest,
-      O: GetRampsResponse,
+    getAssets: {
+      name: "GetAssets",
+      I: GetAssetsRequest,
+      O: GetAssetsResponse,
       kind: MethodKind.Unary,
     },
   }

@@ -31,10 +31,12 @@ service RampService {
   // Sets a bank account for the off ramp
   rpc SetBankAccount (SetBankAccountRequest) returns (SetBankAccountResponse) {}
 
+  rpc GetRamps(GetRampsRequest) returns (GetRampsResponse) {}
+
   // Authentication headers are not required for these RPCs.
   rpc EstimateOnRampFee (EstimateOnRampFeeRequest) returns (EstimateOnRampFeeResponse) {}
   rpc EstimateOffRampFee (EstimateOffRampFeeRequest) returns (EstimateOffRampFeeResponse) {}
-  rpc GetRamps(GetRampsRequest) returns (GetRampsResponse) {}
+  rpc GetAssets(GetAssetsRequest) returns (GetAssetsResponse) {}
 }
 
 message GetAccountInfoRequest {
@@ -95,6 +97,7 @@ message GetAccountInfoResponse {
     }
   }
 
+  // Deprecated
   message CryptoAsset {
     // asset status for on/off ramping
     RampStatus status = 1;
@@ -103,11 +106,13 @@ message GetAccountInfoResponse {
     Network network = 10;
     AssetId asset_id = 20; // the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
     string short_name = 30; // to be used as a fallback if the client doesn't recognise the asset_id (eg: out of date proto definitions)
+    string symbol = 35; // the canonical symbol for the asset - eg: USDC for any Circle-issued USDC on any chain, or ETH for Ethereum
 
     oneof details {
       EthereumErc20Token ethereum_erc20_token = 40;
       CosmosIcs20Token cosmos_ics20_token = 50;
       SubstratePsp22Token substrate_psp22_token = 60;
+      EthereumNative ethereum_native = 70;
     }
 
     message EthereumErc20Token {
@@ -119,6 +124,7 @@ message GetAccountInfoResponse {
     message SubstratePsp22Token {
       string token_address = 10; // Substrate PSP22 token address
     }
+    message EthereumNative {}
     message RampStatus {
       Status onramp = 10;
       Status offramp = 20;
@@ -164,11 +170,11 @@ message GetAccountInfoResponse {
     // current usage for on-ramp in fiat currency
     string onramp_current_daily_usage = 30;
 
-    // single limit for off-ramp in crypto currency (USDC)
+    // single limit for off-ramp expressed in fiat currency (either EUR or GBP)
     string offramp_single_limit = 40;
-    // daily limit for off-ramp in crypto currency (USDC)
+    // daily limit for off-ramp expressed in fiat currency (either EUR or GBP)
     string offramp_daily_limit = 50;
-    // current usage for off-ramp in crypto currency (USDC)
+    // current usage for off-ramp expressed in fiat currency (either EUR or GBP)
     string offramp_current_daily_usage = 60;
   }
 }
@@ -318,6 +324,75 @@ message GetRampsResponse {
   }
 }
 
+message GetAssetsRequest {
+  CurrencyId fiat_asset_id = 10;
+}
+
+message GetAssetsResponse {
+  repeated CryptoAsset crypto_assets = 10;
+
+}
+
+message CryptoAsset {
+  // asset status for on/off ramping
+  RampStatus status = 10;
+
+  Protocol protocol = 20;
+  Network network = 30;
+  AssetId asset_id = 40; // the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
+  string short_name = 50; // to be used as a fallback if the client doesn't recognise the asset_id (eg: out of date proto definitions)
+  string symbol = 55; // the canonical symbol for the asset - eg: USDC for any Circle-issued USDC on any chain, or ETH for Ethereum
+
+  oneof details {
+    EthereumErc20Token ethereum_erc20_token = 60;
+    CosmosIcs20Token cosmos_ics20_token = 70;
+    SubstratePsp22Token substrate_psp22_token = 80;
+    EthereumNative ethereum_native = 90;
+  }
+
+  Limits onramp_limits = 100;
+  Limits offramp_limits = 110;
+
+
+  message EthereumErc20Token {
+    string token_address = 10; // ERC20 token address
+  }
+  message CosmosIcs20Token {
+    string ibc_address = 10; // IBC token address
+  }
+  message SubstratePsp22Token {
+    string token_address = 10; // Substrate PSP22 token address
+  }
+  message EthereumNative {}
+
+  message RampStatus {
+    Status onramp = 10;
+    Status offramp = 20;
+
+    enum Status {
+      // All is good, asset can be on/off ramped
+      STATUS_UNSPECIFIED = 0;
+      // Our system is experiencing degradation (longer waits) but still operational.
+      // The UI should warn users.
+      STATUS_DEGRADED = 20;
+      // Exceptional scenarios: ramping halted. The UI should prevent users from taking any action.
+      STATUS_HALTED = 30;
+    }
+  }
+
+  message Limits {
+    Amount single_limit_amount = 10;
+    Amount daily_limit_amount = 20;
+    Amount daily_used_amount = 30;
+    Amount daily_remaining_amount = 40;
+
+    message Amount {
+      string asset = 10;
+      string fiat = 20;
+    }
+  }
+}
+
 enum RampType {
   RAMP_TYPE_UNSPECIFIED = 0;
   RAMP_TYPE_ON_RAMP = 10;
@@ -348,6 +423,7 @@ enum Ecosystem {
   ECOSYSTEM_UNSPECIFIED = 0;
   ECOSYSTEM_ETHEREUM = 10; // any EVM compatible chain - addresses are expected to be the right-most 160 bits of the keccak256 hash of the public key
   ECOSYSTEM_COSMOS = 20; // any Cosmos ecosystem chain - addresses are expected to be compatible with the Cosmos SDK (such as 160 bit BECH32)
+  ECOSYSTEM_SUBSTRATE = 30; // any Substrate ecosystem chain - addresses are expected to be compatible with Substrate (overal 256bit SS58)
 }
 
 enum Protocol {
@@ -358,6 +434,8 @@ enum Protocol {
   PROTOCOL_POLYGON = 40;
   PROTOCOL_ALEPH_ZERO = 50;
   PROTOCOL_ALEPH_ZERO_L2 = 60;
+  PROTOCOL_POLKADOT = 70;
+  PROTOCOL_NOBLE = 80;
 }
 
 // An AssetId helps the client to identify an exact token and customise the UI.
@@ -368,6 +446,9 @@ enum AssetId {
   ASSET_ID_USDC = 10;
   ASSET_ID_AXL_USDC = 20;
   ASSET_ID_1USD = 30;
+  ASSET_ID_ETH = 40;
+  ASSET_ID_DOT = 50;
+  ASSET_ID_USDE = 60;
 }
 
 enum CurrencyId {
@@ -389,4 +470,8 @@ enum Network {
   NETWORK_ALEPH_ZERO_TESTNET = 90;
   NETWORK_ALEPH_ZERO_L2_MAINNET = 100;
   NETWORK_ALEPH_ZERO_L2_TESTNET = 110;
+  NETWORK_POLKADOT_MAINNET = 120;
+  NETWORK_POLKADOT_TESTNET = 130;
+  NETWORK_NOBLE_MAINNET = 140;
+  NETWORK_NOBLE_TESTNET = 150;
 }

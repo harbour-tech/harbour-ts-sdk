@@ -10,6 +10,8 @@ import {
     EstimateOnRampFeeResponse,
     GetAccountInfoRequest,
     GetAccountInfoResponse,
+    GetAssetsRequest,
+    GetAssetsResponse,
     RemoveAddressRequest,
     RemoveAddressResponse,
     SetBankAccountRequest,
@@ -29,33 +31,38 @@ export class RampClient {
      @param endpoint - URL of Harbour API
      @param signer - function which signs every request to Harbour API
      */
-    constructor(endpoint: string, signer: SignerFunction) {
-        const fetchWithSignature: typeof globalThis.fetch = async (r, init) => {
-            if (!(init?.body instanceof Uint8Array)) {
-                throw "unsupported body type";
-            }
-            const bodyText = new TextDecoder().decode(init.body);
-            const timestamp = Date.now().toString();
-            const data = bodyText + timestamp;
-            const signature = await signer(data);
+    constructor(endpoint: string, signer: SignerFunction | undefined = undefined) {
+        let customFetch: typeof global.fetch
+        if (signer) {
+            customFetch = async (r, init) => {
+                if (!(init?.body instanceof Uint8Array)) {
+                    throw "unsupported body type";
+                }
+                const bodyText = new TextDecoder().decode(init.body);
+                const timestamp = Date.now().toString();
+                const data = bodyText + timestamp;
+                const signature = await signer(data);
 
-            const headers = new Headers(init?.headers);
-            headers.append("X-Signature", signature.signature);
-            headers.append(
-                "X-Signature-Type",
-                `${signature.hashingAlgorithm}/${signature.signingAlgorithm}`,
-            );
-            headers.append("X-Signature-PublicKey", signature.publicKey);
-            headers.append("X-Encoding", signature.encodingAlgorithm);
-            headers.append("X-Signature-Timestamp", timestamp);
+                const headers = new Headers(init?.headers);
+                headers.append("X-Signature", signature.signature);
+                headers.append(
+                    "X-Signature-Type",
+                    `${signature.hashingAlgorithm}/${signature.signingAlgorithm}`,
+                );
+                headers.append("X-Signature-PublicKey", signature.publicKey);
+                headers.append("X-Encoding", signature.encodingAlgorithm);
+                headers.append("X-Signature-Timestamp", timestamp);
 
-            const modifiedInit: RequestInit = {...init, headers};
-            return fetch(r, modifiedInit);
-        };
+                const modifiedInit: RequestInit = {...init, headers};
+                return fetch(r, modifiedInit);
+            };
+        } else {
+            customFetch = fetch
+        }
 
         const transport = createConnectTransport({
             baseUrl: endpoint,
-            fetch: fetchWithSignature,
+            fetch: customFetch,
         });
         this.client = createPromiseClient(RampService, transport);
     }
@@ -102,7 +109,7 @@ export class RampClient {
     }
 
     /**
-     * Esestimate on ramp fee
+     * Estimate on ramp fee
      * @param request - on ramp parameters
      */
     public async estimateOnRampFee(
@@ -112,13 +119,23 @@ export class RampClient {
     }
 
     /**
-     * Esestimate on ramp fee
+     * Estimate on ramp fee
      * @param request - on ramp parameters
      */
     public async estimateOffRampFee(
         request: EstimateOffRampFeeRequest,
     ): Promise<EstimateOffRampFeeResponse> {
         return this.client.estimateOffRampFee(request);
+    }
+
+    /**
+     * Estimate on ramp fee
+     * @param request - on ramp parameters
+     */
+    public async getAssets(
+      request: GetAssetsRequest,
+    ): Promise<GetAssetsResponse> {
+        return this.client.getAssets(request);
     }
 }
 

@@ -3,8 +3,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
-import { Message, proto3, protoInt64, Timestamp } from "@bufbuild/protobuf";
+import type {
+  BinaryReadOptions,
+  FieldList,
+  JsonReadOptions,
+  JsonValue,
+  PartialMessage,
+  PlainMessage
+} from "@bufbuild/protobuf";
+import {Message, proto3, protoInt64, Timestamp} from "@bufbuild/protobuf";
 
 /**
  * @generated from enum ramp.v1.RampType
@@ -54,12 +61,20 @@ export enum Ecosystem {
    * @generated from enum value: ECOSYSTEM_COSMOS = 20;
    */
   COSMOS = 20,
+
+  /**
+   * any Substrate ecosystem chain - addresses are expected to be compatible with Substrate (overal 256bit SS58)
+   *
+   * @generated from enum value: ECOSYSTEM_SUBSTRATE = 30;
+   */
+  SUBSTRATE = 30,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Ecosystem)
 proto3.util.setEnumType(Ecosystem, "ramp.v1.Ecosystem", [
   { no: 0, name: "ECOSYSTEM_UNSPECIFIED" },
   { no: 10, name: "ECOSYSTEM_ETHEREUM" },
   { no: 20, name: "ECOSYSTEM_COSMOS" },
+  { no: 30, name: "ECOSYSTEM_SUBSTRATE" },
 ]);
 
 /**
@@ -100,6 +115,16 @@ export enum Protocol {
    * @generated from enum value: PROTOCOL_ALEPH_ZERO_L2 = 60;
    */
   ALEPH_ZERO_L2 = 60,
+
+  /**
+   * @generated from enum value: PROTOCOL_POLKADOT = 70;
+   */
+  POLKADOT = 70,
+
+  /**
+   * @generated from enum value: PROTOCOL_NOBLE = 80;
+   */
+  NOBLE = 80,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Protocol)
 proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
@@ -110,6 +135,8 @@ proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
   { no: 40, name: "PROTOCOL_POLYGON" },
   { no: 50, name: "PROTOCOL_ALEPH_ZERO" },
   { no: 60, name: "PROTOCOL_ALEPH_ZERO_L2" },
+  { no: 70, name: "PROTOCOL_POLKADOT" },
+  { no: 80, name: "PROTOCOL_NOBLE" },
 ]);
 
 /**
@@ -139,6 +166,21 @@ export enum AssetId {
    * @generated from enum value: ASSET_ID_1USD = 30;
    */
   ASSET_ID_1USD = 30,
+
+  /**
+   * @generated from enum value: ASSET_ID_ETH = 40;
+   */
+  ASSET_ID_ETH = 40,
+
+  /**
+   * @generated from enum value: ASSET_ID_DOT = 50;
+   */
+  ASSET_ID_DOT = 50,
+
+  /**
+   * @generated from enum value: ASSET_ID_USDE = 60;
+   */
+  ASSET_ID_USDE = 60,
 }
 // Retrieve enum metadata with: proto3.getEnumType(AssetId)
 proto3.util.setEnumType(AssetId, "ramp.v1.AssetId", [
@@ -146,6 +188,9 @@ proto3.util.setEnumType(AssetId, "ramp.v1.AssetId", [
   { no: 10, name: "ASSET_ID_USDC" },
   { no: 20, name: "ASSET_ID_AXL_USDC" },
   { no: 30, name: "ASSET_ID_1USD" },
+  { no: 40, name: "ASSET_ID_ETH" },
+  { no: 50, name: "ASSET_ID_DOT" },
+  { no: 60, name: "ASSET_ID_USDE" },
 ]);
 
 /**
@@ -237,6 +282,26 @@ export enum Network {
    * @generated from enum value: NETWORK_ALEPH_ZERO_L2_TESTNET = 110;
    */
   ALEPH_ZERO_L2_TESTNET = 110,
+
+  /**
+   * @generated from enum value: NETWORK_POLKADOT_MAINNET = 120;
+   */
+  POLKADOT_MAINNET = 120,
+
+  /**
+   * @generated from enum value: NETWORK_POLKADOT_TESTNET = 130;
+   */
+  POLKADOT_TESTNET = 130,
+
+  /**
+   * @generated from enum value: NETWORK_NOBLE_MAINNET = 140;
+   */
+  NOBLE_MAINNET = 140,
+
+  /**
+   * @generated from enum value: NETWORK_NOBLE_TESTNET = 150;
+   */
+  NOBLE_TESTNET = 150,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Network)
 proto3.util.setEnumType(Network, "ramp.v1.Network", [
@@ -252,6 +317,10 @@ proto3.util.setEnumType(Network, "ramp.v1.Network", [
   { no: 90, name: "NETWORK_ALEPH_ZERO_TESTNET" },
   { no: 100, name: "NETWORK_ALEPH_ZERO_L2_MAINNET" },
   { no: 110, name: "NETWORK_ALEPH_ZERO_L2_TESTNET" },
+  { no: 120, name: "NETWORK_POLKADOT_MAINNET" },
+  { no: 130, name: "NETWORK_POLKADOT_TESTNET" },
+  { no: 140, name: "NETWORK_NOBLE_MAINNET" },
+  { no: 150, name: "NETWORK_NOBLE_TESTNET" },
 ]);
 
 /**
@@ -631,6 +700,8 @@ export class GetAccountInfoResponse_Account_Reward extends Message<GetAccountInf
 }
 
 /**
+ * Deprecated
+ *
  * @generated from message ramp.v1.GetAccountInfoResponse.CryptoAsset
  */
 export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoResponse_CryptoAsset> {
@@ -666,6 +737,13 @@ export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoRe
   shortName = "";
 
   /**
+   * the canonical symbol for the asset - eg: USDC for any Circle-issued USDC on any chain, or ETH for Ethereum
+   *
+   * @generated from field: string symbol = 35;
+   */
+  symbol = "";
+
+  /**
    * @generated from oneof ramp.v1.GetAccountInfoResponse.CryptoAsset.details
    */
   details: {
@@ -686,6 +764,12 @@ export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoRe
      */
     value: GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token;
     case: "substratePsp22Token";
+  } | {
+    /**
+     * @generated from field: ramp.v1.GetAccountInfoResponse.CryptoAsset.EthereumNative ethereum_native = 70;
+     */
+    value: GetAccountInfoResponse_CryptoAsset_EthereumNative;
+    case: "ethereumNative";
   } | { case: undefined; value?: undefined } = { case: undefined };
 
   constructor(data?: PartialMessage<GetAccountInfoResponse_CryptoAsset>) {
@@ -701,9 +785,11 @@ export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoRe
     { no: 10, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
     { no: 20, name: "asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
     { no: 30, name: "short_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 35, name: "symbol", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 40, name: "ethereum_erc20_token", kind: "message", T: GetAccountInfoResponse_CryptoAsset_EthereumErc20Token, oneof: "details" },
     { no: 50, name: "cosmos_ics20_token", kind: "message", T: GetAccountInfoResponse_CryptoAsset_CosmosIcs20Token, oneof: "details" },
     { no: 60, name: "substrate_psp22_token", kind: "message", T: GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token, oneof: "details" },
+    { no: 70, name: "ethereum_native", kind: "message", T: GetAccountInfoResponse_CryptoAsset_EthereumNative, oneof: "details" },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_CryptoAsset {
@@ -837,6 +923,37 @@ export class GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token extends Mess
 
   static equals(a: GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token | PlainMessage<GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token> | undefined, b: GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token | PlainMessage<GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token> | undefined): boolean {
     return proto3.util.equals(GetAccountInfoResponse_CryptoAsset_SubstratePsp22Token, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.GetAccountInfoResponse.CryptoAsset.EthereumNative
+ */
+export class GetAccountInfoResponse_CryptoAsset_EthereumNative extends Message<GetAccountInfoResponse_CryptoAsset_EthereumNative> {
+  constructor(data?: PartialMessage<GetAccountInfoResponse_CryptoAsset_EthereumNative>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.CryptoAsset.EthereumNative";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAccountInfoResponse_CryptoAsset_EthereumNative {
+    return new GetAccountInfoResponse_CryptoAsset_EthereumNative().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_CryptoAsset_EthereumNative {
+    return new GetAccountInfoResponse_CryptoAsset_EthereumNative().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAccountInfoResponse_CryptoAsset_EthereumNative {
+    return new GetAccountInfoResponse_CryptoAsset_EthereumNative().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetAccountInfoResponse_CryptoAsset_EthereumNative | PlainMessage<GetAccountInfoResponse_CryptoAsset_EthereumNative> | undefined, b: GetAccountInfoResponse_CryptoAsset_EthereumNative | PlainMessage<GetAccountInfoResponse_CryptoAsset_EthereumNative> | undefined): boolean {
+    return proto3.util.equals(GetAccountInfoResponse_CryptoAsset_EthereumNative, a, b);
   }
 }
 
@@ -1130,21 +1247,21 @@ export class GetAccountInfoResponse_AccountLimits extends Message<GetAccountInfo
   onrampCurrentDailyUsage = "";
 
   /**
-   * single limit for off-ramp in crypto currency (USDC)
+   * single limit for off-ramp expressed in fiat currency (either EUR or GBP)
    *
    * @generated from field: string offramp_single_limit = 40;
    */
   offrampSingleLimit = "";
 
   /**
-   * daily limit for off-ramp in crypto currency (USDC)
+   * daily limit for off-ramp expressed in fiat currency (either EUR or GBP)
    *
    * @generated from field: string offramp_daily_limit = 50;
    */
   offrampDailyLimit = "";
 
   /**
-   * current usage for off-ramp in crypto currency (USDC)
+   * current usage for off-ramp expressed in fiat currency (either EUR or GBP)
    *
    * @generated from field: string offramp_current_daily_usage = 60;
    */
@@ -2090,6 +2207,522 @@ export class GetRampsResponse_Ramp extends Message<GetRampsResponse_Ramp> {
 
   static equals(a: GetRampsResponse_Ramp | PlainMessage<GetRampsResponse_Ramp> | undefined, b: GetRampsResponse_Ramp | PlainMessage<GetRampsResponse_Ramp> | undefined): boolean {
     return proto3.util.equals(GetRampsResponse_Ramp, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.GetAssetsRequest
+ */
+export class GetAssetsRequest extends Message<GetAssetsRequest> {
+  /**
+   * @generated from field: ramp.v1.CurrencyId fiat_asset_id = 10;
+   */
+  fiatAssetId = CurrencyId.UNSPECIFIED;
+
+  constructor(data?: PartialMessage<GetAssetsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetAssetsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "fiat_asset_id", kind: "enum", T: proto3.getEnumType(CurrencyId) },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAssetsRequest {
+    return new GetAssetsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAssetsRequest {
+    return new GetAssetsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAssetsRequest {
+    return new GetAssetsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetAssetsRequest | PlainMessage<GetAssetsRequest> | undefined, b: GetAssetsRequest | PlainMessage<GetAssetsRequest> | undefined): boolean {
+    return proto3.util.equals(GetAssetsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.GetAssetsResponse
+ */
+export class GetAssetsResponse extends Message<GetAssetsResponse> {
+  /**
+   * @generated from field: repeated ramp.v1.CryptoAsset crypto_assets = 10;
+   */
+  cryptoAssets: CryptoAsset[] = [];
+
+  constructor(data?: PartialMessage<GetAssetsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.GetAssetsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "crypto_assets", kind: "message", T: CryptoAsset, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetAssetsResponse {
+    return new GetAssetsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetAssetsResponse {
+    return new GetAssetsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetAssetsResponse {
+    return new GetAssetsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetAssetsResponse | PlainMessage<GetAssetsResponse> | undefined, b: GetAssetsResponse | PlainMessage<GetAssetsResponse> | undefined): boolean {
+    return proto3.util.equals(GetAssetsResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.CryptoAsset
+ */
+export class CryptoAsset extends Message<CryptoAsset> {
+  /**
+   * asset status for on/off ramping
+   *
+   * @generated from field: ramp.v1.CryptoAsset.RampStatus status = 10;
+   */
+  status?: CryptoAsset_RampStatus;
+
+  /**
+   * @generated from field: ramp.v1.Protocol protocol = 20;
+   */
+  protocol = Protocol.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.Network network = 30;
+   */
+  network = Network.UNSPECIFIED;
+
+  /**
+   * the client can use this to match an asset with precision and display custom wording / icon, e.g. "USDC"
+   *
+   * @generated from field: ramp.v1.AssetId asset_id = 40;
+   */
+  assetId = AssetId.ASSET_ID_UNSPECIFIED;
+
+  /**
+   * to be used as a fallback if the client doesn't recognise the asset_id (eg: out of date proto definitions)
+   *
+   * @generated from field: string short_name = 50;
+   */
+  shortName = "";
+
+  /**
+   * the canonical symbol for the asset - eg: USDC for any Circle-issued USDC on any chain, or ETH for Ethereum
+   *
+   * @generated from field: string symbol = 55;
+   */
+  symbol = "";
+
+  /**
+   * @generated from oneof ramp.v1.CryptoAsset.details
+   */
+  details: {
+    /**
+     * @generated from field: ramp.v1.CryptoAsset.EthereumErc20Token ethereum_erc20_token = 60;
+     */
+    value: CryptoAsset_EthereumErc20Token;
+    case: "ethereumErc20Token";
+  } | {
+    /**
+     * @generated from field: ramp.v1.CryptoAsset.CosmosIcs20Token cosmos_ics20_token = 70;
+     */
+    value: CryptoAsset_CosmosIcs20Token;
+    case: "cosmosIcs20Token";
+  } | {
+    /**
+     * @generated from field: ramp.v1.CryptoAsset.SubstratePsp22Token substrate_psp22_token = 80;
+     */
+    value: CryptoAsset_SubstratePsp22Token;
+    case: "substratePsp22Token";
+  } | {
+    /**
+     * @generated from field: ramp.v1.CryptoAsset.EthereumNative ethereum_native = 90;
+     */
+    value: CryptoAsset_EthereumNative;
+    case: "ethereumNative";
+  } | { case: undefined; value?: undefined } = { case: undefined };
+
+  /**
+   * @generated from field: ramp.v1.CryptoAsset.Limits onramp_limits = 100;
+   */
+  onrampLimits?: CryptoAsset_Limits;
+
+  /**
+   * @generated from field: ramp.v1.CryptoAsset.Limits offramp_limits = 110;
+   */
+  offrampLimits?: CryptoAsset_Limits;
+
+  constructor(data?: PartialMessage<CryptoAsset>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.CryptoAsset";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "status", kind: "message", T: CryptoAsset_RampStatus },
+    { no: 20, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
+    { no: 30, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
+    { no: 40, name: "asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
+    { no: 50, name: "short_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 55, name: "symbol", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 60, name: "ethereum_erc20_token", kind: "message", T: CryptoAsset_EthereumErc20Token, oneof: "details" },
+    { no: 70, name: "cosmos_ics20_token", kind: "message", T: CryptoAsset_CosmosIcs20Token, oneof: "details" },
+    { no: 80, name: "substrate_psp22_token", kind: "message", T: CryptoAsset_SubstratePsp22Token, oneof: "details" },
+    { no: 90, name: "ethereum_native", kind: "message", T: CryptoAsset_EthereumNative, oneof: "details" },
+    { no: 100, name: "onramp_limits", kind: "message", T: CryptoAsset_Limits },
+    { no: 110, name: "offramp_limits", kind: "message", T: CryptoAsset_Limits },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CryptoAsset {
+    return new CryptoAsset().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CryptoAsset {
+    return new CryptoAsset().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CryptoAsset {
+    return new CryptoAsset().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: CryptoAsset | PlainMessage<CryptoAsset> | undefined, b: CryptoAsset | PlainMessage<CryptoAsset> | undefined): boolean {
+    return proto3.util.equals(CryptoAsset, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.CryptoAsset.EthereumErc20Token
+ */
+export class CryptoAsset_EthereumErc20Token extends Message<CryptoAsset_EthereumErc20Token> {
+  /**
+   * ERC20 token address
+   *
+   * @generated from field: string token_address = 10;
+   */
+  tokenAddress = "";
+
+  constructor(data?: PartialMessage<CryptoAsset_EthereumErc20Token>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.CryptoAsset.EthereumErc20Token";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "token_address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CryptoAsset_EthereumErc20Token {
+    return new CryptoAsset_EthereumErc20Token().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CryptoAsset_EthereumErc20Token {
+    return new CryptoAsset_EthereumErc20Token().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CryptoAsset_EthereumErc20Token {
+    return new CryptoAsset_EthereumErc20Token().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: CryptoAsset_EthereumErc20Token | PlainMessage<CryptoAsset_EthereumErc20Token> | undefined, b: CryptoAsset_EthereumErc20Token | PlainMessage<CryptoAsset_EthereumErc20Token> | undefined): boolean {
+    return proto3.util.equals(CryptoAsset_EthereumErc20Token, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.CryptoAsset.CosmosIcs20Token
+ */
+export class CryptoAsset_CosmosIcs20Token extends Message<CryptoAsset_CosmosIcs20Token> {
+  /**
+   * IBC token address
+   *
+   * @generated from field: string ibc_address = 10;
+   */
+  ibcAddress = "";
+
+  constructor(data?: PartialMessage<CryptoAsset_CosmosIcs20Token>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.CryptoAsset.CosmosIcs20Token";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "ibc_address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CryptoAsset_CosmosIcs20Token {
+    return new CryptoAsset_CosmosIcs20Token().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CryptoAsset_CosmosIcs20Token {
+    return new CryptoAsset_CosmosIcs20Token().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CryptoAsset_CosmosIcs20Token {
+    return new CryptoAsset_CosmosIcs20Token().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: CryptoAsset_CosmosIcs20Token | PlainMessage<CryptoAsset_CosmosIcs20Token> | undefined, b: CryptoAsset_CosmosIcs20Token | PlainMessage<CryptoAsset_CosmosIcs20Token> | undefined): boolean {
+    return proto3.util.equals(CryptoAsset_CosmosIcs20Token, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.CryptoAsset.SubstratePsp22Token
+ */
+export class CryptoAsset_SubstratePsp22Token extends Message<CryptoAsset_SubstratePsp22Token> {
+  /**
+   * Substrate PSP22 token address
+   *
+   * @generated from field: string token_address = 10;
+   */
+  tokenAddress = "";
+
+  constructor(data?: PartialMessage<CryptoAsset_SubstratePsp22Token>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.CryptoAsset.SubstratePsp22Token";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "token_address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CryptoAsset_SubstratePsp22Token {
+    return new CryptoAsset_SubstratePsp22Token().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CryptoAsset_SubstratePsp22Token {
+    return new CryptoAsset_SubstratePsp22Token().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CryptoAsset_SubstratePsp22Token {
+    return new CryptoAsset_SubstratePsp22Token().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: CryptoAsset_SubstratePsp22Token | PlainMessage<CryptoAsset_SubstratePsp22Token> | undefined, b: CryptoAsset_SubstratePsp22Token | PlainMessage<CryptoAsset_SubstratePsp22Token> | undefined): boolean {
+    return proto3.util.equals(CryptoAsset_SubstratePsp22Token, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.CryptoAsset.EthereumNative
+ */
+export class CryptoAsset_EthereumNative extends Message<CryptoAsset_EthereumNative> {
+  constructor(data?: PartialMessage<CryptoAsset_EthereumNative>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.CryptoAsset.EthereumNative";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CryptoAsset_EthereumNative {
+    return new CryptoAsset_EthereumNative().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CryptoAsset_EthereumNative {
+    return new CryptoAsset_EthereumNative().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CryptoAsset_EthereumNative {
+    return new CryptoAsset_EthereumNative().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: CryptoAsset_EthereumNative | PlainMessage<CryptoAsset_EthereumNative> | undefined, b: CryptoAsset_EthereumNative | PlainMessage<CryptoAsset_EthereumNative> | undefined): boolean {
+    return proto3.util.equals(CryptoAsset_EthereumNative, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.CryptoAsset.RampStatus
+ */
+export class CryptoAsset_RampStatus extends Message<CryptoAsset_RampStatus> {
+  /**
+   * @generated from field: ramp.v1.CryptoAsset.RampStatus.Status onramp = 10;
+   */
+  onramp = CryptoAsset_RampStatus_Status.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.CryptoAsset.RampStatus.Status offramp = 20;
+   */
+  offramp = CryptoAsset_RampStatus_Status.UNSPECIFIED;
+
+  constructor(data?: PartialMessage<CryptoAsset_RampStatus>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.CryptoAsset.RampStatus";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "onramp", kind: "enum", T: proto3.getEnumType(CryptoAsset_RampStatus_Status) },
+    { no: 20, name: "offramp", kind: "enum", T: proto3.getEnumType(CryptoAsset_RampStatus_Status) },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CryptoAsset_RampStatus {
+    return new CryptoAsset_RampStatus().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CryptoAsset_RampStatus {
+    return new CryptoAsset_RampStatus().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CryptoAsset_RampStatus {
+    return new CryptoAsset_RampStatus().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: CryptoAsset_RampStatus | PlainMessage<CryptoAsset_RampStatus> | undefined, b: CryptoAsset_RampStatus | PlainMessage<CryptoAsset_RampStatus> | undefined): boolean {
+    return proto3.util.equals(CryptoAsset_RampStatus, a, b);
+  }
+}
+
+/**
+ * @generated from enum ramp.v1.CryptoAsset.RampStatus.Status
+ */
+export enum CryptoAsset_RampStatus_Status {
+  /**
+   * All is good, asset can be on/off ramped
+   *
+   * @generated from enum value: STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Our system is experiencing degradation (longer waits) but still operational.
+   * The UI should warn users.
+   *
+   * @generated from enum value: STATUS_DEGRADED = 20;
+   */
+  DEGRADED = 20,
+
+  /**
+   * Exceptional scenarios: ramping halted. The UI should prevent users from taking any action.
+   *
+   * @generated from enum value: STATUS_HALTED = 30;
+   */
+  HALTED = 30,
+}
+// Retrieve enum metadata with: proto3.getEnumType(CryptoAsset_RampStatus_Status)
+proto3.util.setEnumType(CryptoAsset_RampStatus_Status, "ramp.v1.CryptoAsset.RampStatus.Status", [
+  { no: 0, name: "STATUS_UNSPECIFIED" },
+  { no: 20, name: "STATUS_DEGRADED" },
+  { no: 30, name: "STATUS_HALTED" },
+]);
+
+/**
+ * @generated from message ramp.v1.CryptoAsset.Limits
+ */
+export class CryptoAsset_Limits extends Message<CryptoAsset_Limits> {
+  /**
+   * @generated from field: ramp.v1.CryptoAsset.Limits.Amount single_limit_amount = 10;
+   */
+  singleLimitAmount?: CryptoAsset_Limits_Amount;
+
+  /**
+   * @generated from field: ramp.v1.CryptoAsset.Limits.Amount daily_limit_amount = 20;
+   */
+  dailyLimitAmount?: CryptoAsset_Limits_Amount;
+
+  /**
+   * @generated from field: ramp.v1.CryptoAsset.Limits.Amount daily_used_amount = 30;
+   */
+  dailyUsedAmount?: CryptoAsset_Limits_Amount;
+
+  /**
+   * @generated from field: ramp.v1.CryptoAsset.Limits.Amount daily_remaining_amount = 40;
+   */
+  dailyRemainingAmount?: CryptoAsset_Limits_Amount;
+
+  constructor(data?: PartialMessage<CryptoAsset_Limits>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.CryptoAsset.Limits";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "single_limit_amount", kind: "message", T: CryptoAsset_Limits_Amount },
+    { no: 20, name: "daily_limit_amount", kind: "message", T: CryptoAsset_Limits_Amount },
+    { no: 30, name: "daily_used_amount", kind: "message", T: CryptoAsset_Limits_Amount },
+    { no: 40, name: "daily_remaining_amount", kind: "message", T: CryptoAsset_Limits_Amount },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CryptoAsset_Limits {
+    return new CryptoAsset_Limits().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CryptoAsset_Limits {
+    return new CryptoAsset_Limits().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CryptoAsset_Limits {
+    return new CryptoAsset_Limits().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: CryptoAsset_Limits | PlainMessage<CryptoAsset_Limits> | undefined, b: CryptoAsset_Limits | PlainMessage<CryptoAsset_Limits> | undefined): boolean {
+    return proto3.util.equals(CryptoAsset_Limits, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.CryptoAsset.Limits.Amount
+ */
+export class CryptoAsset_Limits_Amount extends Message<CryptoAsset_Limits_Amount> {
+  /**
+   * @generated from field: string asset = 10;
+   */
+  asset = "";
+
+  /**
+   * @generated from field: string fiat = 20;
+   */
+  fiat = "";
+
+  constructor(data?: PartialMessage<CryptoAsset_Limits_Amount>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.CryptoAsset.Limits.Amount";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "asset", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "fiat", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): CryptoAsset_Limits_Amount {
+    return new CryptoAsset_Limits_Amount().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): CryptoAsset_Limits_Amount {
+    return new CryptoAsset_Limits_Amount().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): CryptoAsset_Limits_Amount {
+    return new CryptoAsset_Limits_Amount().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: CryptoAsset_Limits_Amount | PlainMessage<CryptoAsset_Limits_Amount> | undefined, b: CryptoAsset_Limits_Amount | PlainMessage<CryptoAsset_Limits_Amount> | undefined): boolean {
+    return proto3.util.equals(CryptoAsset_Limits_Amount, a, b);
   }
 }
 

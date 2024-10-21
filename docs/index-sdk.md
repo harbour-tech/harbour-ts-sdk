@@ -27,7 +27,7 @@ import {GetAccountInfoRequest, Ecosystem, SignatureType, WhitelistAddressRequest
 const privateKey = "0x"+crypto.randomBytes(32).toString('hex');
 const wallet = new Wallet(privateKey);
 
-const ramp = new Ramp(
+const ramp = new RampCLient(
   "https://...",
   SignatureType.SECP256K1,
   wallet.signingKey.publicKey,
