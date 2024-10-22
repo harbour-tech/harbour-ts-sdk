@@ -6,7 +6,7 @@ https://www.figma.com/design/dw4ygEpoyyVBCn27ZH7XvP/Harbour-Wallet-Integration?n
 
 ## Usage of SDK
 
-1. Copy `src/index.ts` and `src/gen/**` to you project
+1. Copy `src/index.ts` and `src/gen/**` into your project
 2. Look into example of usage below or, for more sophisticated examples, in the `examples/` folder
 
 Dev API: https://dev-api.harborapps-nonprod.link
@@ -21,17 +21,28 @@ Example of SDK initialization and usage
 import {Wallet} from 'ethers';
 import crypto from 'crypto';
 
-import Ramp from '.'
+import RampCLient, { EthereumSignature, Signature } from '.'
 import {GetAccountInfoRequest, Ecosystem, SignatureType, WhitelistAddressRequest} from "./gen/ramp/v1/public_pb";
 
 const privateKey = "0x"+crypto.randomBytes(32).toString('hex');
 const wallet = new Wallet(privateKey);
 
+const signPayload = (payload: string): string => {
+    const hashed = keccak256(toUtf8Bytes(payload));
+    const sig = wallet.signingKey.sign(hashed).serialized;
+    return sig;
+}
+
 const ramp = new RampCLient(
-  "https://...",
-  SignatureType.SECP256K1,
-  wallet.signingKey.publicKey,
-  wallet.signMessage
+  "https://dev-api.harborapps-nonprod.link",
+  (payload): Promise<Signature> => {
+    const sig = signPayload(payload);
+    return Promise.resolve({
+      signature: sig,
+      publicKey: wallet.signingKey.publicKey,
+      ...EthereumSignature,
+    });
+  },
 )
 
 const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest())
