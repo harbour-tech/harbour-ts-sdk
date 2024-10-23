@@ -5,7 +5,10 @@
 Detailed description of requests and responses fields can be found in the [proto definitions](../proto/ramp/v1/public.proto)
 
 ### List of supported fiat currencies
-List of supported fiat currencies can be found in CurrencyId enum of [proto definitions](../proto/ramp/v1/public.proto)
+List of supported fiat currencies can be found in **CurrencyId** enum of [proto definitions](../proto/ramp/v1/public.proto)
+
+### List of supported countries and payment methods
+List of supported countries can be found [here](./countries-payments.md)
 
 ## Usage of SDK
 1. Copy `src/index.ts` and `src/gen/**` into your project
@@ -48,6 +51,14 @@ List of supported fiat currencies can be found in CurrencyId enum of [proto defi
    }));
    ```
    Please check **EstimateOffRampFeeResponse** of [proto definitions](../proto/ramp/v1/public.proto) for detailed documentation over response data
+6. Open a popup window passing parameters
+
+   Once user selected Harbour as ramp provider user should be directed to Harbour ramp web app at
+   `https://.../?origin={metamask}&op={buy|sell}&amount=100&asset={ASSET_ID_USDC|ASSET_ID_ETH|...}&protocol={ETHEREUM|POLYGON|...}&currency={EUR}`
+   Please note that
+   * amount should be in `fiat` for `buy` operation and in 'crypto' for `sell` operation 
+   * `asset`, `protocol` and `currency` values should be the same as string representation of enum in [proto definitions](../proto/ramp/v1/public.proto)   
+   * Exact domain name for the URL will be provided shortly.  
 
 ## End to end example of SDK usage
 End to end example of SDK usage can be found  [here](../src/examples/example-aggregator.ts) and can be executed with following command 
