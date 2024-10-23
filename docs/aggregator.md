@@ -54,10 +54,11 @@ List of supported countries can be found [here](./countries-payments.md)
 6. Open a popup window passing parameters
 
    Once user selected Harbour as ramp provider user should be directed to Harbour ramp web app at
-   `https://.../?origin={metamask}&op={buy|sell}&amount=100&asset={ASSET_ID_USDC|ASSET_ID_ETH|...}&protocol={ETHEREUM|POLYGON|...}&currency={CURRENCY_ID_EUR}`
+   `https://.../?origin={metamask}&op={buy|sell}&amount=100&asset={ASSET_ID_USDC|ASSET_ID_ETH|...}&protocol={PROTOCOL_ETHEREUM|PROTOCOL_POLYGON|...}&currency={CURRENCY_ID_EUR}`
    Please note that
    * amount should be in `fiat` for `buy` operation and in `crypto` for `sell` operation 
    * `asset`, `protocol` and `currency` values should be the same as string representation of enum in [proto definitions](../proto/ramp/v1/public.proto)   
+   * `.` should be used as the decimal separator for `amount`. In addition to that `amount` would be truncated if it exceeds the decimal precision of the fiat or crypto asset.
    * Exact domain name for the URL will be provided shortly.  
 
 ## End to end example of SDK usage
