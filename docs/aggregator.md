@@ -55,6 +55,7 @@ List of supported countries can be found [here](./countries-payments.md)
 
    Once user selected Harbour as ramp provider user should be directed to Harbour ramp web app at
    `https://.../?origin={metamask}&op={buy|sell}&amount=100&asset={ASSET_ID_USDC|ASSET_ID_ETH|...}&protocol={PROTOCOL_ETHEREUM|PROTOCOL_POLYGON|...}&currency={CURRENCY_ID_EUR}`
+
    Please note that
    * amount should be in `fiat` for `buy` operation and in `crypto` for `sell` operation 
    * `asset`, `protocol` and `currency` values should be the same as string representation of enum in [proto definitions](../proto/ramp/v1/public.proto)   
