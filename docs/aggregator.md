@@ -69,7 +69,7 @@ List of supported countries can be found [here](./countries-payments.md)
    | referral_transaction_id | 'tx123'                                  | any string containing only letters (any case), numbers, '_' and '-'                                                                                                                                                              |
 8. As soon as ramp transaction changes it's status partner webhook will be invoked
    
-   Complete request definition can be found in the [proto definitions](../proto/ramp/v1/public.proto). Webhook's payload is JSON encoded by default. Example payload:      
+   Complete `RampTransaction` definition can be found in the [proto definitions](../proto/ramp/v1/public.proto). Webhook's payload is JSON encoded by default. Example payload:      
    ```json
    {
      "transactionId" : "00000000-0000-0000-0000-000000000000",

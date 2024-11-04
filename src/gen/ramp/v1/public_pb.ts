@@ -40,6 +40,32 @@ proto3.util.setEnumType(RampType, "ramp.v1.RampType", [
 ]);
 
 /**
+ * @generated from enum ramp.v1.RampStatus
+ */
+export enum RampStatus {
+  /**
+   * @generated from enum value: RAMP_STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: RAMP_STATUS_PENDING = 10;
+   */
+  PENDING = 10,
+
+  /**
+   * @generated from enum value: RAMP_STATUS_COMPLETED = 20;
+   */
+  COMPLETED = 20,
+}
+// Retrieve enum metadata with: proto3.getEnumType(RampStatus)
+proto3.util.setEnumType(RampStatus, "ramp.v1.RampStatus", [
+  { no: 0, name: "RAMP_STATUS_UNSPECIFIED" },
+  { no: 10, name: "RAMP_STATUS_PENDING" },
+  { no: 20, name: "RAMP_STATUS_COMPLETED" },
+]);
+
+/**
  * @generated from enum ramp.v1.Ecosystem
  */
 export enum Ecosystem {
@@ -107,7 +133,8 @@ export enum Protocol {
   POLYGON = 40,
 
   /**
-   * @generated from enum value: PROTOCOL_ALEPH_ZERO = 50;
+   * @generated from enum value: PROTOCOL_ALEPH_ZERO = 50 [deprecated = true];
+   * @deprecated
    */
   ALEPH_ZERO = 50,
 
@@ -1734,6 +1761,29 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
     case: "fiatAssetAmount";
   } | { case: undefined; value?: undefined } = { case: undefined };
 
+  /**
+   * this is optional and could be used by partners of Harbour
+   *
+   * @generated from oneof ramp.v1.EstimateOnRampFeeRequest.referral
+   */
+  referral: {
+    /**
+     * please reach out support to obtain referral code
+     *
+     * @generated from field: string code = 30;
+     */
+    value: string;
+    case: "code";
+  } | {
+    /**
+     * provide wallet_address if referral transaction was registered for this address
+     *
+     * @generated from field: string wallet_address = 40;
+     */
+    value: string;
+    case: "walletAddress";
+  } | { case: undefined; value?: undefined } = { case: undefined };
+
   constructor(data?: PartialMessage<EstimateOnRampFeeRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -1746,6 +1796,8 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
     { no: 10, name: "crypto_asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
     { no: 15, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 20, name: "fiat_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "amount" },
+    { no: 30, name: "code", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "referral" },
+    { no: 40, name: "wallet_address", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "referral" },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): EstimateOnRampFeeRequest {
@@ -1866,6 +1918,29 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
     case: "cryptoAssetAmount";
   } | { case: undefined; value?: undefined } = { case: undefined };
 
+  /**
+   * this is optional and could be used by partners of Harbour
+   *
+   * @generated from oneof ramp.v1.EstimateOffRampFeeRequest.referral
+   */
+  referral: {
+    /**
+     * please reach out support to obtain referral code
+     *
+     * @generated from field: string code = 30;
+     */
+    value: string;
+    case: "code";
+  } | {
+    /**
+     * provide wallet_address if referral transaction was registered for this address
+     *
+     * @generated from field: string wallet_address = 40;
+     */
+    value: string;
+    case: "walletAddress";
+  } | { case: undefined; value?: undefined } = { case: undefined };
+
   constructor(data?: PartialMessage<EstimateOffRampFeeRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -1878,6 +1953,8 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
     { no: 10, name: "crypto_asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
     { no: 15, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     { no: 20, name: "crypto_asset_amount", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "amount" },
+    { no: 30, name: "code", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "referral" },
+    { no: 40, name: "wallet_address", kind: "scalar", T: 9 /* ScalarType.STRING */, oneof: "referral" },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): EstimateOffRampFeeRequest {
@@ -2281,6 +2358,122 @@ export class GetAssetsResponse extends Message<GetAssetsResponse> {
 
   static equals(a: GetAssetsResponse | PlainMessage<GetAssetsResponse> | undefined, b: GetAssetsResponse | PlainMessage<GetAssetsResponse> | undefined): boolean {
     return proto3.util.equals(GetAssetsResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.RegisterReferralTransactionRequest
+ */
+export class RegisterReferralTransactionRequest extends Message<RegisterReferralTransactionRequest> {
+  /**
+   * assigned to the partner by Harbour
+   *
+   * @generated from field: string referral_code = 10;
+   */
+  referralCode = "";
+
+  /**
+   * @generated from field: string wallet_address = 20;
+   */
+  walletAddress = "";
+
+  /**
+   * @generated from field: ramp.v1.RampType type = 30;
+   */
+  type = RampType.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.CurrencyId currency = 40;
+   */
+  currency = CurrencyId.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.AssetId crypto_asset = 50;
+   */
+  cryptoAsset = AssetId.ASSET_ID_UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.Protocol crypto_asset_protocol = 60;
+   */
+  cryptoAssetProtocol = Protocol.UNSPECIFIED;
+
+  /**
+   * client generated id of transaction, will be reported back in the webhook
+   *
+   * @generated from field: string referral_transaction_id = 70;
+   */
+  referralTransactionId = "";
+
+  /**
+   * fiat amount for on ramps, crypto amount for off ramps
+   *
+   * @generated from field: string amount = 80;
+   */
+  amount = "";
+
+  constructor(data?: PartialMessage<RegisterReferralTransactionRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.RegisterReferralTransactionRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "referral_code", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "wallet_address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "type", kind: "enum", T: proto3.getEnumType(RampType) },
+    { no: 40, name: "currency", kind: "enum", T: proto3.getEnumType(CurrencyId) },
+    { no: 50, name: "crypto_asset", kind: "enum", T: proto3.getEnumType(AssetId) },
+    { no: 60, name: "crypto_asset_protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
+    { no: 70, name: "referral_transaction_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 80, name: "amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RegisterReferralTransactionRequest {
+    return new RegisterReferralTransactionRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RegisterReferralTransactionRequest {
+    return new RegisterReferralTransactionRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RegisterReferralTransactionRequest {
+    return new RegisterReferralTransactionRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: RegisterReferralTransactionRequest | PlainMessage<RegisterReferralTransactionRequest> | undefined, b: RegisterReferralTransactionRequest | PlainMessage<RegisterReferralTransactionRequest> | undefined): boolean {
+    return proto3.util.equals(RegisterReferralTransactionRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.RegisterReferralTransactionResponse
+ */
+export class RegisterReferralTransactionResponse extends Message<RegisterReferralTransactionResponse> {
+  constructor(data?: PartialMessage<RegisterReferralTransactionResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.RegisterReferralTransactionResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RegisterReferralTransactionResponse {
+    return new RegisterReferralTransactionResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RegisterReferralTransactionResponse {
+    return new RegisterReferralTransactionResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RegisterReferralTransactionResponse {
+    return new RegisterReferralTransactionResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: RegisterReferralTransactionResponse | PlainMessage<RegisterReferralTransactionResponse> | undefined, b: RegisterReferralTransactionResponse | PlainMessage<RegisterReferralTransactionResponse> | undefined): boolean {
+    return proto3.util.equals(RegisterReferralTransactionResponse, a, b);
   }
 }
 
@@ -2809,6 +3002,190 @@ export class IbanCoordinates extends Message<IbanCoordinates> {
 
   static equals(a: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined, b: IbanCoordinates | PlainMessage<IbanCoordinates> | undefined): boolean {
     return proto3.util.equals(IbanCoordinates, a, b);
+  }
+}
+
+/**
+ * used in the webhook for partners (by default in the JSON format)
+ *
+ * @generated from message ramp.v1.RampTransaction
+ */
+export class RampTransaction extends Message<RampTransaction> {
+  /**
+   * @generated from field: string transaction_id = 10;
+   */
+  transactionId = "";
+
+  /**
+   * @generated from field: string referral_transaction_id = 20;
+   */
+  referralTransactionId = "";
+
+  /**
+   * @generated from field: ramp.v1.RampType type = 30;
+   */
+  type = RampType.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.RampStatus status = 40;
+   */
+  status = RampStatus.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.CurrencyId currency = 50;
+   */
+  currency = CurrencyId.UNSPECIFIED;
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: ramp.v1.AssetId crypto_asset_id = 60;
+   */
+  cryptoAssetId = AssetId.ASSET_ID_UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.Protocol crypto_asset_protocol = 70;
+   */
+  cryptoAssetProtocol = Protocol.UNSPECIFIED;
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: string fiat_amount = 80;
+   */
+  fiatAmount = "";
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: string crypto_amount = 90;
+   */
+  cryptoAmount = "";
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: string exchange_rate = 100;
+   */
+  exchangeRate = "";
+
+  /**
+   * not set if ramp is not completed yet
+   *
+   * @generated from field: ramp.v1.RampTransaction.Fees fees = 110;
+   */
+  fees?: RampTransaction_Fees;
+
+  /**
+   * @generated from field: string wallet_address = 120;
+   */
+  walletAddress = "";
+
+  /**
+   * could be empty if ramp is not completed yet
+   *
+   * @generated from field: google.protobuf.Timestamp finalized_at = 130;
+   */
+  finalizedAt?: Timestamp;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp initiated_at = 140;
+   */
+  initiatedAt?: Timestamp;
+
+  constructor(data?: PartialMessage<RampTransaction>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.RampTransaction";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "transaction_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "referral_transaction_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "type", kind: "enum", T: proto3.getEnumType(RampType) },
+    { no: 40, name: "status", kind: "enum", T: proto3.getEnumType(RampStatus) },
+    { no: 50, name: "currency", kind: "enum", T: proto3.getEnumType(CurrencyId) },
+    { no: 60, name: "crypto_asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
+    { no: 70, name: "crypto_asset_protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
+    { no: 80, name: "fiat_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 90, name: "crypto_amount", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 100, name: "exchange_rate", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 110, name: "fees", kind: "message", T: RampTransaction_Fees },
+    { no: 120, name: "wallet_address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 130, name: "finalized_at", kind: "message", T: Timestamp },
+    { no: 140, name: "initiated_at", kind: "message", T: Timestamp },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RampTransaction {
+    return new RampTransaction().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RampTransaction {
+    return new RampTransaction().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RampTransaction {
+    return new RampTransaction().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: RampTransaction | PlainMessage<RampTransaction> | undefined, b: RampTransaction | PlainMessage<RampTransaction> | undefined): boolean {
+    return proto3.util.equals(RampTransaction, a, b);
+  }
+}
+
+/**
+ * @generated from message ramp.v1.RampTransaction.Fees
+ */
+export class RampTransaction_Fees extends Message<RampTransaction_Fees> {
+  /**
+   * in fiat currency
+   *
+   * @generated from field: string processing = 10;
+   */
+  processing = "";
+
+  /**
+   * in fiat currency
+   *
+   * @generated from field: string network = 20;
+   */
+  network = "";
+
+  /**
+   * in fiat currency
+   *
+   * @generated from field: string referral = 30;
+   */
+  referral = "";
+
+  constructor(data?: PartialMessage<RampTransaction_Fees>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "ramp.v1.RampTransaction.Fees";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 10, name: "processing", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "network", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "referral", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RampTransaction_Fees {
+    return new RampTransaction_Fees().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RampTransaction_Fees {
+    return new RampTransaction_Fees().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RampTransaction_Fees {
+    return new RampTransaction_Fees().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: RampTransaction_Fees | PlainMessage<RampTransaction_Fees> | undefined, b: RampTransaction_Fees | PlainMessage<RampTransaction_Fees> | undefined): boolean {
+    return proto3.util.equals(RampTransaction_Fees, a, b);
   }
 }
 
