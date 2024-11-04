@@ -16,6 +16,8 @@ import {
   GetRampsResponse,
   PingRequest,
   PingResponse,
+  RegisterReferralTransactionRequest,
+  RegisterReferralTransactionResponse,
   RemoveAddressRequest,
   RemoveAddressResponse,
   SetBankAccountRequest,
@@ -104,6 +106,15 @@ export const RampService = {
       name: "GetRamps",
       I: GetRampsRequest,
       O: GetRampsResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc ramp.v1.RampService.RegisterReferralTransaction
+     */
+    registerReferralTransaction: {
+      name: "RegisterReferralTransaction",
+      I: RegisterReferralTransactionRequest,
+      O: RegisterReferralTransactionResponse,
       kind: MethodKind.Unary,
     },
     /**

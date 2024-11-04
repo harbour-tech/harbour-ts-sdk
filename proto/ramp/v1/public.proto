@@ -33,6 +33,8 @@ service RampService {
 
   rpc GetRamps(GetRampsRequest) returns (GetRampsResponse) {}
 
+  rpc RegisterReferralTransaction(RegisterReferralTransactionRequest) returns (RegisterReferralTransactionResponse) {}
+
   // Authentication headers are not required for these RPCs.
   rpc EstimateOnRampFee (EstimateOnRampFeeRequest) returns (EstimateOnRampFeeResponse) {}
   rpc EstimateOffRampFee (EstimateOffRampFeeRequest) returns (EstimateOffRampFeeResponse) {}
@@ -265,6 +267,11 @@ message EstimateOnRampFeeRequest {
   oneof amount {
     string fiat_asset_amount = 20;
   }
+
+  oneof referral { // this is optional and could be used by partners of Harbour
+    string code = 30; // please reach out support to obtain referral code
+    string wallet_address = 40; // provide wallet_address if referral transaction was registered for this address
+  }
 }
 
 message EstimateOnRampFeeResponse {
@@ -281,6 +288,11 @@ message EstimateOffRampFeeRequest {
   Protocol protocol = 15;
   oneof amount {
     string crypto_asset_amount = 20;
+  }
+
+  oneof referral { // this is optional and could be used by partners of Harbour
+    string code = 30; // please reach out support to obtain referral code
+    string wallet_address = 40; // provide wallet_address if referral transaction was registered for this address
   }
 }
 
@@ -330,6 +342,21 @@ message GetAssetsRequest {
 
 message GetAssetsResponse {
   repeated CryptoAsset crypto_assets = 10;
+
+}
+
+message RegisterReferralTransactionRequest {
+  string referral_code = 10; // assigned to the partner by Harbour
+  string wallet_address = 20;
+  RampType type = 30;
+  CurrencyId currency = 40;
+  AssetId crypto_asset = 50;
+  Protocol crypto_asset_protocol = 60;
+  string referral_transaction_id = 70; // client generated id of transaction, will be reported back in the webhook
+  string amount = 80; // fiat amount for on ramps, crypto amount for off ramps
+}
+
+message RegisterReferralTransactionResponse {
 
 }
 
@@ -393,12 +420,6 @@ message CryptoAsset {
   }
 }
 
-enum RampType {
-  RAMP_TYPE_UNSPECIFIED = 0;
-  RAMP_TYPE_ON_RAMP = 10;
-  RAMP_TYPE_OFF_RAMP = 20;
-}
-
 message ScanCoordinates {
   string account_number = 10; // always 8 digits
   string sort_code = 20; // always 6 digits (if using an input mask such as ##-##-##, remove the dashes before submitting)
@@ -406,6 +427,31 @@ message ScanCoordinates {
 
 message IbanCoordinates {
   string iban = 10; // up to 34 characters (please submit them all uppercase) and numbers
+}
+
+// used in the webhook for partners (by default in the JSON format)
+message RampTransaction {
+  string transaction_id = 10;
+  string referral_transaction_id = 20;
+  RampType type= 30;
+  RampStatus status= 40;
+  CurrencyId currency = 50;
+  AssetId crypto_asset_id = 60; // could be empty if ramp is not completed yet
+  Protocol crypto_asset_protocol = 70;
+  string fiat_amount = 80; // could be empty if ramp is not completed yet
+  string crypto_amount = 90; // could be empty if ramp is not completed yet
+  string exchange_rate = 100; // could be empty if ramp is not completed yet
+  Fees fees = 110; // not set if ramp is not completed yet
+  string wallet_address = 120;
+
+  google.protobuf.Timestamp finalized_at = 130; // could be empty if ramp is not completed yet
+  google.protobuf.Timestamp initiated_at = 140;
+
+  message Fees {
+    string processing = 10; // in fiat currency
+    string network = 20; // in fiat currency
+    string referral = 30; // in fiat currency
+  }
 }
 
 message Page {
@@ -417,6 +463,18 @@ message PagedResult {
   uint64 index = 10; // zero based numbering
   uint64 size = 20;
   bool has_more = 30; // true if next page is available
+}
+
+enum RampType {
+  RAMP_TYPE_UNSPECIFIED = 0;
+  RAMP_TYPE_ON_RAMP = 10;
+  RAMP_TYPE_OFF_RAMP = 20;
+}
+
+enum RampStatus {
+  RAMP_STATUS_UNSPECIFIED = 0;
+  RAMP_STATUS_PENDING = 10;
+  RAMP_STATUS_COMPLETED = 20;
 }
 
 enum Ecosystem {
@@ -432,7 +490,7 @@ enum Protocol {
   PROTOCOL_AVAX = 20;
   PROTOCOL_TERRA = 30;
   PROTOCOL_POLYGON = 40;
-  PROTOCOL_ALEPH_ZERO = 50;
+  PROTOCOL_ALEPH_ZERO = 50 [deprecated = true];
   PROTOCOL_ALEPH_ZERO_L2 = 60;
   PROTOCOL_POLKADOT = 70;
   PROTOCOL_NOBLE = 80;
