@@ -280,6 +280,7 @@ message EstimateOnRampFeeResponse {
   string exchange_rate = 40;
   string network_fee_amount = 50; // denominated in user's fiat currency
   string processing_fee_amount = 60; // denominated in user's fiat currency
+  string referral_fee_amount = 70; // denominated in user's fiat currency
 }
 
 message EstimateOffRampFeeRequest {
@@ -301,6 +302,7 @@ message EstimateOffRampFeeResponse {
   string crypto_asset_amount = 30; // denominated in crypto_asset
   string exchange_rate = 40;
   string processing_fee_amount = 60; // denominated in user's fiat currency
+  string referral_fee_amount = 70;
 }
 
 

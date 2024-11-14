@@ -12,6 +12,8 @@ import {
     GetAccountInfoResponse,
     GetAssetsRequest,
     GetAssetsResponse,
+    RegisterReferralTransactionRequest,
+    RegisterReferralTransactionResponse,
     RemoveAddressRequest,
     RemoveAddressResponse,
     SetBankAccountRequest,
@@ -136,6 +138,16 @@ export class RampClient {
       request: GetAssetsRequest,
     ): Promise<GetAssetsResponse> {
         return this.client.getAssets(request);
+    }
+
+    /**
+     * Register referral transaction
+     * @param request - on ramp parameters
+     */
+    public async registerReferralTransaction(
+      request: RegisterReferralTransactionRequest,
+    ): Promise<RegisterReferralTransactionResponse> {
+        return this.client.registerReferralTransaction(request);
     }
 }
 
