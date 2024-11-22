@@ -57,11 +57,13 @@ console.log("Sending whitelist request")
 const whitelistResp = await ramp.whitelistAddress(
     new WhitelistAddressRequest({
         protocol: Protocol.ETHEREUM,
-        address: wallet.address,
+        signedAddress: {
+            address: wallet.address,
+            addressSignature: addressSig,
+            publicKey: compressedPubKey,
+        },
         // Note: the compressed public key has to be passed when whitelisting an address
-        publicKey: compressedPubKey,
         name: "ETH Example wallet #1",
-        addressSignature: addressSig,
     }),
 );
 
