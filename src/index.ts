@@ -185,6 +185,7 @@ export enum HashingAlgorithm {
     Keccak256 = "keccak256",
     SHA256 = "sha256",
     Blake2b256 = "blake2b256",
+    Ethereum = "ethereum", // like keccak256, but adding prefix \x19Ethereum Signed Message:{length} before hashing
 }
 
 /**
