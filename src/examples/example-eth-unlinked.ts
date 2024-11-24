@@ -2,12 +2,14 @@
 // Run me with: npx tsx src/examples/example-eth-unlinked.ts
 
 import { keccak256, toUtf8Bytes, Wallet } from "ethers";
+import crypto from 'crypto';
 
 import RampClient, { EthereumSignature, Signature } from "../";
 import {GetAccountInfoRequest} from "../gen/ramp/v1/public_pb";
 
-const mnemonic = "indoor dish desk flag debris potato excuse depart ticket judge file exit"
-const wallet = Wallet.fromPhrase(mnemonic);
+const privateKey = "0x" + crypto.randomBytes(32).toString('hex');
+const wallet = new Wallet(privateKey);
+
 
 console.log("Private key hex: ", wallet.signingKey.privateKey);
 console.log("Public key hex: ", wallet.signingKey.publicKey);
