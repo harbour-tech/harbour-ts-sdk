@@ -185,7 +185,7 @@ export enum HashingAlgorithm {
     Keccak256 = "keccak256",
     SHA256 = "sha256",
     Blake2b256 = "blake2b256",
-    Ethereum = "ethereum", // like keccak256, but adding prefix \x19Ethereum Signed Message:{length} before hashing
+    Ethereum = "ethereum", // like keccak256, but adding prefix \x19Ethereum Signed Message:\n{length} before hashing
 }
 
 /**
@@ -228,10 +228,19 @@ export interface Signature extends SignatureConfig {
 export type SignerFunction = (data: string) => Promise<Signature>;
 
 /**
- * Signature configuration for Ethereum ecosystem
+ * Signature configuration for Ethereum ecosystem, raw signing
  */
 export const EthereumSignature: SignatureConfig = {
     hashingAlgorithm: HashingAlgorithm.Keccak256,
+    signingAlgorithm: SigningAlgorithm.SECP256K1,
+    encodingAlgorithm: EncodingAlgorithm.Hex,
+};
+
+/**
+ * Signature configuration for Ethereum personal message signing
+ */
+export const EthPersonalSignature: SignatureConfig = {
+    hashingAlgorithm: HashingAlgorithm.Ethereum, // note: using Ethereum instead of raw keccak
     signingAlgorithm: SigningAlgorithm.SECP256K1,
     encodingAlgorithm: EncodingAlgorithm.Hex,
 };

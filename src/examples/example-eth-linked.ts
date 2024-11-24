@@ -50,8 +50,7 @@ console.log(accountInfo);
 // Since the endpoint is idempotent, you can repeat the action every time, without worrying about "is it already whitelisted" logic,
 // or you can implement such logic to optimize network usage, your choice.
 console.log("Signing address to demonstrate ownership")
-const addressPayload = '\x19Ethereum Signed Message:\n' + wallet.address.length + wallet.address;
-const addressSig = signPayload(addressPayload)
+const addressSig = signPayload(wallet.address)
 
 console.log("Sending whitelist request")
 const whitelistResp = await ramp.whitelistAddress(
