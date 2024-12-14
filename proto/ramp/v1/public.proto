@@ -445,6 +445,10 @@ message RampTransaction {
   string exchange_rate = 100; // could be empty if ramp is not completed yet
   Fees fees = 110; // not set if ramp is not completed yet
   string wallet_address = 120;
+  // The hash of the transaction related to this ramp. For on-ramp it's the transaction to the user's wallet at the end of the ramp
+  // For off-ramp it's the transaction hash that initiated the off-ramp.
+  // Could be empty for on-ramp if it's not completed yet (i.e. the funds were not sent to the user's wallet yet)
+  string transaction_hash = 125;
 
   google.protobuf.Timestamp finalized_at = 130; // could be empty if ramp is not completed yet
   google.protobuf.Timestamp initiated_at = 140;
@@ -484,6 +488,7 @@ enum Ecosystem {
   ECOSYSTEM_ETHEREUM = 10; // any EVM compatible chain - addresses are expected to be the right-most 160 bits of the keccak256 hash of the public key
   ECOSYSTEM_COSMOS = 20; // any Cosmos ecosystem chain - addresses are expected to be compatible with the Cosmos SDK (such as 160 bit BECH32)
   ECOSYSTEM_SUBSTRATE = 30; // any Substrate ecosystem chain - addresses are expected to be compatible with Substrate (overal 256bit SS58)
+  ECOSYSTEM_SOLANA = 40;
 }
 
 enum Protocol {
@@ -496,6 +501,8 @@ enum Protocol {
   PROTOCOL_ALEPH_ZERO_L2 = 60;
   PROTOCOL_POLKADOT = 70;
   PROTOCOL_NOBLE = 80;
+  PROTOCOL_ARBITRUM = 90;
+  PROTOCOL_SOLANA = 100;
 }
 
 // An AssetId helps the client to identify an exact token and customise the UI.
@@ -534,4 +541,8 @@ enum Network {
   NETWORK_POLKADOT_TESTNET = 130;
   NETWORK_NOBLE_MAINNET = 140;
   NETWORK_NOBLE_TESTNET = 150;
+  NETWORK_ARBITRUM_MAINNET = 160;
+  NETWORK_ARBITRUM_SEPOLIA = 170;
+  NETWORK_SOLANA_MAINNET = 180;
+  NETWORK_SOLANA_DEVNET = 190;
 }

@@ -4,11 +4,7 @@
 import {keccak256, Wallet} from "ethers";
 
 import {AuthClient} from "../";
-import {
-    AuthenticateWalletRequest,
-    AuthenticateWalletRequest_HashingAlgo,
-    AuthenticateWalletRequest_PublicKeyType
-} from "../gen/auth/v1/public_pb";
+import {AuthenticateWalletRequest_HashingAlgo, AuthenticateWalletRequest_PublicKeyType} from "../gen/auth/v1/public_pb";
 
 const mnemonic = "smooth clump orphan else enjoy blue legend panda waste weapon wire aunt"
 const wallet = Wallet.fromPhrase(mnemonic);
@@ -17,11 +13,11 @@ console.log("Private key (hex): ", wallet.signingKey.privateKey);
 console.log("Public key (hex): ", wallet.signingKey.publicKey);
 
 const signPayload = (payload: Uint8Array): string => {
-    const hashed = keccak256(payload);
-    console.log("Hashed payload: ", hashed);
-    const sig = wallet.signingKey.sign(hashed).serialized;
-    console.log("Signature: ", sig);
-    return sig;
+  const hashed = keccak256(payload);
+  console.log("Hashed payload: ", hashed);
+  const sig = wallet.signingKey.sign(hashed).serialized;
+  console.log("Signature: ", sig);
+  return sig;
 }
 
 const auth = new AuthClient("https://dev-api.harborapps-nonprod.link");
@@ -43,37 +39,27 @@ console.log("Sending auth wallet request")
 console.log("Signature: ", signature);
 console.log("Timestamp: ", timestamp);
 
-const authenticateResp = await auth.authenticateWallet(
-    new AuthenticateWalletRequest({
-        publicKey: hexToBinary(wallet.signingKey.publicKey),
-        publicKeyType: AuthenticateWalletRequest_PublicKeyType.SECP256K1,
-        hashingAlgo: AuthenticateWalletRequest_HashingAlgo.KECCAK256,
-        signature: hexToBinary(signature),
-        timestamp: BigInt(timestamp)
-    }),
-);
+const authenticateResp = await auth.authenticateWallet({
+  publicKey: hexToBinary(wallet.signingKey.publicKey),
+  publicKeyType: AuthenticateWalletRequest_PublicKeyType.SECP256K1,
+  hashingAlgo: AuthenticateWalletRequest_HashingAlgo.KECCAK256,
+  signature: hexToBinary(signature),
+  timestamp: BigInt(timestamp)
+});
 
 console.log("Auth wallet response received")
 console.dir(authenticateResp, {depth: null});
 
 function hexToBinary(hexString: string): Uint8Array {
-    // Remove '0x' prefix if present
-    const hex = hexString.toLowerCase().startsWith('0x') ? hexString.slice(2) : hexString;
+  // Remove '0x' prefix if present
+  const hex = hexString.toLowerCase().startsWith('0x') ? hexString.slice(2) : hexString;
 
-    // Convert the hex string to a Uint8Array
-    return new Uint8Array(hex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);
-}
-
-function hexToBase64(hexString: string): string {
-    return Buffer.from(hexToBinary(hexString)).toString('base64');
-}
-
-function base64ToBinary(base64String: string): Uint8Array { // unused here, but useful for other cases
-    return Uint8Array.from(Buffer.from(base64String, 'base64'));
+  // Convert the hex string to a Uint8Array
+  return new Uint8Array(hex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);
 }
 
 function uint8ArrayToHex(uint8Array: Uint8Array): string {
-    return "0x" + Array.from(uint8Array)
-        .map(byte => byte.toString(16).padStart(2, '0'))
-        .join('');
+  return "0x" + Array.from(uint8Array)
+    .map(byte => byte.toString(16).padStart(2, '0'))
+    .join('');
 }

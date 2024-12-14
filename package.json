@@ -8,13 +8,12 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@bufbuild/protobuf": "^1.10.0",
-    "@connectrpc/connect": "^1.6.1",
-    "@connectrpc/connect-web": "^1.6.1"
+    "@bufbuild/protobuf": "^2.2.3",
+    "@connectrpc/connect": "^2.0.0",
+    "@connectrpc/connect-web": "^2.0.0"
   },
   "devDependencies": {
-    "@bufbuild/protoc-gen-es": "^1.10.0",
-    "@connectrpc/protoc-gen-connect-es": "^1.6.1",
+    "@bufbuild/protoc-gen-es": "^2.2.3",
     "@cosmostation/cosmosjs": "^0.9.7",
     "@mysten/sui.js": "^0.51.0",
     "@polkadot/api": "^11.0.3",
@@ -30,5 +29,6 @@
     "buf:generate": "buf generate && sed -i '' s/_pb.js/_pb/ src/gen/*/v1/public_*.ts",
     "buf:sync": "rm -rf proto/ramp && rm -rf _tmp && mkdir -p proto/ramp/v1/  && git clone --depth 1 git@github.com:harbour-tech/be-ramp-service.git _tmp && mv _tmp/proto/ramp/v1/public.proto proto/ramp/v1/ && rm -rf _tmp",
     "buf": "npm run buf:sync && npm run buf:generate"
-  }
+  },
+  "packageManager": "yarn@4.5.1+sha512.341db9396b6e289fecc30cd7ab3af65060e05ebff4b3b47547b278b9e67b08f485ecd8c79006b405446262142c7a38154445ef7f17c1d5d1de7d90bf9ce7054d"
 }
