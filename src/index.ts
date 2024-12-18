@@ -1,7 +1,7 @@
-import {createPromiseClient, PromiseClient} from "@connectrpc/connect";
+import {createClient, Client} from "@connectrpc/connect";
 import {createConnectTransport} from "@connectrpc/connect-web";
 
-import {RampService} from "./gen/ramp/v1/public_connect";
+import {RampService} from "./gen/ramp/v1/public_pb";
 
 import {
     EstimateOffRampFeeRequest,
@@ -21,12 +21,10 @@ import {
     WhitelistAddressRequest,
     WhitelistAddressResponse,
 } from "./gen/ramp/v1/public_pb";
-import {PartialMessage} from "@bufbuild/protobuf";
-import {AuthenticateWalletRequest, AuthenticateWalletResponse} from "./gen/auth/v1/public_pb";
-import {AuthService} from "./gen/auth/v1/public_connect";
+import {AuthenticateWalletRequest, AuthenticateWalletResponse, AuthService} from "./gen/auth/v1/public_pb";
 
-export class RampClient {
-    public client: PromiseClient<typeof RampService>;
+export default class RampClient {
+    public client: Client<typeof RampService>;
 
     /**
      * Constructs instance of RampClient
@@ -66,7 +64,7 @@ export class RampClient {
             baseUrl: endpoint,
             fetch: customFetch,
         });
-        this.client = createPromiseClient(RampService, transport);
+        this.client = createClient(RampService, transport);
     }
 
     /**
@@ -74,7 +72,7 @@ export class RampClient {
      * authenticated (onboarded or logged in). Authentication URL is provided in the result.
      */
     public async getAccountInfo(
-        request: PartialMessage<GetAccountInfoRequest>,
+        request: GetAccountInfoRequest,
     ): Promise<GetAccountInfoResponse> {
         return this.client.getAccountInfo(request);
     }
@@ -85,7 +83,7 @@ export class RampClient {
      * @param request - whitelisting parameters
      */
     public async whitelistAddress(
-        request: PartialMessage<WhitelistAddressRequest>,
+        request: WhitelistAddressRequest,
     ): Promise<WhitelistAddressResponse> {
         return this.client.whitelistAddress(request);
     }
@@ -151,10 +149,8 @@ export class RampClient {
     }
 }
 
-export default RampClient;
-
 export class AuthClient {
-    public client: PromiseClient<typeof AuthService>;
+    public client: Client<typeof AuthService>;
 
     /**
      * Constructs instance of RampClient
@@ -164,7 +160,7 @@ export class AuthClient {
         const transport = createConnectTransport({
             baseUrl: endpoint,
         });
-        this.client = createPromiseClient(AuthService, transport);
+        this.client = createClient(AuthService, transport);
     }
 
     /**
@@ -172,7 +168,7 @@ export class AuthClient {
      * @param request - authentication parameters
      */
     public async authenticateWallet(
-        request: PartialMessage<AuthenticateWalletRequest>,
+        request: AuthenticateWalletRequest,
     ): Promise<AuthenticateWalletResponse> {
         return this.client.authenticateWallet(request);
     }

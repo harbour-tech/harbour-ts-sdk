@@ -1,15 +1,10 @@
 // In this example we demonstrate how an Ethereum wallet not yet linked to any user will generate a response with the onboarding URL
 // Run me with: npx tsx src/examples/example-eth-linked.ts
 
-import { keccak256, toUtf8Bytes, Wallet } from "ethers";
+import {keccak256, toUtf8Bytes, Wallet} from "ethers";
 
-import RampClient, { EthereumSignature, Signature } from "../";
-import {
-  GetAccountInfoRequest,
-  Protocol,
-  SetBankAccountRequest,
-  WhitelistAddressRequest,
-} from "../gen/ramp/v1/public_pb";
+import RampClient, {EthereumSignature, Signature} from "../";
+import {Protocol} from "../gen/ramp/v1/public_pb";
 
 const mnemonic = "smooth clump orphan else enjoy blue legend panda waste weapon wire aunt"
 const wallet = Wallet.fromPhrase(mnemonic);
@@ -21,12 +16,12 @@ console.log("Public key compressed: ", compressedPubKey);
 console.log("Address: ", wallet.address);
 
 const signPayload = (payload: string): string => {
-    console.log("Signing payload: ", payload);
-    const hashed = keccak256(toUtf8Bytes(payload));
-    console.log("Hashed payload: ", hashed);
-    const sig = wallet.signingKey.sign(hashed).serialized;
-    console.log("Signature: ", sig);
-    return sig;
+  console.log("Signing payload: ", payload);
+  const hashed = keccak256(toUtf8Bytes(payload));
+  console.log("Hashed payload: ", hashed);
+  const sig = wallet.signingKey.sign(hashed).serialized;
+  console.log("Signature: ", sig);
+  return sig;
 }
 
 const ramp = new RampClient(
@@ -43,7 +38,7 @@ const ramp = new RampClient(
 );
 
 // this will return an actual response with on- and off- ramping details
-const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest());
+const accountInfo = await ramp.getAccountInfo({});
 console.log(accountInfo);
 
 // The first time a user connects their wallet and selects and address for on-ramping, they need to whitelist their crypto wallet address.
@@ -53,32 +48,28 @@ console.log("Signing address to demonstrate ownership")
 const addressSig = signPayload(wallet.address)
 
 console.log("Sending whitelist request")
-const whitelistResp = await ramp.whitelistAddress(
-    new WhitelistAddressRequest({
-        protocol: Protocol.ETHEREUM,
-        signedAddress: {
-            address: wallet.address,
-            addressSignature: addressSig,
-            publicKey: compressedPubKey,
-        },
-        // Note: the compressed public key has to be passed when whitelisting an address
-        name: "ETH Example wallet #1",
-    }),
-);
+const whitelistResp = await ramp.whitelistAddress({
+  protocol: Protocol.ETHEREUM,
+  signedAddress: {
+    address: wallet.address,
+    addressSignature: addressSig,
+    publicKey: compressedPubKey,
+  },
+  // Note: the compressed public key has to be passed when whitelisting an address
+  name: "ETH Example wallet #1",
+});
 
 console.log("Whitelist response received")
 console.dir(whitelistResp, {depth: null});
 
 // One more step is required for off-ramping: the bank account on which the user is supposed to receive funds has to be set
-await ramp.setBankAccount(
-    new SetBankAccountRequest({
-        bankAccount: {
-            case: "iban",
-            value: {
-                iban: "DE44500105178191381683",
-            },
-        },
-    }),
-);
+await ramp.setBankAccount({
+  bankAccount: {
+    case: "iban",
+    value: {
+      iban: "DE44500105178191381683",
+    },
+  },
+});
 
 // Note: the above only works for EU (EUR) customers, take a look at our proto definitions for a UK (GBP) customer example

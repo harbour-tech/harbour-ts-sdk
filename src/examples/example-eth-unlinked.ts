@@ -5,11 +5,9 @@ import { keccak256, toUtf8Bytes, Wallet } from "ethers";
 import crypto from 'crypto';
 
 import RampClient, { EthereumSignature, Signature } from "../";
-import {GetAccountInfoRequest} from "../gen/ramp/v1/public_pb";
 
 const privateKey = "0x" + crypto.randomBytes(32).toString('hex');
 const wallet = new Wallet(privateKey);
-
 
 console.log("Private key hex: ", wallet.signingKey.privateKey);
 console.log("Public key hex: ", wallet.signingKey.publicKey);
@@ -44,5 +42,5 @@ const ramp = new RampClient(
 );
 
 // this will return an onboarding url, as this wallet hasn't been linked to any Harbour customer yet
-const accountInfo = await ramp.getAccountInfo(new GetAccountInfoRequest());
+const accountInfo = await ramp.getAccountInfo({});
 console.log(accountInfo);
