@@ -92,7 +92,7 @@ export default class RampClient {
 
     /**
      * Crypto assets can only be on-ramped to address which belongs to the user. In order to proof address belongs to the
-     * user, address need to be signed with private key of this address.
+     * user, address needs to be signed with the smart contract wallet.
      * @param request - whitelisting parameters
      */
     public async whitelistERC1271Wallet(
