@@ -20,6 +20,8 @@ import {
     SetBankAccountResponse,
     WhitelistAddressRequest,
     WhitelistAddressResponse,
+    WhitelistErc1271AddressRequest,
+    WhitelistErc1271AddressResponse
 } from "./gen/ramp/v1/public_pb";
 import {AuthenticateWalletRequest, AuthenticateWalletResponse, AuthService} from "./gen/auth/v1/public_pb";
 
@@ -86,6 +88,17 @@ export default class RampClient {
         request: WhitelistAddressRequest,
     ): Promise<WhitelistAddressResponse> {
         return this.client.whitelistAddress(request);
+    }
+
+    /**
+     * Crypto assets can only be on-ramped to address which belongs to the user. In order to proof address belongs to the
+     * user, address needs to be signed with the smart contract wallet.
+     * @param request - whitelisting parameters
+     */
+    public async whitelistERC1271Wallet(
+        request: WhitelistErc1271AddressRequest,
+    ): Promise<WhitelistErc1271AddressResponse> {
+        return this.client.whitelistErc1271Address(request);
     }
 
     /**
