@@ -24,6 +24,7 @@ service RampService {
   // Whitelists address. Crypto assets can only be on-ramped to address which belongs to the user.
   // In order to proof address belongs to the user, address need to be signed with private key of this address.
   rpc WhitelistAddress (WhitelistAddressRequest) returns (WhitelistAddressResponse) {}
+  rpc WhitelistErc1271Address (WhitelistErc1271AddressRequest) returns (WhitelistErc1271AddressResponse) {}
 
   //  Removes whitelisted address
   rpc RemoveAddress (RemoveAddressRequest) returns (RemoveAddressResponse) {}
@@ -184,7 +185,7 @@ message GetAccountInfoResponse {
 message WhitelistAddressRequest {
   // user given name, could be same name as in the Self Custody wallet if supported by wallet vendor
   // (the maximum length of the name is 100 symbols)
-  string name = 10;
+  string name = 10 [deprecated=true];
   // Ethereum, Avalanche, Terra and etc.
   Protocol protocol = 20;
   // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
@@ -216,6 +217,19 @@ message WhitelistAddressRequest {
 }
 
 message WhitelistAddressResponse {}
+
+message WhitelistErc1271AddressRequest {
+  Protocol protocol = 10;
+  SignedErc1271Address signed_address = 20;
+
+  message SignedErc1271Address {
+    // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
+    string address = 10;
+    string address_signature = 20; // signature of the the string address representation
+  }
+}
+
+message WhitelistErc1271AddressResponse {}
 
 message RemoveAddressRequest {
   Protocol protocol = 10;
@@ -453,10 +467,17 @@ message RampTransaction {
   google.protobuf.Timestamp finalized_at = 130; // could be empty if ramp is not completed yet
   google.protobuf.Timestamp initiated_at = 140;
 
+  UsdEstimation usd_estimation = 150; // fiat values, estimated in USD. Not set if ramp is not completed yet. MUST NOT be used for settlement purposes
+
   message Fees {
     string processing = 10; // in fiat currency
     string network = 20; // in fiat currency
     string referral = 30; // in fiat currency
+  }
+
+  message UsdEstimation {
+    string amount = 10;
+    Fees fees = 20;
   }
 }
 

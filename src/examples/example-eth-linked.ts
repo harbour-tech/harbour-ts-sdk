@@ -1,4 +1,5 @@
-// In this example we demonstrate how an Ethereum wallet not yet linked to any user will generate a response with the onboarding URL
+// In this example we demonstrate how an Ethereum wallet already linked to an account, will return the account info with
+// on- and off-ramping details, whitelist the wallet address and set the bank account for off-ramping.
 // Run me with: npx tsx src/examples/example-eth-linked.ts
 
 import {keccak256, toUtf8Bytes, Wallet} from "ethers";
@@ -61,6 +62,16 @@ const whitelistResp = await ramp.whitelistAddress({
 
 console.log("Whitelist response received")
 console.dir(whitelistResp, {depth: null});
+
+// Example on how to whitelist ERC1271 (smart contract) wallet
+// const whitelistERC1271Resp = await ramp.whitelistERC1271Wallet({
+//   protocol: Protocol.ARBITRUM,
+//   signedAddress: {
+//     address: wallet.address, // the address of the wallet
+//     addressSignature: addressSig, // the signature of the address hashed in EIP-191 format (https://eips.ethereum.org/EIPS/eip-191) and signed by the wallet
+//   },
+//   name: "Smart account wallet #2",
+// });
 
 // One more step is required for off-ramping: the bank account on which the user is supposed to receive funds has to be set
 await ramp.setBankAccount({
