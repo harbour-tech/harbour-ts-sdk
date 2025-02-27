@@ -40,6 +40,8 @@ service RampService {
   rpc EstimateOnRampFee (EstimateOnRampFeeRequest) returns (EstimateOnRampFeeResponse) {}
   rpc EstimateOffRampFee (EstimateOffRampFeeRequest) returns (EstimateOffRampFeeResponse) {}
   rpc GetAssets(GetAssetsRequest) returns (GetAssetsResponse) {}
+  rpc SetEmailAddress(SetEmailAddressRequest) returns (SetEmailAddressResponse) {}
+  rpc GetCountries(GetCountriesRequest) returns (GetCountriesResponse) {}
 }
 
 message GetAccountInfoRequest {
@@ -79,6 +81,7 @@ message GetAccountInfoResponse {
     }
 
     string account_holder = 20; // account holder name for on and off-ramping
+    string email_address = 25; // email address for receipts and notifications. Can be updated with SetEmailAddress
 
     // list of supported assets
     repeated CryptoAsset crypto_assets = 30;
@@ -131,7 +134,7 @@ message GetAccountInfoResponse {
     message RampStatus {
       Status onramp = 10;
       Status offramp = 20;
-  
+
       enum Status {
         // All is good, asset can be on/off ramped
         STATUS_UNSPECIFIED = 0;
@@ -185,20 +188,20 @@ message GetAccountInfoResponse {
 message WhitelistAddressRequest {
   // user given name, could be same name as in the Self Custody wallet if supported by wallet vendor
   // (the maximum length of the name is 100 symbols)
-  string name = 10 [deprecated=true];
+  string name = 10 [deprecated = true];
   // Ethereum, Avalanche, Terra and etc.
   Protocol protocol = 20;
   // address in particular blockchain e.g. 0x31792BB64B2fA8e0a4F5fD8F82DDf81A6F2C30e0
   // Deprecated in favour of signed_address
-  string address = 30 [deprecated=true]; // limited to 255 characters
+  string address = 30 [deprecated = true]; // limited to 255 characters
   // address must be derived from the provided public key
   // public key in particular ecosystem, encoded accordingly to ecosystem rules (Ethereum - hex, Cosmos - base64)
   // Deprecated in favour of signed_address
-  string public_key = 35 [deprecated=true]; // limited to 255 characters
+  string public_key = 35 [deprecated = true]; // limited to 255 characters
   // the address should be signed with its private key
   // for the Ethereum: the address should be signed with https://docs.metamask.io/wallet/reference/personal_sign/
   // Deprecated in favour of signed_address
-  string address_signature = 40  [deprecated=true];
+  string address_signature = 40  [deprecated = true];
 
   // this field is only required when the public key used to authenticate this request is different from the key used to derive the address
   // if this field is present in the request it takes precedence over the address, public_key and address_signature of the WhitelistAddressRequest
@@ -282,7 +285,7 @@ message EstimateOnRampFeeRequest {
     string fiat_asset_amount = 20;
   }
 
-  oneof referral { // this is optional and could be used by partners of Harbour
+  oneof referral {// this is optional and could be used by partners of Harbour
     string code = 30; // please reach out support to obtain referral code
     string wallet_address = 40; // provide wallet_address if referral transaction was registered for this address
   }
@@ -295,6 +298,7 @@ message EstimateOnRampFeeResponse {
   string network_fee_amount = 50; // denominated in user's fiat currency
   string processing_fee_amount = 60; // denominated in user's fiat currency
   string referral_fee_amount = 70; // denominated in user's fiat currency
+  bool instant_processing = 80; // True if the ramp will be processed immediately
 }
 
 message EstimateOffRampFeeRequest {
@@ -305,7 +309,7 @@ message EstimateOffRampFeeRequest {
     string crypto_asset_amount = 20;
   }
 
-  oneof referral { // this is optional and could be used by partners of Harbour
+  oneof referral {// this is optional and could be used by partners of Harbour
     string code = 30; // please reach out support to obtain referral code
     string wallet_address = 40; // provide wallet_address if referral transaction was registered for this address
   }
@@ -317,6 +321,7 @@ message EstimateOffRampFeeResponse {
   string exchange_rate = 40;
   string processing_fee_amount = 60; // denominated in user's fiat currency
   string referral_fee_amount = 70;
+  bool instant_processing = 80; // True if the ramp will be processed immediately
 }
 
 
@@ -337,7 +342,7 @@ message GetRampsResponse {
 
   message Ramp {
     string id = 10;
-    RampType type= 20;
+    RampType type = 20;
     AssetId crypto_asset = 30; // could be empty if ramp is not completed yet
     string fiat_amount = 40; // could be empty if ramp is not completed yet
     string crypto_amount = 50; // could be empty if ramp is not completed yet
@@ -449,8 +454,8 @@ message IbanCoordinates {
 message RampTransaction {
   string transaction_id = 10;
   string referral_transaction_id = 20;
-  RampType type= 30;
-  RampStatus status= 40;
+  RampType type = 30;
+  RampStatus status = 40;
   CurrencyId currency = 50;
   AssetId crypto_asset_id = 60; // could be empty if ramp is not completed yet
   Protocol crypto_asset_protocol = 70;
@@ -466,6 +471,7 @@ message RampTransaction {
 
   google.protobuf.Timestamp finalized_at = 130; // could be empty if ramp is not completed yet
   google.protobuf.Timestamp initiated_at = 140;
+  PaymentMethod payment_method = 145;
 
   UsdEstimation usd_estimation = 150; // fiat values, estimated in USD. Not set if ramp is not completed yet. MUST NOT be used for settlement purposes
 
@@ -478,6 +484,17 @@ message RampTransaction {
   message UsdEstimation {
     string amount = 10;
     Fees fees = 20;
+  }
+}
+
+message GetCountriesRequest {}
+
+message GetCountriesResponse {
+  repeated Country countries = 10;
+
+  message Country {
+    string code = 10;
+    string name = 20;
   }
 }
 
@@ -566,4 +583,16 @@ enum Network {
   NETWORK_ARBITRUM_SEPOLIA = 170;
   NETWORK_SOLANA_MAINNET = 180;
   NETWORK_SOLANA_DEVNET = 190;
+}
+
+message SetEmailAddressRequest {
+  string email_address = 10;
+}
+
+message SetEmailAddressResponse {
+
+}
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  PAYMENT_METHOD_SEPA = 10;
 }
