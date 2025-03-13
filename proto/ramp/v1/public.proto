@@ -119,6 +119,7 @@ message GetAccountInfoResponse {
       CosmosIcs20Token cosmos_ics20_token = 50;
       SubstratePsp22Token substrate_psp22_token = 60;
       EthereumNative ethereum_native = 70;
+      PolkadotAssethubAsset assethub_asset = 80;
     }
 
     message EthereumErc20Token {
@@ -130,7 +131,13 @@ message GetAccountInfoResponse {
     message SubstratePsp22Token {
       string token_address = 10; // Substrate PSP22 token address
     }
-    message EthereumNative {}
+    message EthereumNative{}
+
+    message PolkadotAssethubAsset {
+      // Each asset in the Polkadot Assethub parachain is identified 
+      // by a unique numeric ID.
+      int64 id = 10;
+    }
     message RampStatus {
       Status onramp = 10;
       Status offramp = 20;
@@ -396,6 +403,7 @@ message CryptoAsset {
     CosmosIcs20Token cosmos_ics20_token = 70;
     SubstratePsp22Token substrate_psp22_token = 80;
     EthereumNative ethereum_native = 90;
+    PolkadotAssethubAsset polkadot_assethub_asset = 95;
   }
 
   Limits onramp_limits = 100;
@@ -412,6 +420,12 @@ message CryptoAsset {
     string token_address = 10; // Substrate PSP22 token address
   }
   message EthereumNative {}
+
+  message PolkadotAssethubAsset {
+    // Each asset in the Polkadot Assethub parachain is identified 
+    // by a unique numeric ID.
+    int64 id = 10; 
+  }
 
   message RampStatus {
     Status onramp = 10;
@@ -538,6 +552,7 @@ enum Protocol {
   PROTOCOL_ALEPH_ZERO = 50 [deprecated = true];
   PROTOCOL_ALEPH_ZERO_L2 = 60;
   PROTOCOL_POLKADOT = 70;
+  PROTOCOL_POLKADOT_ASSETHUB = 71;
   PROTOCOL_NOBLE = 80;
   PROTOCOL_ARBITRUM = 90;
   PROTOCOL_SOLANA = 100;
@@ -577,6 +592,8 @@ enum Network {
   NETWORK_ALEPH_ZERO_L2_TESTNET = 110;
   NETWORK_POLKADOT_MAINNET = 120;
   NETWORK_POLKADOT_TESTNET = 130;
+  NETWORK_POLKADOT_ASSETHUB_MAINNET = 131;
+  NETWORK_POLKADOT_ASSETHUB_TESTNET = 132;
   NETWORK_NOBLE_MAINNET = 140;
   NETWORK_NOBLE_TESTNET = 150;
   NETWORK_ARBITRUM_MAINNET = 160;
@@ -589,9 +606,8 @@ message SetEmailAddressRequest {
   string email_address = 10;
 }
 
-message SetEmailAddressResponse {
+message SetEmailAddressResponse {}
 
-}
 enum PaymentMethod {
   PAYMENT_METHOD_UNSPECIFIED = 0;
   PAYMENT_METHOD_SEPA = 10;
